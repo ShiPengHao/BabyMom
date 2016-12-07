@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.os.Looper;
 import android.widget.Toast;
 
-
 import com.yimeng.babymom.R;
 
 import java.io.BufferedOutputStream;
@@ -30,8 +29,8 @@ import java.util.Map;
  * Bug收集工具类
  */
 
-public class BugHandler implements Thread.UncaughtExceptionHandler {
-    private static final boolean DEBUG = false;//调试模式
+class BugHandler implements Thread.UncaughtExceptionHandler {
+    private static final boolean DEBUG = true;//调试模式
     private static BugHandler instance;
     //用来存储设备信息
     private Map<String, String> infos = new HashMap<>();
@@ -46,7 +45,7 @@ public class BugHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 初始化，设置异常捕获监听
      */
-    public synchronized static void init() {
+    synchronized static void init() {
         if (instance == null) {
             instance = new BugHandler();
             Thread.currentThread().setUncaughtExceptionHandler(instance);
@@ -116,7 +115,7 @@ public class BugHandler implements Thread.UncaughtExceptionHandler {
             if (pi != null) {
                 String versionName = pi.versionName == null ? "null" : pi.versionName;
                 String versionCode = String.valueOf(pi.versionCode);
-                sb.insert(0, "versionName=" + versionName + "\n" + "versionCode=" + versionCode + "\n");
+                sb.insert(0, "appName=" + MyApp.getAppContext().getString(R.string.app_name) + "versionName=" + versionName + "\n" + "versionCode=" + versionCode + "\n");
             }
         } catch (Exception e) {
             e.printStackTrace();

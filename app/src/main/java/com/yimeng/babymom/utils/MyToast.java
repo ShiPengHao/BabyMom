@@ -1,20 +1,23 @@
 package com.yimeng.babymom.utils;
 
+import android.app.Activity;
 import android.widget.Toast;
 
 /**
  * 静态吐司
- * Created by 依萌 on 2016/6/13.
  */
 public class MyToast {
     private static Toast toast;
 
+
     /**
      * toast一个内容
-     * @param content 内容
+     *
+     * @param content  内容
+     * @param activity activity
      */
-    public static void show(final String content) {
-        ThreadUtils.runOnUIThread(new Runnable() {
+    public static void show(Activity activity, final String content) {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (toast == null) {

@@ -1,11 +1,12 @@
-package com.yimeng.babymom.activity.view;
+package com.yimeng.babymom.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yimeng.hyzchbczhwq.utils.DensityUtil;
+
+import com.yimeng.babymom.utils.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;

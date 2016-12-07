@@ -1,4 +1,4 @@
-package com.yimeng.babymom.activity.view;
+package com.yimeng.babymom.view;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,7 +16,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.yimeng.hyzchbczhwq.R;
+import com.yimeng.babymom.R;
+
 
 /**
  * 可以下拉刷新的ListView。

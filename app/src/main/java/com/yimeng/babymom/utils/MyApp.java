@@ -2,6 +2,7 @@ package com.yimeng.babymom.utils;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Process;
 import android.os.SystemClock;
 
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -10,12 +11,15 @@ import com.zhy.http.okhttp.cookie.CookieJarImpl;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
+import cn.smssdk.SMSSDK;
 import okhttp3.OkHttpClient;
 
 /**
  * 应用实例
  */
 public class MyApp extends Application {
+    private static final String APPKEY = "19a9f1ec985f0";
+    private static final String APPSECRET = "33e722ae7da7d4d29560933c60ee71bd";
     /**
      * 存储本应用已经打开的activity的集合
      */
@@ -33,16 +37,17 @@ public class MyApp extends Application {
     public static MyApp getAppContext() {
         return instance;
     }
-    
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
 //        LeakCanary.install(this);
-        ThreadUtils.runOnUIThread(null);
+//        ThreadUtils.runOnUIThread(null);
         activities.clear();
-
+        PreferenceManager.init(this);
+        SMSSDK.initSDK(this, APPKEY, APPSECRET);
         BugHandler.init();
 //        Picasso.setSingletonInstance(Picasso.with(this));
         initHttpUtils();
@@ -75,18 +80,23 @@ public class MyApp extends Application {
      * 完全退出本应用
      */
     public void finish() {
-        SystemClock.sleep(2000);
+        new Thread() {
+            @Override
+            public void run() {
+                SystemClock.sleep(2000);
 //        EMClient.getInstance().logout(true);
-        stopJPush();
-        for (int j = 0; j < activities.size(); j++) {
-            activities.get(j).finish();
-        }
+                stopJPush();
+                for (Activity activity : activities) {
+                    activity.finish();
+                }
 
-        //退出程序
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(0);
+                //退出程序
+                Process.killProcess(Process.myPid());
+                System.exit(0);
 //        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 //        activityManager.killBackgroundProcesses(getPackageName());
+            }
+        }.start();
     }
 
     /**

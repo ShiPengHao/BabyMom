@@ -1,7 +1,10 @@
 package com.yimeng.babymom.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,60 +13,59 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.utils.MyApp;
-import com.yimeng.babymom.utils.MyConstant;
-import com.yimeng.babymom.utils.WebServiceUtils;
+import com.yimeng.babymom.utils.MyToast;
+import com.yimeng.babymom.utils.PreferenceManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     private View mStatusBarView;
-    protected Context context;
-
-    /**
-     * 使用ksoap框架执行WebService请求的异步任务类
-     */
-    public static class SoapAsyncTask extends AsyncTask<Object, Object, String> {
-        @Override
-        protected String doInBackground(Object... params) {
-            if (params != null && params.length >= 2) {
-                return WebServiceUtils.callWebService(MyConstant.WEB_SERVICE_URL, MyConstant.NAMESPACE, (String) params[0],
-                        (Map<String, Object>) params[1]);
-            } else if (params != null && params.length == 1) {
-                return WebServiceUtils.callWebService(MyConstant.WEB_SERVICE_URL, MyConstant.NAMESPACE, (String) params[0],
-                        null);
-            } else {
-                return null;
-            }
-        }
-    }
+    protected Activity activity;
+    protected PreferenceManager mPrefManager = PreferenceManager.getInstance();
+    private Dialog mLoadingDialog;
+    private AlertDialog mOkDialog;
+    private DialogInterface.OnClickListener mOnclickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyApp.getAppContext().addActivity(this);
-        if (context == null) {
-            context = this;
+        if (activity == null) {
+            activity = this;
         }
         setContentView(setLayoutResId());
         setStatusBar();
         initView();
+        setBackListener();
         setListener();
         initData();
         overridePendingTransition(R.anim.next_in, R.anim.next_out);
 //        LocationUtils.setUpdateLocationListener(null);
     }
 
+    /**
+     * 为返回控件设置点击事件
+     */
+    protected void setBackListener() {
+        View backView = findViewById(R.id.iv_back);
+        if (backView != null)
+            backView.setOnClickListener(this);
+    }
+
     @Override
     protected void onDestroy() {
+        dismissLoadingView();
+        if (mOkDialog != null && mOkDialog.isShowing())
+            mOkDialog.dismiss();
         MyApp.getAppContext().removeActivity(this);
         super.onDestroy();
     }
@@ -93,11 +95,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param string 字符串
      * @return 空true，否则false
      */
-    protected boolean isEmpty(String string) {
-        if (null == string) {
-            return true;
-        }
-        return TextUtils.isEmpty(string.trim());
+    public boolean isEmpty(String string) {
+        return null == string || TextUtils.isEmpty(string.trim());
     }
 
     /**
@@ -148,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @return 颜色
      */
-    protected int setStatusBarColor() {
+    public int setStatusBarColor() {
         return getResources().getColor(R.color.colorStatusBar);
     }
 
@@ -194,5 +193,87 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected abstract void initData();
 
+    /**
+     * 让子类处理"返回"以外的控件的点击事件
+     *
+     * @param viewId 控件id
+     */
+    protected abstract void onInnerClick(int viewId);
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.iv_back)
+            finish();
+        else
+            onInnerClick(id);
+    }
+
+    public void showLoadingView() {
+        showLoadingView(null);
+    }
+
+    /**
+     * 显示过渡view
+     *
+     * @param message 加载视图文字指示
+     */
+    public void showLoadingView(String message) {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new Dialog(this, R.style.MyDialogStyle);
+            mLoadingDialog.setContentView(R.layout.layout_loading);
+            Window window = mLoadingDialog.getWindow();
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.dimAmount = 0f;
+            window.setAttributes(params);
+            mLoadingDialog.setCanceledOnTouchOutside(false);
+        }
+        TextView tv = (TextView) mLoadingDialog.findViewById(R.id.tv);
+        tv.setText(message == null ? getString(R.string.loading) : message);
+        mLoadingDialog.show();
+    }
+
+    /**
+     * 显示提示对话框
+     *
+     * @param message         显示消息
+     * @param onClickListener 确定按钮的点击事件监听
+     */
+    public void showOkTips(String message, DialogInterface.OnClickListener onClickListener) {
+        dismissLoadingView();
+        if (null == mOkDialog) {
+            mOkDialog = new AlertDialog.Builder(activity)
+                    .setTitle(getString(R.string.tip))
+                    .setCancelable(false)
+                    .create();
+
+            mOnclickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
+        }
+        mOkDialog.setMessage(message);
+        mOkDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok), onClickListener == null ? mOnclickListener : onClickListener);
+        mOkDialog.show();
+    }
+
+    /**
+     * 消失过渡view
+     */
+    public void dismissLoadingView() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing())
+            mLoadingDialog.dismiss();
+    }
+
+    /**
+     * 吐司
+     *
+     * @param message 内容
+     */
+    public void showToast(String message) {
+        MyToast.show(activity, message);
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.yimeng.babymom.activity.view;
+package com.yimeng.babymom.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,7 +9,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.yimeng.hyzchbczhwq.R;
+import com.yimeng.babymom.R;
+
 
 /**
  * 字母索引条

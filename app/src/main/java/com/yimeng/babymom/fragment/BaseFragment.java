@@ -1,6 +1,6 @@
 package com.yimeng.babymom.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yimeng.babymom.utils.MyToast;
 import com.yimeng.babymom.utils.UiUtils;
 
 
@@ -15,13 +16,13 @@ import com.yimeng.babymom.utils.UiUtils;
  * fragment抽象基类
  */
 public abstract class BaseFragment extends Fragment {
-    protected Context context;
+    protected Activity activity;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (context == null) {
-            context = getActivity();
+        if (activity == null) {
+            activity = getActivity();
         }
         View view = getView();
         if (null == view) {
@@ -57,4 +58,12 @@ public abstract class BaseFragment extends Fragment {
      * 加载数据，绑定到控件
      */
     protected abstract void initData();
+
+    /**
+     * 吐司
+     * @param message 内容
+     */
+    protected void showToast(String message) {
+        MyToast.show(activity, message);
+    }
 }

@@ -1,4 +1,4 @@
-package com.yimeng.babymom.activity.view;
+package com.yimeng.babymom.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -8,7 +8,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.EditText;
 
-import com.yimeng.hyzchbczhwq.R;
+import com.yimeng.babymom.R;
+
 
 /**
  * Created by 依萌 on 2016/6/22.

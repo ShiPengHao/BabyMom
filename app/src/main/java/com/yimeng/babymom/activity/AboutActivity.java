@@ -8,18 +8,19 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.format.Formatter;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hyphenate.util.TextFormater;
-import com.yimeng.hyzchbczhwq.R;
-import com.yimeng.hyzchbczhwq.utils.MyApp;
-import com.yimeng.hyzchbczhwq.utils.MyConstant;
-import com.yimeng.hyzchbczhwq.utils.MyNetUtils;
-import com.yimeng.hyzchbczhwq.utils.MyToast;
+import com.yimeng.babymom.R;
+import com.yimeng.babymom.task.SoapAsyncTask;
+import com.yimeng.babymom.utils.MyApp;
+import com.yimeng.babymom.utils.MyConstant;
+import com.yimeng.babymom.utils.MyNetUtils;
+import com.yimeng.babymom.utils.MyToast;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.request.RequestCall;
@@ -33,13 +34,13 @@ import java.util.Random;
 import okhttp3.Call;
 import okhttp3.Request;
 
-import static com.yimeng.hyzchbczhwq.R.string.apk_name;
+import static com.yimeng.babymom.R.string.apk_name;
 
 
 /**
  * 关于 界面
  */
-public class AboutActivity extends BaseActivity implements View.OnClickListener {
+public class AboutActivity extends BaseActivity{
 
     private ImageView iv_back;
     private TextView tv_version;
@@ -91,8 +92,8 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onInnerClick(int viewId) {
+        switch (viewId) {
             case R.id.iv_back:
                 finish();
                 break;
@@ -114,29 +115,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     private void checkUpdate() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("app_type", MyConstant.ANDROID);
-        new SoapAsyncTask() {
-            @Override
-            protected void onPostExecute(String s) {
-                if (s == null) {
-                    MyToast.show(getString(R.string.connect_error));
-                    return;
-                }
-                try {
-                    int localVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-                    JSONObject object = new JSONObject(s).optJSONArray("data").optJSONObject(0);
-                    if (object.optInt("version_Number") > localVersionCode) {
-                        apkSize = object.optInt("version_Size");
-                        downloadUrl = object.optString("version_Url");
-                        showUpdateDialog();
-                    } else {
-                        MyToast.show(getString(R.string.is_new));
-                    }
-                } catch (Exception e) {
-                    MyToast.show(getString(R.string.connect_error));
-                    e.printStackTrace();
-                }
-            }
-        }.execute("Get_VersionCode", map);
+
     }
 
     /**
@@ -161,10 +140,10 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 })
                 .create();
         String wifiTip = "";
-        if (!MyNetUtils.isWifi(this)) {
+        if (!MyNetUtils.isWifi()) {
             wifiTip = "检测到您的手机当前并非在wifi环境下，";
         }
-        updateDialog.setMessage(String.format("新版本安装包大小为%s，%s确定更新？", TextFormater.getDataSize(apkSize), wifiTip));
+        updateDialog.setMessage(String.format("新版本安装包大小为%s，%s确定更新？", Formatter.formatFileSize(this,apkSize), wifiTip));
         updateDialog.show();
     }
 
@@ -215,14 +194,14 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                             requestCall.cancel();
                             progressDialog.dismiss();
                             cancelByUser = true;
-                            MyToast.show("下载已取消");
+                            MyToast.show(activity,"下载已取消");
                             return true;
                         }
                         return false;
                     }
                 });
 
-                progressDialog.setMessage("拼命下载中...");
+                progressDialog.setMessage(getString(R.string.loading));
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDialog.show();
                 if (selfUpdate)
@@ -252,7 +231,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 if (!cancelByUser) {
                     e.printStackTrace();
                     progressDialog.dismiss();
-                    MyToast.show(getString(R.string.connect_error));
+                    MyToast.show(activity,getString(R.string.connect_error));
                 }
             }
         });

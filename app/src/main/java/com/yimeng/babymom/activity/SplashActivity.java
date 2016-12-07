@@ -4,21 +4,16 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.widget.ImageView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.utils.BitmapUtils;
-import com.yimeng.babymom.utils.DensityUtil;
+import com.yimeng.babymom.task.SoapAsyncTask;
 import com.yimeng.babymom.utils.MyConstant;
 import com.yimeng.babymom.utils.MyNetUtils;
 import com.yimeng.babymom.utils.MyToast;
@@ -37,13 +32,13 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Request;
 
+
 /**
  * 闪屏界面，处理apk版本更新，自动登陆，页面跳转等逻辑
  */
 public class SplashActivity extends BaseActivity {
 
-    private SharedPreferences spAccount;
-    private Handler handler;
+    private static Handler handler = new Handler();
     private String downloadUrl;
     private String fileDir;
     private AlertDialog updateDialog;
@@ -51,13 +46,17 @@ public class SplashActivity extends BaseActivity {
     private ProgressDialog progressDialog;
     private RequestCall requestCall;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getImage();
-        handler = new Handler();
+        dispatchEvent();
+    }
 
-        spAccount = getSharedPreferences(MyConstant.PREFS_ACCOUNT, MODE_PRIVATE);
+    /**
+     * 根据状态，分发apk版本更新，自动登陆，页面跳转等逻辑
+     */
+    private void dispatchEvent() {
         if (isFirstRunning()) {
             copyDataToLocal();
             handler.postDelayed(new Runnable() {
@@ -84,13 +83,17 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
+    public int setStatusBarColor() {
+        return Color.parseColor("#3F3B54");
+    }
+
+    @Override
     protected int setLayoutResId() {
         return R.layout.activity_splash;
     }
 
     @Override
     protected void initView() {
-
     }
 
     @Override
@@ -100,19 +103,11 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
     }
 
-    /**
-     * 获得闪屏界面的背景图片
-     */
-    private void getImage() {
-        ImageView iv = (ImageView) findViewById(R.id.iv);
-        if (iv != null) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.splash);
-            iv.setImageBitmap(BitmapUtils.zoomBitmap(bitmap, DensityUtil.SCREEN_WIDTH, DensityUtil.SCREEN_HEIGHT));
-            bitmap.recycle();
-        }
+    @Override
+    protected void onInnerClick(int viewId) {
+
     }
 
     /**
@@ -127,21 +122,11 @@ public class SplashActivity extends BaseActivity {
      * 自动登陆
      */
     private void attemptToLogin() {
-        String username = spAccount.getString(MyConstant.KEY_ACCOUNT_LAST_USERNAME, "");
-        String pwd = spAccount.getString(MyConstant.KEY_ACCOUNT_LAST_PASSWORD, "");
-        String type = spAccount.getString(MyConstant.KEY_ACCOUNT_LAST_TYPE, "");
-        String method = null;
-        if (type.equalsIgnoreCase("patient")) {
-            method = "User_Login";
-        } else if (type.equalsIgnoreCase("doctor")) {
-            method = "Doctor_Login";
-        } else if (type.equalsIgnoreCase("shop")) {
-            method = "Shop_Login";
-        }
-        if (TextUtils.isEmpty(method)) {
+        String username = mPrefManager.getAccountUsername();
+        String pwd = mPrefManager.getAccountPassword();
+        if (isEmpty(username) || isEmpty(pwd))
             goToLogin();
-            return;
-        }
+        String method = "login";
         HashMap<String, Object> param = new HashMap<>();
         param.put("user", username);
         param.put("pwd", pwd);
@@ -261,38 +246,38 @@ public class SplashActivity extends BaseActivity {
         final String packageName = getPackageName();
         HashMap<String, Object> map = new HashMap<>();
         map.put("app_type", MyConstant.ANDROID);
-        new SoapAsyncTask() {
-            @Override
-            protected void onPostExecute(String s) {
-                if (s == null) {
-                    if (isAutoLogin())
-                        attemptToLogin();
-                    else
-                        goToLogin();
-                    return;
-                }
-                try {
-                    int localVersionCode = getPackageManager().getPackageInfo(packageName, 0).versionCode;
-                    JSONObject object = new JSONObject(s).optJSONArray("data").optJSONObject(0);
-                    if (object.optInt("version_Number") > localVersionCode) {
-                        apkSize = object.optInt("version_Size");
-                        downloadUrl = object.optString("version_Url");
-                        showUpdateDialog();
-                    } else {
-                        if (isAutoLogin())
-                            attemptToLogin();
-                        else
-                            goToLogin();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (isAutoLogin())
-                        attemptToLogin();
-                    else
-                        goToLogin();
-                }
-            }
-        }.execute("Get_VersionCode", map);
+//        new SoapAsyncTask() {
+//            @Override
+//            protected void onPostExecute(String s) {
+//                if (s == null) {
+//                    if (isAutoLogin())
+//                        attemptToLogin();
+//                    else
+//                        goToLogin();
+//                    return;
+//                }
+//                try {
+//                    int localVersionCode = getPackageManager().getPackageInfo(packageName, 0).versionCode;
+//                    JSONObject object = new JSONObject(s).optJSONArray("data").optJSONObject(0);
+//                    if (object.optInt("version_Number") > localVersionCode) {
+//                        apkSize = object.optInt("version_Size");
+//                        downloadUrl = object.optString("version_Url");
+//                        showUpdateDialog();
+//                    } else {
+//                        if (isAutoLogin())
+//                            attemptToLogin();
+//                        else
+//                            goToLogin();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    if (isAutoLogin())
+//                        attemptToLogin();
+//                    else
+//                        goToLogin();
+//                }
+//            }
+//        }.execute("Get_VersionCode", map);
     }
 
     /**
@@ -321,7 +306,7 @@ public class SplashActivity extends BaseActivity {
                 })
                 .create();
         String wifiTip = "";
-        if (!MyNetUtils.isWifi(this)) {
+        if (!MyNetUtils.isWifi()) {
             wifiTip = "检测到您的手机当前并非在wifi环境下，";
         }
         updateDialog.setMessage(String.format("新版本安装包大小为%s，%s确定更新？", android.text.format.Formatter.formatFileSize(this, apkSize), wifiTip));
@@ -355,7 +340,7 @@ public class SplashActivity extends BaseActivity {
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                         if (progressDialog != null && progressDialog.isShowing()) {
                             requestCall.cancel();
-                            MyToast.show("下载已取消");
+                            MyToast.show(activity,"下载已取消");
                             return true;
                         }
                         return false;
@@ -401,6 +386,7 @@ public class SplashActivity extends BaseActivity {
             progressDialog.dismiss();
         if (requestCall != null)
             requestCall.cancel();
+        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
@@ -435,7 +421,7 @@ public class SplashActivity extends BaseActivity {
      * @return
      */
     private boolean isFirstRunning() {
-        return spAccount.getBoolean(MyConstant.KEY_ACCOUNT_FIRSTRUNNING, true);
+        return mPrefManager.getAccountFirstRunning();
     }
 
     /**
@@ -444,7 +430,7 @@ public class SplashActivity extends BaseActivity {
      * @return
      */
     private boolean isAutoUpdate() {
-        return spAccount.getBoolean(MyConstant.KEY_ACCOUNT_AUTOUPDATE, false);
+        return mPrefManager.getAccountAutoUpdate();
     }
 
     /**
@@ -453,6 +439,6 @@ public class SplashActivity extends BaseActivity {
      * @return
      */
     private boolean isAutoLogin() {
-        return spAccount.getBoolean(MyConstant.KEY_ACCOUNT_AUTOLOGIN, false);
+        return mPrefManager.getAccountAutoLogin();
     }
 }

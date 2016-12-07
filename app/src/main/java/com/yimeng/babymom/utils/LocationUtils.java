@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 位置服务工具类
  */
-public class LocationUtils {
+class LocationUtils {
     /**
      * 设置位置变化服务的监听
      *
@@ -78,7 +78,7 @@ public class LocationUtils {
     /**
      * 位置服务监听
      */
-    public interface UpdateLocationListener {
+    interface UpdateLocationListener {
         /**
          * 获得新的定位的监听，当前方法在主线程
          *
@@ -119,7 +119,7 @@ public class LocationUtils {
 
             @Override
             protected void onPostExecute(String s) {
-                MyToast.show(s);
+                //do something
             }
         }.execute(location);
     }
