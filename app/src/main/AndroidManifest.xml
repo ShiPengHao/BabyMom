@@ -70,12 +70,6 @@
             android:name="com.yimeng.babymom.activity.UserProtocolActivity"
             android:screenOrientation="portrait" />
 
-
-        <!--<activity-->
-            <!--android:name="com.mob.tools.MobUIShell"-->
-            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"-->
-            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
-            <!--android:windowSoftInputMode="stateHidden|adjustResize"/>-->
     </application>
 
 </manifest>

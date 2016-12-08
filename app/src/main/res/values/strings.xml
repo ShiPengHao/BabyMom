@@ -521,7 +521,7 @@
     <string name="down_video_apk">下载"华医在线"</string>
     <string name="msg_verify">验证码</string>
     <string name="get_msg_verify">获取短信验证码</string>
-    <string name="agree_protocol">我已阅读并同意用户协议</string>
+    <string name="protocol_agree">我已阅读并同意用户协议</string>
     <string name="verify">短信验证</string>
     <string name="register_ok">恭喜，注册成功！</string>
     <string name="sms_check_ok">短信验证码验证成功！</string>
@@ -602,4 +602,8 @@
     <string name="pwd_reset_ok">密码重置成功</string>
     <string name="phone_bad">手机号格式不正确</string>
     <string name="password_bad">密码长度应在6-11位之间</string>
+    <string name="password_different">两次密码不一致</string>
+    <string name="protocol_need_agree">请阅读并同意用户协议</string>
+    <string name="down_cancel">下载已取消</string>
+    <string name="version_is_new">当前版本已经是最新版本</string>
 </resources>

@@ -1,10 +1,10 @@
 package com.yimeng.babymom.interFace;
 
 /**
- * 重置密码
+ * 重置密码功能
  */
 
-public interface PwdResetInterface extends ViewInterface {
+public interface PwdResetInterface extends GeneralInterface {
     /**
      * 重置密码
      */
@@ -16,7 +16,7 @@ public interface PwdResetInterface extends ViewInterface {
     void goToCheckSms();
 
     /**
-     * 返回登陆页面
+     * 重置密码成功后，返回上个页面
      */
-    void backToLogin();
+    void feedbackPre();
 }

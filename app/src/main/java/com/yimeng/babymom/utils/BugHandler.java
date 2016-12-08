@@ -30,7 +30,7 @@ import java.util.Map;
  */
 
 class BugHandler implements Thread.UncaughtExceptionHandler {
-    private static final boolean DEBUG = true;//调试模式
+    private static final boolean DEBUG = false;//调试模式
     private static BugHandler instance;
     //用来存储设备信息
     private Map<String, String> infos = new HashMap<>();

@@ -1,85 +1,47 @@
 package com.yimeng.babymom.activity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.view.KeyEvent;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.task.SoapAsyncTask;
+import com.yimeng.babymom.interFace.SplashInterface;
+import com.yimeng.babymom.task.LoginTask;
+import com.yimeng.babymom.task.UpdateTask;
+import com.yimeng.babymom.utils.DownloadManager;
 import com.yimeng.babymom.utils.MyConstant;
 import com.yimeng.babymom.utils.MyNetUtils;
-import com.yimeng.babymom.utils.MyToast;
-import com.yimeng.babymom.utils.WebServiceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.request.RequestCall;
 
-import org.json.JSONObject;
-
-import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Request;
 
 
 /**
  * 闪屏界面，处理apk版本更新，自动登陆，页面跳转等逻辑
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements SplashInterface {
 
     private static Handler handler = new Handler();
-    private String downloadUrl;
-    private String fileDir;
-    private AlertDialog updateDialog;
-    private int apkSize;
-    private ProgressDialog progressDialog;
-    private RequestCall requestCall;
+    private String mDownloadUrl;
+    private AlertDialog mUpdateDialog;
+    private int mApkSize;
+    private RequestCall mRequestCall;
+    private HashMap<String, Object> mParams = new HashMap<>();
+    private AsyncTask<Object, Object, String> mLoginTask;
+    private AsyncTask<Object, Object, String> mUpdateTask;
+    private String mPhone;
+    private String mPassword;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dispatchEvent();
-    }
-
-    /**
-     * 根据状态，分发apk版本更新，自动登陆，页面跳转等逻辑
-     */
-    private void dispatchEvent() {
-        if (isFirstRunning()) {
-            copyDataToLocal();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    goToIntroduce();
-                }
-            }, 2000);
-        } else if (MyNetUtils.isConnected()) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    checkUpdate();
-                }
-            }, 2000);
-        } else {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    goToLogin();
-                }
-            }, 2000);
-        }
     }
 
     @Override
@@ -110,181 +72,71 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-    /**
-     * 将资源文件拷贝到本地
-     */
-    private void copyDataToLocal() {
+
+    public void copyRes2Local() {
 
     }
 
-
-    /**
-     * 自动登陆
-     */
-    private void attemptToLogin() {
-        String username = mPrefManager.getAccountUsername();
-        String pwd = mPrefManager.getAccountPassword();
-        if (isEmpty(username) || isEmpty(pwd))
-            goToLogin();
-        String method = "login";
-        HashMap<String, Object> param = new HashMap<>();
-        param.put("user", username);
-        param.put("pwd", pwd);
-        requestLogin(method, param);
-    }
-
-    /**
-     * 执行异步任务，登录
-     *
-     * @param params 方法名+参数列表（哈希表形式）
-     */
-    public void requestLogin(Object... params) {
-        new AsyncTask<Object, Object, String>() {
-            @Override
-            protected String doInBackground(Object... params) {
-                if (params != null && params.length == 2) {
-                    String result = WebServiceUtils.callWebService(MyConstant.WEB_SERVICE_URL, MyConstant.NAMESPACE, (String) params[0],
-                            (Map<String, Object>) params[1]);
-                    if (result == null) {
-                        goToLogin();
-                        return null;
-                    }
-                    try {
-//                      new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-                        JSONObject object = new JSONObject(result);
-                        if ("ok".equalsIgnoreCase(object.optString("status"))) {
-                            loginHuanXin(object);
-                        } else {
-                            goToLogin();
-                        }
-                    } catch (Exception e) {
-                        goToLogin();
-                        e.printStackTrace();
-                    }
-                } else {
-                    goToLogin();
+    public void dispatchEvent() {
+        if (mPrefManager.getAccountFirstRunning()) {
+            copyRes2Local();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    goToIntroduce();
                 }
-                return null;
-            }
-        }.execute(params);
+            }, 2000);
+        } else
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    checkUpdate();
+                }
+            }, 2000);
+
     }
 
-    /**
-     * 登陆成功后登陆环信服务器
-     */
-    private void loginHuanXin(final JSONObject object) {
-//        new AsyncTask<Object, Object, Object>() {
-//            @Override
-//            protected Object doInBackground(Object... params) {
-//                try {
-////                    EMClient.getInstance().createAccount(username, password);//同步方法
-//                    String username = object.optString("username");
-//                    String password = object.optString("password");
-//                    while (EMClient.getInstance().isLoggedInBefore()
-//                            && !username.equalsIgnoreCase(EMClient.getInstance().getCurrentUser())) {
-//                        EMClient.getInstance().logout(true);
-//                    }
-//                    EMClient.getInstance().login(username, password, new EMCallBack() {//回调
-//                        @Override
-//                        public void onSuccess() {
-//                            EMClient.getInstance().groupManager().loadAllGroups();
-//                            EMClient.getInstance().chatManager().loadAllConversations();
-//                            String type = object.optString("type");
-//                            String id = object.optString("id");
-//                            setJPushAliasAndTag(type, id);
-//                        }
-//
-//                        @Override
-//                        public void onProgress(int progress, String status) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onError(int code, String message) {
-//                            MyLog.i(getClass(), message);
-//                            String type = object.optString("type");
-//                            String id = object.optString("id");
-//                            setJPushAliasAndTag(type, id);
-//                        }
-//                    });
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//        }.execute();
+    public void autoLogin() {
+        mPhone = mPrefManager.getAccountUsername();
+        mPassword = mPrefManager.getAccountPassword();
+        if (isEmpty(mPhone) || isEmpty(mPassword))
+            goToLogin();
+        else
+            login();
     }
 
-    /**
-     * 登陆成功后为本应用用户绑定JPush的别名和标签，别名为账号类型+"-"+id，标签为账号类型，设置成功以后跳转到主页
-     */
-    private void setJPushAliasAndTag(final String type, final String id) {
-        final HashSet<String> tags = new HashSet<>();
-        tags.add(type);
-//        ThreadUtils.runOnBackThread(new Runnable() {
-//            @Override
-//            public void run() {
-////                JPushInterface.setAliasAndTags(MyApp.getAppContext(), type + "+" + id, tags, new TagAliasCallback() {
-////                    @Override
-////                    public void gotResult(int i, String s, Set<String> set) {
-////                        if (i != 0) {
-////                            MyLog.i("JPush", "set alias and tag error");
-////                            goToLogin();
-////                        } else {
-////                            goToHome(type);
-////                        }
-////                    }
-////                });
-//            }
-//        });
+    public void login() {
+        if (mLoginTask != null)
+            mLoginTask.cancel(true);
+        mParams.clear();
+        mParams.put("phone", mPhone);
+        mParams.put("password", mPassword);
+        mLoginTask = new LoginTask(this).execute("login", mParams);
     }
 
-    /**
-     * 查询最新版本，比较版本号，如果有新版本，提示用户
-     */
-    private void checkUpdate() {
-        final String packageName = getPackageName();
+    public void goToLogin() {
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
+    }
+
+    public void goToHome() {
+//        startActivity(new Intent(this, HomeActivity.class));
+        finish();
+    }
+
+    public void goToIntroduce() {
+        startActivity(new Intent(this, IntroduceActivity.class));
+        finish();
+    }
+
+    public void checkUpdate() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("app_type", MyConstant.ANDROID);
-//        new SoapAsyncTask() {
-//            @Override
-//            protected void onPostExecute(String s) {
-//                if (s == null) {
-//                    if (isAutoLogin())
-//                        attemptToLogin();
-//                    else
-//                        goToLogin();
-//                    return;
-//                }
-//                try {
-//                    int localVersionCode = getPackageManager().getPackageInfo(packageName, 0).versionCode;
-//                    JSONObject object = new JSONObject(s).optJSONArray("data").optJSONObject(0);
-//                    if (object.optInt("version_Number") > localVersionCode) {
-//                        apkSize = object.optInt("version_Size");
-//                        downloadUrl = object.optString("version_Url");
-//                        showUpdateDialog();
-//                    } else {
-//                        if (isAutoLogin())
-//                            attemptToLogin();
-//                        else
-//                            goToLogin();
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    if (isAutoLogin())
-//                        attemptToLogin();
-//                    else
-//                        goToLogin();
-//                }
-//            }
-//        }.execute("Get_VersionCode", map);
+        mUpdateTask = new UpdateTask(this).execute("getUpdate", map);
     }
 
-    /**
-     * 弹出一个对话框，提示用户更新，如果更新，则下载新版本，不更新则跳到登陆页面
-     */
-    private void showUpdateDialog() {
-        updateDialog = new AlertDialog.Builder(SplashActivity.this).setTitle("发现新版本!")
+    public void showUpdateDialog() {
+        mUpdateDialog = new AlertDialog.Builder(SplashActivity.this).setTitle("发现新版本!")
                 // 限制对话框取消动作
                 .setCancelable(false)
                 .setPositiveButton("我要！", new DialogInterface.OnClickListener() {
@@ -297,10 +149,7 @@ public class SplashActivity extends BaseActivity {
                 .setNegativeButton("下次再说", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (isAutoLogin())
-                            attemptToLogin();
-                        else
-                            goToLogin();
+                        dispatchLogin();
                         dialog.dismiss();
                     }
                 })
@@ -309,136 +158,57 @@ public class SplashActivity extends BaseActivity {
         if (!MyNetUtils.isWifi()) {
             wifiTip = "检测到您的手机当前并非在wifi环境下，";
         }
-        updateDialog.setMessage(String.format("新版本安装包大小为%s，%s确定更新？", android.text.format.Formatter.formatFileSize(this, apkSize), wifiTip));
-        updateDialog.show();
+        mUpdateDialog.setMessage(String.format("新版本安装包大小为%s，%s确定更新？", android.text.format.Formatter.formatFileSize(this, mApkSize), wifiTip));
+        mUpdateDialog.show();
     }
 
     /**
-     * 下载apk安装包
+     * 判断是否自动登陆，是则尝试自动登陆，否则跳转登陆页面
      */
+    public void dispatchLogin() {
+        if (mPrefManager.getAccountAutoLogin())
+            autoLogin();
+        else
+            goToLogin();
+    }
+
     public void downPackage() {
-        if (Environment.MEDIA_MOUNTED.equalsIgnoreCase(Environment.getExternalStorageState())) {
-            fileDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        } else {
-            fileDir = getFilesDir().getAbsolutePath();
+        if (mRequestCall != null) {
+            mRequestCall.cancel();
         }
-        requestCall = OkHttpUtils.get().url(downloadUrl).build().connTimeOut(300000).readTimeOut(300000).writeTimeOut(300000);
-        requestCall.execute(new FileCallBack(fileDir, getString(R.string.apk_name)) {
-
+        mRequestCall = OkHttpUtils.get().url(mDownloadUrl).build().connTimeOut(300000).readTimeOut(300000).writeTimeOut(300000);
+        DownloadManager.downPackage(activity, mRequestCall, getString(R.string.apk_name), mApkSize, new DownloadManager.ErrorCallback() {
             @Override
-            public void onBefore(Request request, int id) {
-                int contentLength = 0;
-                try {
-                    contentLength = (int) request.body().contentLength();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog = new ProgressDialog(SplashActivity.this);
-                progressDialog.setMessage("拼命下载中...");
-                progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-                    @Override
-                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                        if (progressDialog != null && progressDialog.isShowing()) {
-                            requestCall.cancel();
-                            MyToast.show(activity,"下载已取消");
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.show();
-                progressDialog.setMax(contentLength == 0 ? apkSize : contentLength);
+            public void onError() {
+                dispatchLogin();
             }
 
             @Override
-            public void inProgress(float progress, long total, int id) {
-                if (progressDialog != null && progressDialog.isShowing())
-                    progressDialog.setProgress(progress > 0 ? (int) (progress * progressDialog.getMax()) : -(int) progress);
-            }
-
-            @Override
-            public void onResponse(File file, int i) {
-                progressDialog.dismiss();
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-                startActivity(intent);
-            }
-
-            @Override
-            public void onError(Call call, Exception e, int i) {
-                e.printStackTrace();
-                progressDialog.dismiss();
-                if (isAutoLogin())
-                    attemptToLogin();
-                else
-                    goToLogin();
-
+            public void onCancel() {
+                dispatchLogin();
             }
         });
     }
 
+    public void setApkSize(int mApkSize) {
+        this.mApkSize = mApkSize;
+    }
+
+    public void setDownloadUrl(String mDownloadUrl) {
+        this.mDownloadUrl = mDownloadUrl;
+    }
+
     @Override
     protected void onDestroy() {
-        if (updateDialog != null && updateDialog.isShowing())
-            updateDialog.dismiss();
-        if (progressDialog != null && progressDialog.isShowing())
-            progressDialog.dismiss();
-        if (requestCall != null)
-            requestCall.cancel();
+        if (mUpdateDialog != null && mUpdateDialog.isShowing())
+            mUpdateDialog.dismiss();
+        if (mRequestCall != null)
+            mRequestCall.cancel();
+        if (mUpdateTask != null)
+            mUpdateTask.cancel(true);
+        if (mLoginTask != null)
+            mLoginTask.cancel(true);
         handler.removeCallbacksAndMessages(null);
         super.onDestroy();
-    }
-
-    /**
-     * 跳转到登陆页面
-     */
-    private void goToLogin() {
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
-    }
-
-    /**
-     * 跳转到主页，根据账号类型判断
-     */
-    private void goToHome(String type) {
-        finish();
-
-    }
-
-    /**
-     * 跳转到引导界面
-     */
-    private void goToIntroduce() {
-        startActivity(new Intent(this, IntroduceActivity.class));
-        finish();
-    }
-
-
-    /**
-     * 判断本应用是否在本机首次运行
-     *
-     * @return
-     */
-    private boolean isFirstRunning() {
-        return mPrefManager.getAccountFirstRunning();
-    }
-
-    /**
-     * 判断是否设置自动更新
-     *
-     * @return
-     */
-    private boolean isAutoUpdate() {
-        return mPrefManager.getAccountAutoUpdate();
-    }
-
-    /**
-     * 判断是否设置自动登陆
-     *
-     * @return
-     */
-    private boolean isAutoLogin() {
-        return mPrefManager.getAccountAutoLogin();
     }
 }

@@ -26,7 +26,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-
+/**
+ * 自定义activity基类，实现以下功能：
+ * 1.设置状态栏透明及颜色，子类可以重写
+ * 2.提供过渡view的显示和隐藏方法mLoadingDialog
+ * 3.通过一系列抽象方法规范视图创建时的逻辑，initView，initData等
+ * 4.处理点击事件响应：返回键finish，其它控件子类处理
+ * 5.增加activity的进入和退出动画
+ * 6.提供一个通用的提示对话框mOkDialog
+ * 7.简化toast
+ */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     private View mStatusBarView;
     protected Activity activity;
@@ -49,7 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         setListener();
         initData();
         overridePendingTransition(R.anim.next_in, R.anim.next_out);
-//        LocationUtils.setUpdateLocationListener(null);
     }
 
     /**

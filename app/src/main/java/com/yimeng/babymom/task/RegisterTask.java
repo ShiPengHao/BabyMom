@@ -1,7 +1,7 @@
 package com.yimeng.babymom.task;
 
 import android.content.DialogInterface;
-import android.widget.Button;
+import android.view.View;
 
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.activity.RegisterActivity;
@@ -14,8 +14,8 @@ import org.json.JSONObject;
 
 public class RegisterTask extends SoapAsyncTask<RegisterActivity> {
 
-    public RegisterTask(RegisterActivity activity, Button button) {
-        super(activity, button);
+    public RegisterTask(RegisterActivity activity, View view) {
+        super(activity, view);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RegisterTask extends SoapAsyncTask<RegisterActivity> {
                 activity.showOkTips(activity.getString(R.string.register_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        activity.backToLogin();
+                        activity.feedbackPre();
                     }
                 });
             } else {

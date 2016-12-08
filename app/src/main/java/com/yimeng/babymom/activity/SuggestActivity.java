@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -17,10 +18,9 @@ import com.luseen.autolinklibrary.AutoLinkMode;
 import com.luseen.autolinklibrary.AutoLinkOnClickListener;
 import com.luseen.autolinklibrary.AutoLinkTextView;
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.task.SoapAsyncTask;
+import com.yimeng.babymom.interFace.SuggestInterface;
+import com.yimeng.babymom.task.SuggestTask;
 import com.yimeng.babymom.utils.MyToast;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -29,7 +29,7 @@ import java.util.HashMap;
  * 意见与反馈界面
  */
 
-public class SuggestActivity extends BaseActivity implements AutoLinkOnClickListener {
+public class SuggestActivity extends BaseActivity implements AutoLinkOnClickListener, SuggestInterface {
 
     private ImageView iv_back;
     private EditText et_suggest;
@@ -37,6 +37,9 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
     private Button bt_submit;
     private AutoLinkTextView autoLinkTextView;
     private EditText et_phone;
+    private String mSuggest;
+    private String mPhone;
+    private AsyncTask<Object, Object, String> mSuggestTask;
 
     @Override
     protected int setLayoutResId() {
@@ -91,51 +94,33 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
     @Override
     public void onInnerClick(int id) {
         switch (id) {
-            case R.id.iv_back:
-                finish();
-                break;
             case R.id.bt_submit:
-                submitSuggest();
+                checkInput();
                 break;
         }
     }
 
-    /**
-     * 提交建议
-     */
-    private void submitSuggest() {
-        String suggest = et_suggest.getText().toString();
-        if (TextUtils.isEmpty(suggest)) {
+    @Override
+    public void checkInput() {
+        mSuggest = et_suggest.getText().toString();
+        if (TextUtils.isEmpty(mSuggest)) {
             MyToast.show(activity, String.format("%s%s", getString(R.string.suggest), getString(R.string.can_not_be_null)));
             return;
         }
-        String phoneNumber = et_phone.getText().toString().trim();
-        if (!TextUtils.isEmpty(phoneNumber) && !phoneNumber.matches("[1][358]\\d{9}")) {
+        mPhone = et_phone.getText().toString().trim();
+        if (!TextUtils.isEmpty(mPhone) && !mPhone.matches("[1][358]\\d{9}")) {
             MyToast.show(activity, "手机号格式不正确");
             ObjectAnimator.ofFloat(et_phone, "translationX", 15f, -15f, 20f, -20f, 0).setDuration(300).start();
             return;
         }
+        suggest();
+    }
+
+    public void suggest() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("msg", suggest);
-        params.put("phone", phoneNumber);
-//        new SoapAsyncTask() {
-//            @Override
-//            protected void onPostExecute(String s) {
-//                if (s == null) {
-//                    MyToast.show(activity, getString(R.string.connect_error));
-//                    return;
-//                }
-//                try {
-//                    JSONObject object = new JSONObject(s);
-//                    MyToast.show(activity, object.optString("msg"));
-//                    if ("ok".equalsIgnoreCase(object.optString("status")))
-//                        finish();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    MyToast.show(activity, getString(R.string.connect_error));
-//                }
-//            }
-//        }.execute("AddGuestbook", params);
+        params.put("msg", mSuggest);
+        params.put("phone", mPhone);
+        mSuggestTask = new SuggestTask(this, bt_submit).execute("AddGuestbook", params);
     }
 
     @Override
@@ -143,5 +128,12 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
         if (autoLinkMode == AutoLinkMode.MODE_PHONE && ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
             startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + matchedText)));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mSuggestTask != null)
+            mSuggestTask.cancel(true);
+        super.onDestroy();
     }
 }

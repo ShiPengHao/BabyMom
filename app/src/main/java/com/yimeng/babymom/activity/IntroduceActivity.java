@@ -12,12 +12,13 @@ import android.widget.LinearLayout;
 
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.adapter.DefaultPagerAdapter;
+import com.yimeng.babymom.interFace.IntroduceInterface;
 import com.yimeng.babymom.utils.DensityUtil;
 
 /**
  * 引导界面，应用第一次运行时展示应用信息
  */
-public class IntroduceActivity extends BaseActivity {
+public class IntroduceActivity extends BaseActivity implements IntroduceInterface {
     private static final int[] PIC_RES_IDS = new int[]{R.drawable.welcome1, R.drawable.welcome2, R.drawable.welcome3};
     private static final int PIC_COUNT = PIC_RES_IDS.length;
     private static final int PAGE_JUMP_TIME_DELAY = 5;
@@ -31,12 +32,7 @@ public class IntroduceActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case PAGE_JUMP_TIME_DELAY:
-                    if (mTimeCount > 0) {
-                        bt_login.setText(String.format("%s，%s秒", getString(R.string.skip_introduce), mTimeCount--));
-                        sendEmptyMessageDelayed(PAGE_JUMP_TIME_DELAY, 1000);
-                    } else {
-                        goToLogin();
-                    }
+                    updateTextIndicator(PIC_COUNT - 1);
                     break;
             }
         }
@@ -96,10 +92,7 @@ public class IntroduceActivity extends BaseActivity {
         return Color.parseColor("#3F3B54");
     }
 
-    /**
-     * 初始化页码指示器
-     */
-    private void initDots() {
+    public void initDots() {
         ll_points.removeAllViews();
         ImageView imageView;
         LinearLayout.LayoutParams startParams = new LinearLayout.LayoutParams(
@@ -118,11 +111,6 @@ public class IntroduceActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 更新页码指示
-     *
-     * @param position 当前位置
-     */
     private void updateDotsIndicator(int position) {
         for (int i = 0; i < PIC_COUNT; i++) {
             if (i == position)
@@ -133,14 +121,14 @@ public class IntroduceActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 更新文字指示：最后一页时倒计时5s后自动跳转页面
-     *
-     * @param position 当前位置
-     */
     private void updateTextIndicator(int position) {
         if (position == PIC_COUNT - 1) {
-            mHandler.sendEmptyMessageDelayed(PAGE_JUMP_TIME_DELAY, 1000);
+            if (mTimeCount > 0) {
+                bt_login.setText(String.format("%s，%s秒", getString(R.string.skip_introduce), mTimeCount--));
+                mHandler.sendEmptyMessageDelayed(PAGE_JUMP_TIME_DELAY, 1000);
+            } else {
+                goToLogin();
+            }
         } else {
             mHandler.removeCallbacksAndMessages(null);
             mTimeCount = PAGE_JUMP_TIME_DELAY;
@@ -153,7 +141,7 @@ public class IntroduceActivity extends BaseActivity {
      *
      * @param position 页码
      */
-    private void refreshIndicator(int position) {
+    public void refreshIndicator(int position) {
         updateDotsIndicator(position);
         updateTextIndicator(position);
     }
@@ -166,7 +154,7 @@ public class IntroduceActivity extends BaseActivity {
     /**
      * 去登陆页面
      */
-    private void goToLogin() {
+    public void goToLogin() {
         startActivity(new Intent(IntroduceActivity.this, LoginActivity.class));
         finish();
     }

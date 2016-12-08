@@ -80,7 +80,7 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
                 goToRegister();
                 break;
             case R.id.bt_login:
-                login();
+                checkInput();
                 break;
             case R.id.tv_forget_pwd:
                 goToPwdReset();
@@ -88,9 +88,6 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
         }
     }
 
-    /**
-     * 登陆成功，去主页
-     */
     public void goToHome() {
 //        startActivity(new Intent(this, HomeActivity.class));
         finish();
@@ -103,9 +100,6 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
         );
     }
 
-    /**
-     * 去注册
-     */
     public void goToRegister() {
         startActivityForResult(new Intent(this, RegisterActivity.class), 100);
     }
@@ -141,9 +135,6 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
         login();
     }
 
-    /**
-     * 执行异步任务，登录
-     */
     public void login() {
         if (mLoginTask != null)
             mLoginTask.cancel(true);
@@ -153,10 +144,6 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
         mLoginTask = new LoginTask(this, bt_login).execute("login", mParams);
     }
 
-
-    /**
-     * 保存登陆成功的账号信息到本地sp文件中
-     */
     public void saveAccountInfo() {
         mPrefManager.setAccountAutoLogin(cb_auto.isChecked())
                 .setAccountLastRemember(cb_remember.isChecked())

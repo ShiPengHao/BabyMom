@@ -1,7 +1,7 @@
 package com.yimeng.babymom.task;
 
 import android.content.DialogInterface;
-import android.widget.Button;
+import android.view.View;
 
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.activity.PwdResetActivity;
@@ -9,12 +9,12 @@ import com.yimeng.babymom.activity.PwdResetActivity;
 import org.json.JSONObject;
 
 /**
- * 充值密码任务
+ * 重置密码任务
  */
 
 public class PwdResetTask extends SoapAsyncTask<PwdResetActivity> {
-    public PwdResetTask(PwdResetActivity activity, Button button) {
-        super(activity, button);
+    public PwdResetTask(PwdResetActivity activity, View view) {
+        super(activity, view);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class PwdResetTask extends SoapAsyncTask<PwdResetActivity> {
                 activity.showOkTips(activity.getString(R.string.pwd_reset_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        activity.backToLogin();
+                        activity.feedbackPre();
                     }
                 });
             } else {
