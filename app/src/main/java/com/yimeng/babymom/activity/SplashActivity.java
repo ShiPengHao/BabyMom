@@ -190,12 +190,12 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
         });
     }
 
-    public void setApkSize(int mApkSize) {
-        this.mApkSize = mApkSize;
+    public void setApkSize(int apkSize) {
+        this.mApkSize = apkSize;
     }
 
-    public void setDownloadUrl(String mDownloadUrl) {
-        this.mDownloadUrl = mDownloadUrl;
+    public void setDownloadUrl(String downloadUrl) {
+        this.mDownloadUrl = downloadUrl;
     }
 
     @Override

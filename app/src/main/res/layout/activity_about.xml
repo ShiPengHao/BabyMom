@@ -109,33 +109,6 @@
                     android:textSize="18dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_down"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/finger_width"
-                android:layout_marginBottom="2dp"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/common_listview_headview_red_arrow" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="10dp"
-                    android:drawableRight="@mipmap/next"
-                    android:text="@string/down_video_apk"
-                    android:textColor="@color/black"
-                    android:textSize="18dp" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class LoginActivity extends BaseActivity implements LoginInterface,CompoundButton.OnCheckedChangeListener {
 
-    private EditText et_username;
+    private EditText et_phone;
     private EditText et_pwd;
     private CheckBox cb_remember;
     private CheckBox cb_auto;
@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
     }
 
     protected void initView() {
-        et_username = (EditText) findViewById(R.id.et_username);
+        et_phone = (EditText) findViewById(R.id.et_phone);
         et_pwd = (EditText) findViewById(R.id.et_pwd);
         cb_remember = (CheckBox) findViewById(R.id.cb_remeber);
         cb_auto = (CheckBox) findViewById(R.id.cb_auto);
@@ -63,8 +63,8 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
     @Override
     protected void initData() {
         // 回显账号
-        et_username.setText(mPrefManager.getAccountUsername());
-        et_username.setSelection(et_username.getText().length());
+        et_phone.setText(mPrefManager.getAccountUsername());
+        et_phone.setSelection(et_phone.getText().length());
         // 回显密码
         et_pwd.setText(mPrefManager.getAccountPassword());
         // 回显记住密码
@@ -96,12 +96,13 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
 
     public void goToPwdReset() {
         startActivityForResult(new Intent(this, PwdResetActivity.class)
-                .putExtra("phone", et_username.getText().toString().trim()), 101
+                .putExtra("phone", et_phone.getText().toString().trim()), 101
         );
     }
 
     public void goToRegister() {
-        startActivityForResult(new Intent(this, RegisterActivity.class), 100);
+        startActivityForResult(new Intent(this, RegisterActivity.class)
+                .putExtra("phone", et_phone.getText().toString().trim()), 100);
     }
 
     @Override
@@ -112,15 +113,24 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
         switch (requestCode) {
             case 100:
             case 101:
-                et_username.setText(data.getStringExtra("phone"));
-                et_pwd.setText(data.getStringExtra("pwd"));
+                mPhone = data.getStringExtra("phone");
+                if (mPhone != null) {
+                    et_phone.setText(mPhone);
+                    et_phone.setSelection(mPhone.length());
+                }
+
+                mPassword = data.getStringExtra("pwd");
+                if (mPassword != null) {
+                    et_pwd.setText(mPassword);
+                    et_pwd.setSelection(mPassword.length());
+                }
                 break;
         }
     }
 
 
     public void checkInput() {
-        mPhone = et_username.getText().toString().trim();
+        mPhone = et_phone.getText().toString().trim();
         if (TextUtils.isEmpty(mPhone)) {
             showToast(String.format("%s%s", getString(R.string.phone), getString(R.string.can_not_be_null)));
             return;

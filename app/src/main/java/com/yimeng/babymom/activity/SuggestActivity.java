@@ -1,7 +1,6 @@
 package com.yimeng.babymom.activity;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,6 +19,7 @@ import com.luseen.autolinklibrary.AutoLinkTextView;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.interFace.SuggestInterface;
 import com.yimeng.babymom.task.SuggestTask;
+import com.yimeng.babymom.utils.KeyBoardUtils;
 import com.yimeng.babymom.utils.MyToast;
 
 import java.util.HashMap;
@@ -93,6 +93,7 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
 
     @Override
     public void onInnerClick(int id) {
+        KeyBoardUtils.closeKeybord(et_phone, this);
         switch (id) {
             case R.id.bt_submit:
                 checkInput();
@@ -107,12 +108,7 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
             MyToast.show(activity, String.format("%s%s", getString(R.string.suggest), getString(R.string.can_not_be_null)));
             return;
         }
-        mPhone = et_phone.getText().toString().trim();
-        if (!TextUtils.isEmpty(mPhone) && !mPhone.matches("[1][358]\\d{9}")) {
-            MyToast.show(activity, "手机号格式不正确");
-            ObjectAnimator.ofFloat(et_phone, "translationX", 15f, -15f, 20f, -20f, 0).setDuration(300).start();
-            return;
-        }
+
         suggest();
     }
 
