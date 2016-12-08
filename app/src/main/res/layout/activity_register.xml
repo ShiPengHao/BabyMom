@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/TextTitle"
+            android:text="@string/register" />
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/back" />
+    </RelativeLayout>
+
+
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/phone"
+        android:inputType="number"
+        android:layout_margin="10dp" />
+
+
+    <EditText
+        android:id="@+id/et_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/pwd"
+        android:inputType="textPassword"
+        android:layout_margin="10dp" />
+
+
+    <EditText
+        android:id="@+id/et_pwd_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/pwd_confirm"
+        android:inputType="textPassword"
+        android:layout_margin="10dp" />
+
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/ll_invite_code"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="8dp">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:padding="6dp"-->
+    <!--android:text="@string/invite_code"-->
+    <!--android:textSize="18dp" />-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/et_invite_code"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:hint="@string/invite_code_nullable"-->
+    <!--android:padding="6dp" />-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:padding="6dp"-->
+    <!--android:src="@mipmap/r_arrow" />-->
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <CheckBox
+            android:id="@+id/cb"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tv_protocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="@string/protocol_agree"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="18dp"
+        android:background="@drawable/selector_bt_bg_accent"
+        android:gravity="center"
+        android:text="@string/register"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+</LinearLayout>
+
