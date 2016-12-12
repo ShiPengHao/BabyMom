@@ -30,13 +30,14 @@ public class BitmapUtils {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         // 设置开关
         opts.inJustDecodeBounds = true;
+        opts.inPreferredConfig = Bitmap.Config.RGB_565;
         BitmapFactory.decodeResource(activity.getResources(), resId, opts);
         float imgWidth = opts.outWidth;
         float imgHeight = opts.outHeight;
 
         // 获得缩放比例
 
-        opts.inSampleSize = (int) (Math.max(imgWidth / DensityUtil.SCREEN_WIDTH, imgHeight / DensityUtil.SCREEN_HEIGHT) + 0.5f);
+        opts.inSampleSize = (int) (Math.min(imgWidth / DensityUtil.SCREEN_WIDTH, imgHeight / DensityUtil.SCREEN_HEIGHT) + 0.5f);
 
         // 设置开关
         opts.inJustDecodeBounds = false;

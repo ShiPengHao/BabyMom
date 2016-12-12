@@ -3,7 +3,6 @@ package com.yimeng.babymom.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,13 +18,17 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.request.RequestCall;
 
 import java.util.HashMap;
+import java.util.Random;
 
 
 /**
  * 闪屏界面，处理apk版本更新，自动登陆，页面跳转等逻辑
  */
 public class SplashActivity extends BaseActivity implements SplashInterface {
-
+    /**
+     * 虚拟的文件大小，当服务器返回的大小异常时使用
+     */
+    private static final int FAKE_SIZE = 1024 * 1024 * (10 + new Random().nextInt(6)) + new Random().nextInt(1000);
     private static Handler handler = new Handler();
     private String mDownloadUrl;
     private AlertDialog mUpdateDialog;
@@ -45,8 +48,8 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
     }
 
     @Override
-    public int setStatusBarColor() {
-        return Color.parseColor("#3F3B54");
+    protected void setStatusBar() {
+//        super.setStatusBar();
     }
 
     @Override
@@ -177,7 +180,7 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
             mRequestCall.cancel();
         }
         mRequestCall = OkHttpUtils.get().url(mDownloadUrl).build().connTimeOut(300000).readTimeOut(300000).writeTimeOut(300000);
-        DownloadManager.downPackage(activity, mRequestCall, getString(R.string.apk_name), mApkSize, new DownloadManager.ErrorCallback() {
+        DownloadManager.downPackage(activity, mRequestCall, getString(R.string.apk_name), mApkSize == 0 ? FAKE_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
             @Override
             public void onError() {
                 dispatchLogin();

@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * 7.简化toast
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
-    private View mStatusBarView;
+    protected View mStatusBarView;
     protected Activity activity;
     protected PreferenceManager mPrefManager = PreferenceManager.getInstance();
     private Dialog mLoadingDialog;
@@ -141,6 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     private void setupStatusBarView(ViewGroup contentLayout) {
         if (mStatusBarView == null) {
             View statusBarView = new View(this);
+            statusBarView.setId(R.id.iv_back);
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(this));
             contentLayout.addView(statusBarView, lp);

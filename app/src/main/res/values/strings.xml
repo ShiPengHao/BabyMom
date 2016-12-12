@@ -58,7 +58,7 @@
     <string name="pick_doctor">请选择期望问诊的医生</string>
     <string name="introduce_page">引导页面</string>
     <string name="splash_page">闪屏界面</string>
-    <string name="skip_introduce">跳过引导，马上体验</string>
+    <string name="skip_introduce">跳过</string>
     <string name="doctor_introduce">医生简介</string>
     <string name="pharmacy_introduce">药店简介</string>
     <string name="my">我的</string>
@@ -528,7 +528,7 @@
     <string name="sms_check_error">短信验证码验证失败</string>
     <string name="about">关于</string>
     <string name="user_protocol">用户协议</string>
-    <string name="protocol">孕妈妈手机客户端（以下简称“孕妈妈”）是深圳华医之春信息科技有限公司提供的，在使用前，请务必认真阅读和理解《孕妈妈许可使用协议》（以下简称《协议》）中规定的所有权利和限制。除非您接受本《协议》条款，否则您无权下载、安装或使用本“孕妈妈”及其相关服务。您一旦安装、复制、下载、访问或以其它方式使用孕妈妈产品，将视为对本《协议》的接受，即表示您同意接受本《协议》各项条款的约束。如果您不同意本《协议》中的条款，请不要安装、复制或使用孕妈妈手机客户端软件。本《协议》是用户与深圳华医之春信息科技有限公司之间关于用户下载、安装、使用、复制的法律协议。
+    <string name="protocol">孕妈妈手机客户端（以下简称“孕妈妈”）是深圳华医之春信息科技有限公司提供的，在使用前，请务必认真阅读和理解《孕妈妈许可使用协议》（以下简称《协议》）中规定的所有权利和限制。除非您接受本《协议》条款，否则您无权使用本“孕妈妈”及其相关服务。您一旦访问或以其它方式使用孕妈妈产品，将视为对本《协议》的接受，即表示您同意接受本《协议》各项条款的约束。如果您不同意本《协议》中的条款，请不要使用孕妈妈手机客户端软件。本《协议》是用户与深圳华医之春信息科技有限公司之间关于用户下载、安装、使用、复制的法律协议。
 \n\n
 一、总则
 \n\n

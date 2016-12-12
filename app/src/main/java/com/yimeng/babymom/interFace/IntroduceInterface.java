@@ -11,13 +11,7 @@ public interface IntroduceInterface {
     void goToLogin();
 
     /**
-     * 初始化页码指示器
+     * 指示跳转倒计时
      */
-    void initDots();
-
-    /**
-     * 根据页码更新页码指示
-     * @param position 当前页码
-     */
-    void refreshIndicator(int position);
+    void refreshIndicator();
 }
