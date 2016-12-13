@@ -4,7 +4,7 @@ package com.yimeng.babymom.interFace;
  * 意见与反馈功能
  */
 
-public interface SuggestInterface extends GeneralInterface {
+public interface SuggestUIInterface extends GeneralUIInterface {
     /**
      * 提交建议
      */

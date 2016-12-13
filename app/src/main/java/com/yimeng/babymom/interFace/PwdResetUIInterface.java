@@ -4,7 +4,7 @@ package com.yimeng.babymom.interFace;
  * 重置密码功能
  */
 
-public interface PwdResetInterface extends GeneralInterface {
+public interface PwdResetUIInterface extends GeneralUIInterface {
     /**
      * 重置密码
      */

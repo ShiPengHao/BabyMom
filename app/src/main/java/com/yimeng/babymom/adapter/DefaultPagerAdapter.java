@@ -8,11 +8,9 @@ import android.view.ViewGroup;
  * pagerAdapter的简单包装
  */
 
-public class DefaultPagerAdapter extends PagerAdapter {
+public abstract class DefaultPagerAdapter extends PagerAdapter {
     @Override
-    public int getCount() {
-        return 0;
-    }
+    public abstract int getCount();
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {

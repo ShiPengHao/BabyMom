@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 位置服务工具类
  */
-class LocationUtils {
+public class LocationUtils {
     /**
      * 设置位置变化服务的监听
      *
@@ -78,7 +78,7 @@ class LocationUtils {
     /**
      * 位置服务监听
      */
-    interface UpdateLocationListener {
+    public interface UpdateLocationListener {
         /**
          * 获得新的定位的监听，当前方法在主线程
          *

@@ -4,7 +4,7 @@ package com.yimeng.babymom.interFace;
  * 注册功能
  */
 
-public interface RegisterInterface extends GeneralInterface {
+public interface RegisterUIInterface extends GeneralUIInterface {
     /**
      * 注册
      */

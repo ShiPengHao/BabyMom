@@ -17,10 +17,9 @@ import com.luseen.autolinklibrary.AutoLinkMode;
 import com.luseen.autolinklibrary.AutoLinkOnClickListener;
 import com.luseen.autolinklibrary.AutoLinkTextView;
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.SuggestInterface;
+import com.yimeng.babymom.interFace.SuggestUIInterface;
 import com.yimeng.babymom.task.SuggestTask;
 import com.yimeng.babymom.utils.KeyBoardUtils;
-import com.yimeng.babymom.utils.MyToast;
 
 import java.util.HashMap;
 
@@ -29,7 +28,7 @@ import java.util.HashMap;
  * 意见与反馈界面
  */
 
-public class SuggestActivity extends BaseActivity implements AutoLinkOnClickListener, SuggestInterface {
+public class SuggestActivity extends BaseActivity implements AutoLinkOnClickListener, SuggestUIInterface {
 
     private ImageView iv_back;
     private EditText et_suggest;
@@ -105,7 +104,7 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
     public void checkInput() {
         mSuggest = et_suggest.getText().toString();
         if (TextUtils.isEmpty(mSuggest)) {
-            MyToast.show(activity, String.format("%s%s", getString(R.string.suggest), getString(R.string.can_not_be_null)));
+            showToast(String.format("%s%s", getString(R.string.suggest), getString(R.string.can_not_be_null)));
             return;
         }
 

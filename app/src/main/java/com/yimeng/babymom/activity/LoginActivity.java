@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.LoginInterface;
+import com.yimeng.babymom.interFace.LoginUIInterface;
 import com.yimeng.babymom.task.LoginTask;
 import com.yimeng.babymom.utils.KeyBoardUtils;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 登陆界面
  */
-public class LoginActivity extends BaseActivity implements LoginInterface,CompoundButton.OnCheckedChangeListener {
+public class LoginActivity extends BaseActivity implements LoginUIInterface,CompoundButton.OnCheckedChangeListener {
 
     private EditText et_phone;
     private EditText et_pwd;
@@ -80,7 +80,8 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
                 goToRegister();
                 break;
             case R.id.bt_login:
-                checkInput();
+//                checkInput();//TODO 登录未测试
+                goToHome();
                 break;
             case R.id.tv_forget_pwd:
                 goToPwdReset();
@@ -89,7 +90,7 @@ public class LoginActivity extends BaseActivity implements LoginInterface,Compou
     }
 
     public void goToHome() {
-//        startActivity(new Intent(this, HomeActivity.class));
+        startActivity(new Intent(this, HomeActivity.class));
         finish();
     }
 

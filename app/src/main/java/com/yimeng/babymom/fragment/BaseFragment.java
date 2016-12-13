@@ -26,7 +26,7 @@ public abstract class BaseFragment extends Fragment {
         }
         View view = getView();
         if (null == view) {
-            view = UiUtils.inflate(getLayoutResId());
+            view = UiUtils.inflate(setLayoutResId());
             initView(view);
             setListener();
             initData();
@@ -38,14 +38,14 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 获得布局id
      *
-     * @return
+     * @return layoutId
      */
-    protected abstract int getLayoutResId();
+    protected abstract int setLayoutResId();
 
     /**
      * 初始化控件
      *
-     * @param view
+     * @param view rootView
      */
     protected abstract void initView(View view);
 

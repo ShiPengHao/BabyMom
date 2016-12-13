@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.RegisterInterface;
+import com.yimeng.babymom.interFace.RegisterUIInterface;
 import com.yimeng.babymom.task.RegisterTask;
 import com.yimeng.babymom.utils.KeyBoardUtils;
 
@@ -20,7 +20,7 @@ import java.util.HashMap;
  * 注册页面
  */
 
-public class RegisterActivity extends BaseActivity implements RegisterInterface {
+public class RegisterActivity extends BaseActivity implements RegisterUIInterface {
     private EditText et_phone;
     private EditText et_pwd;
     private EditText et_pwd_confirm;

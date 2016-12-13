@@ -16,7 +16,6 @@ import com.yimeng.babymom.task.UpdateTask;
 import com.yimeng.babymom.utils.DownloadManager;
 import com.yimeng.babymom.utils.MyConstant;
 import com.yimeng.babymom.utils.MyNetUtils;
-import com.yimeng.babymom.utils.MyToast;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.request.RequestCall;
 
@@ -134,12 +133,12 @@ public class AboutActivity extends BaseActivity implements AboutInterface {
         DownloadManager.downPackage(activity, mRequestCall, getString(R.string.app_name), mApkSize == 0 ? VIDEO_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
             @Override
             public void onError() {
-                MyToast.show(activity, getString(R.string.connect_error));
+                showToast(getString(R.string.connect_error));
             }
 
             @Override
             public void onCancel() {
-                MyToast.show(activity, getString(R.string.down_cancel));
+                showToast(getString(R.string.down_cancel));
             }
         });
     }

@@ -4,7 +4,7 @@ package com.yimeng.babymom.interFace;
  * 短信验证功能
  */
 
-public interface SMSVerifyInterface extends GeneralInterface {
+public interface SMSVerifyUIInterface extends GeneralUIInterface {
     /**
      * 注册短信验证回调监听
      */

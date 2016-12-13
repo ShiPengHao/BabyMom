@@ -71,6 +71,15 @@
         <activity
             android:name="com.yimeng.babymom.activity.UserProtocolActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.yimeng.babymom.activity.HomeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.yimeng.babymom.activity.WebViewActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
     </application>
 

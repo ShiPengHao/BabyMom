@@ -4,7 +4,7 @@ package com.yimeng.babymom.interFace;
  * 登陆功能
  */
 
-public interface LoginInterface extends GeneralInterface, GeneralLoginInterface {
+public interface LoginUIInterface extends GeneralUIInterface, GeneralLoginInterface {
 
     /**
      * 登陆成功后保存需要的用户信息

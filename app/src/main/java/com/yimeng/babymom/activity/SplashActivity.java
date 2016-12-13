@@ -48,11 +48,6 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
     }
 
     @Override
-    protected void setStatusBar() {
-//        super.setStatusBar();
-    }
-
-    @Override
     protected int setLayoutResId() {
         return R.layout.activity_splash;
     }
@@ -123,7 +118,7 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
     }
 
     public void goToHome() {
-//        startActivity(new Intent(this, HomeActivity.class));
+        startActivity(new Intent(this, HomeActivity.class));
         finish();
     }
 

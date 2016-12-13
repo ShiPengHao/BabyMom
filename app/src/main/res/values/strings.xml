@@ -133,7 +133,6 @@
     <string name="response_module_select">选择回应模板</string>
 
 
-
     <string name="app_slogon">即时通讯云领导者</string>
     <string name="text_ack_msg">已读</string>
     <string name="text_delivered_msg">送达</string>
@@ -484,8 +483,6 @@
     <string name="input_suggest">请输入您的意见或者建议</string>
     <string name="can_input">还可输入</string>
     <string name="charactor">字符</string>
-    <string name="news_title">新闻标题</string>
-    <string name="news_content">新闻简介</string>
     <string name="contact_way">联系方式：\nQQ邮箱:  286797498@qq.com\n电话号码:  15837120019</string>
     <string name="forget_pwd">忘记密码？</string>
     <string name="phone_nullable">手机号码（可选填）</string>
@@ -606,4 +603,23 @@
     <string name="protocol_need_agree">请阅读并同意用户协议</string>
     <string name="down_cancel">下载已取消</string>
     <string name="version_is_new">当前版本已经是最新版本</string>
+    <string name="firstRunningTip">感谢使用！首次运行应用时需要缓存部分必须数据，可能造成微小卡顿，请耐心等待几秒钟或者重试即可</string>
+    <string name="location">定位</string>
+    <string name="sign">签到</string>
+    <string name="common_fun">实用功能</string>
+    <string name="user_state">孕育状态</string>
+    <string name="title">标题</string>
+    <string name="des">描述</string>
+    <string name="complete">已完成</string>
+    <string name="uncomplete">未完成</string>
+    <string name="pregnant_week">孕周信息</string>
+    <string name="pregnant_week_check">孕周检查项目</string>
+    <string name="pregnant_week_check_detail">孕周检查项目详情</string>
+    <array name="home_fun">
+        <item>在线咨询</item>
+        <item>健康监测</item>
+        <item>测算工具</item>
+        <item>孕育百科</item>
+        <item>营养食谱</item>
+    </array>
 </resources>

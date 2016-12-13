@@ -1,4 +1,4 @@
-package com.yimeng.babymom.activity.view;
+package com.yimeng.babymom.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
