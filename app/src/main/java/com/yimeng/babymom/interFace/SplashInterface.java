@@ -21,7 +21,7 @@ public interface SplashInterface extends GeneralLoginInterface, GeneralUpdateInt
     void autoLogin();
 
     /**
-     * 自动登陆成功后跳转主页
+     * 跳转主页
      */
     void goToHome();
 

@@ -12,90 +12,55 @@
             style="@style/TextTitle"
             android:text="@string/suggest" />
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:src="@mipmap/back" />
+        <include layout="@layout/layout_imageview_back" />
     </RelativeLayout>
 
-    <TextView
+    <com.yimeng.babymom.activity.view.CustomMarqueeTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:ellipsize="marquee"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:padding="4dp"
-        android:scrollHorizontally="true"
+        android:padding="@dimen/general_margin"
         android:singleLine="true"
         android:text="@string/suggest_introduce"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/bg_light_green"
         android:textSize="18dp" />
 
-    <LinearLayout
-        android:padding="10dp"
+    <EditText
+        android:id="@+id/et_phone"
+        style="@style/myEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/finger_width"
-        android:orientation="horizontal">
+        android:layout_margin="@dimen/general_margin"
+        android:hint="@string/phone_nullable"
+        android:inputType="number"
+        android:paddingBottom="4dp"
+        android:textColor="@color/black_item_title"
+        android:textSize="16dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:text="@string/phone"
-            android:textSize="16dp" />
-
-        <EditText
-            android:id="@+id/et_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="@string/phone_nullable"
-            android:inputType="number"
-            android:padding="6dp"
-            android:textColor="@color/black_item_title"
-            android:textSize="16dp" />
-    </LinearLayout>
-
-    <RelativeLayout
+    <EditText
+        android:id="@+id/et_suggest"
+        style="@style/myEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_transparent_grey">
+        android:layout_margin="@dimen/general_margin"
+        android:paddingBottom="4dp"
+        android:gravity="start"
+        android:hint="@string/input_suggest"
+        android:lineSpacingMultiplier="1.1"
+        android:maxLength="100"
+        android:maxLines="10"
+        android:textColor="@color/black_item_title"
+        android:textSize="16dp" />
 
-        <EditText
-            android:id="@+id/et_suggest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="start"
-            android:hint="@string/input_suggest"
-            android:lineSpacingMultiplier="1.1"
-            android:maxLength="100"
-            android:maxLines="10"
-            android:minLines="5"
-            android:padding="6dp"
-            android:textColor="@color/black_item_title"
-            android:textSize="16dp" />
-
-        <TextView
-            android:id="@+id/tv_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/et_suggest"
-            android:padding="6dp"
-            android:textColor="@color/black_item_content"
-            android:textSize="14dp" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/et_suggest"
+        android:gravity="right|center_vertical"
+        android:padding="@dimen/general_margin"
+        android:textColor="@color/black_item_content"
+        android:textSize="14dp" />
 
 
     <Button
@@ -114,8 +79,8 @@
         android:id="@+id/autoLinkTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/general_margin"
         android:lineSpacingMultiplier="1.2"
-        android:textColor="@color/black_item_content"
+        android:textColor="@color/bg_light_green"
         android:textSize="16dp" />
 </LinearLayout>

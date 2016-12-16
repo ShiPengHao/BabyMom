@@ -15,10 +15,11 @@ import com.yimeng.babymom.utils.UiUtils;
 public class PicDesHolder extends BaseHolder<PicDesBean> {
     private ImageView iv;
     private TextView tv;
+    private View view;
 
     @Override
     protected View initView() {
-        View view = UiUtils.inflate(R.layout.layout_pic_des);
+        view = UiUtils.inflate(R.layout.layout_pic_des);
         iv = (ImageView) view.findViewById(R.id.iv);
         tv = (TextView) view.findViewById(R.id.tv);
         return view;
@@ -28,5 +29,6 @@ public class PicDesHolder extends BaseHolder<PicDesBean> {
     public void bindData(PicDesBean data) {
         iv.setImageResource(data.picResId);
         tv.setText(data.des);
+        view.setEnabled(data.enable);
     }
 }

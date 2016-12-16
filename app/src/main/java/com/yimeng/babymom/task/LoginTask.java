@@ -12,7 +12,14 @@ import org.json.JSONObject;
  * 登录任务
  */
 
-public class LoginTask extends SoapAsyncTask<GeneralLoginInterface> {
+public class LoginTask extends BaseTask<GeneralLoginInterface> {
+
+    public static final String METHOD = "login";
+
+    public static final String PHONE = "phone";
+
+    public static final String PASSWORD = "password";
+
 
     public LoginTask(LoginActivity activity, View view) {
         super(activity, view);
@@ -28,26 +35,17 @@ public class LoginTask extends SoapAsyncTask<GeneralLoginInterface> {
 //                new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             JSONObject object = new JSONObject(result);
             if ("ok".equalsIgnoreCase(object.optString("status"))) {
-                if (activity instanceof LoginActivity) {
-                    ((LoginActivity) activity).saveAccountInfo();
-                    ((LoginActivity) activity).goToHome();
-                } else if (activity instanceof SplashActivity) {
-                    ((SplashActivity) activity).goToHome();
-                }
+                activity.onLoginOk();
             } else {
-                onError(activity);
+                activity.onLoginError();
             }
         } catch (Exception e) {
-            onError(activity);
+            activity.onLoginError();
         }
     }
 
     @Override
     protected void onError(GeneralLoginInterface activity) {
-        if (activity instanceof SplashActivity) {
-            ((SplashActivity) activity).goToLogin();
-        } else {
-            super.onError(activity);
-        }
+        activity.onLoginError();
     }
 }

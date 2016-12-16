@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.SMSVerifyUIInterface;
+import com.yimeng.babymom.interFace.SMSVerifyInterface;
 import com.yimeng.babymom.utils.MyToast;
 
 import org.json.JSONObject;
@@ -23,7 +23,7 @@ import cn.smssdk.SMSSDK;
  * 短信验证界面
  */
 
-public class SMSVerifyActivity extends BaseActivity implements SMSVerifyUIInterface {
+public class SMSVerifyActivity extends BaseActivity implements SMSVerifyInterface {
     private TextView tv_phone;
     private EditText et_msg_verify;
     private Button bt_verify;
@@ -53,7 +53,7 @@ public class SMSVerifyActivity extends BaseActivity implements SMSVerifyUIInterf
     private String mPhone;
     private String mVerifyCode;
 
-    private class MyEventHandler extends EventHandler implements SMSVerifyUIInterface.SMSListener {
+    private class MyEventHandler extends EventHandler implements SMSVerifyInterface.SMSListener {
         @Override
         public void afterEvent(int event, int result, Object data) {
             switch (result) {

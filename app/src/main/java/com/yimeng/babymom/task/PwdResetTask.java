@@ -12,7 +12,13 @@ import org.json.JSONObject;
  * 重置密码任务
  */
 
-public class PwdResetTask extends SoapAsyncTask<PwdResetActivity> {
+public class PwdResetTask extends BaseTask<PwdResetActivity> {
+    public static final String METHOD = "pwdRest";
+
+    public static final String PHONE = "phone";
+
+    public static final String PASSWORD = "password";
+
     public PwdResetTask(PwdResetActivity activity, View view) {
         super(activity, view);
     }

@@ -11,7 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.PwdResetUIInterface;
+import com.yimeng.babymom.interFace.PwdResetInterface;
 import com.yimeng.babymom.task.PwdResetTask;
 import com.yimeng.babymom.utils.KeyBoardUtils;
 
@@ -22,7 +22,7 @@ import java.util.HashMap;
  * 密码重置界面
  */
 
-public class PwdResetActivity extends BaseActivity implements PwdResetUIInterface, CompoundButton.OnCheckedChangeListener {
+public class PwdResetActivity extends BaseActivity implements PwdResetInterface, CompoundButton.OnCheckedChangeListener {
     private Button bt_submit;
     private EditText et_new_pwd;
     private EditText et_phone;
@@ -104,9 +104,9 @@ public class PwdResetActivity extends BaseActivity implements PwdResetUIInterfac
     @Override
     public void resetPwd() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("phone", mPhone);
-        params.put("password", mPassword);
-        mPwdRestTask = new PwdResetTask(this, bt_submit).execute("pwdReset", params);
+        params.put(PwdResetTask.PHONE, mPhone);
+        params.put(PwdResetTask.PASSWORD, mPassword);
+        mPwdRestTask = new PwdResetTask(this, bt_submit).execute(PwdResetTask.METHOD, params);
     }
 
     @Override

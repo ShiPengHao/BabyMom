@@ -85,7 +85,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_bt_bg_yellow"
             android:gravity="center"
-            android:text="@string/register"
+            android:text="@string/register_gift"
             android:textColor="@color/white" />
     </LinearLayout>
 

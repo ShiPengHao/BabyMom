@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.RegisterUIInterface;
+import com.yimeng.babymom.interFace.RegisterInterface;
 import com.yimeng.babymom.task.RegisterTask;
 import com.yimeng.babymom.utils.KeyBoardUtils;
 
@@ -20,7 +20,7 @@ import java.util.HashMap;
  * 注册页面
  */
 
-public class RegisterActivity extends BaseActivity implements RegisterUIInterface {
+public class RegisterActivity extends BaseActivity implements RegisterInterface {
     private EditText et_phone;
     private EditText et_pwd;
     private EditText et_pwd_confirm;
@@ -32,7 +32,7 @@ public class RegisterActivity extends BaseActivity implements RegisterUIInterfac
 
     private String mPhone;
     private String mPassword;
-    private AsyncTask registerTask;
+    private AsyncTask mRegisterTask;
 
     @Override
     protected int setLayoutResId() {
@@ -150,15 +150,15 @@ public class RegisterActivity extends BaseActivity implements RegisterUIInterfac
 
     public void register() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("phone", mPhone);
-        params.put("password", mPassword);
-        registerTask = new RegisterTask(this, bt_submit).execute("register", params);
+        params.put(RegisterTask.PHONE, mPhone);
+        params.put(RegisterTask.PASSWORD, mPassword);
+        mRegisterTask = new RegisterTask(this, bt_submit).execute(RegisterTask.METHOD, params);
     }
 
     @Override
     protected void onDestroy() {
-        if (registerTask != null)
-            registerTask.cancel(true);
+        if (mRegisterTask != null)
+            mRegisterTask.cancel(true);
         super.onDestroy();
     }
 

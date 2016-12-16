@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,13 +19,16 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.utils.MyApp;
+import com.yimeng.babymom.utils.MyConstant;
 import com.yimeng.babymom.utils.MyToast;
 import com.yimeng.babymom.utils.PreferenceManager;
+import com.yimeng.babymom.utils.WebServiceUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * 自定义activity基类，实现以下功能：
@@ -39,10 +43,28 @@ import java.util.ArrayList;
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     protected View mStatusBarView;
     protected Activity activity;
-    protected PreferenceManager mPrefManager = PreferenceManager.getInstance();
+    public PreferenceManager mPrefManager = PreferenceManager.getInstance();
     private Dialog mLoadingDialog;
     private AlertDialog mOkDialog;
     private DialogInterface.OnClickListener mOnclickListener;
+
+    /**
+     * 使用ksoap框架执行WebService请求的异步任务类
+     */
+    public static class SoapAsyncTask extends AsyncTask<Object, Object, String> {
+        @Override
+        protected String doInBackground(Object... params) {
+            if (params != null && params.length >= 2) {
+                return WebServiceUtils.callWebService(MyConstant.WEB_SERVICE_URL, MyConstant.NAMESPACE, (String) params[0],
+                        (Map<String, Object>) params[1]);
+            } else if (params != null && params.length == 1) {
+                return WebServiceUtils.callWebService(MyConstant.WEB_SERVICE_URL, MyConstant.NAMESPACE, (String) params[0],
+                        null);
+            } else {
+                return null;
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

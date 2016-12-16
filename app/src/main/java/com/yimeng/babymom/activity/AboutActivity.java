@@ -86,8 +86,8 @@ public class AboutActivity extends BaseActivity implements AboutInterface {
 
     public void checkUpdate() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("app_type", MyConstant.ANDROID);
-        mUpdateTask = new UpdateTask(this, ll_check_update).execute("getUpdate", map);
+        map.put(UpdateTask.APP_TYPE, MyConstant.ANDROID);
+        mUpdateTask = new UpdateTask(this, ll_check_update).execute(UpdateTask.METHOD, map);
     }
 
     public void showUpdateDialog() {

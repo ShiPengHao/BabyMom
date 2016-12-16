@@ -9,24 +9,33 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.yimeng.babymom.R;
+import com.yimeng.babymom.activity.AddressListActivity;
+import com.yimeng.babymom.activity.DepartmentActivity;
+import com.yimeng.babymom.activity.HospitalListActivity;
+import com.yimeng.babymom.activity.MeasureActivity;
 import com.yimeng.babymom.activity.WebViewActivity;
 import com.yimeng.babymom.adapter.DefaultAdapter;
-import com.yimeng.babymom.adapter.DefaultPagerAdapter;
+import com.yimeng.babymom.adapter.DefaultBannerAdapter;
 import com.yimeng.babymom.bean.DecorateImgBean;
+import com.yimeng.babymom.bean.HospitalBean;
 import com.yimeng.babymom.bean.PicDesBean;
+import com.yimeng.babymom.bean.UserBean;
 import com.yimeng.babymom.holder.BaseHolder;
 import com.yimeng.babymom.holder.PicDesHolder;
 import com.yimeng.babymom.interFace.HomeFInterface;
+import com.yimeng.babymom.task.BannerTask;
+import com.yimeng.babymom.task.HospitalCityTask;
+import com.yimeng.babymom.task.SignTask;
+import com.yimeng.babymom.task.UserInfoTask;
 import com.yimeng.babymom.utils.DensityUtil;
+import com.yimeng.babymom.utils.JsonUtils;
 import com.yimeng.babymom.utils.LocationUtils;
 import com.yimeng.babymom.utils.MyApp;
 import com.yimeng.babymom.utils.MyConstant;
@@ -35,13 +44,14 @@ import com.yimeng.babymom.view.GridViewForScrollView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * 主页fragment
  */
 
-public class HomeFragment extends BaseFragment implements View.OnClickListener, HomeFInterface, CycleViewPager.OnItemClickListener, LocationUtils.UpdateLocationListener, AdapterView.OnItemClickListener {
+public class HomeFragment extends BaseFragment implements HomeFInterface, CycleViewPager.OnItemClickListener, AdapterView.OnItemClickListener {
     private TextView tv_location;
     private TextView tv_img_title;
     private TextView tv_user_status;
@@ -56,18 +66,27 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private RelativeLayout rl_tip;
 
     private ArrayList<DecorateImgBean> mBannerBeans = new ArrayList<>();
-    private static final int[] BANNER_PLACE_HOLDER = new int[]{R.drawable.banner_mask1, R.drawable.banner_mask2, R.drawable.banner_mask3};
+
     private PagerAdapter mBannerPagerAdapter;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
 
-    private String mLocationCity;
+    private String mCityName;
     private AsyncTask<Location, Void, String> mLocationTask;
 
     private DefaultAdapter<PicDesBean> mFunGridAdapter;
-    private static final int[] FUN_ICON_IDS = new int[]{R.drawable.sultation, R.drawable.monitor, R.drawable.measure,
-            R.drawable.encyclo, R.drawable.diet};
+    private static final int[] FUN_ICON_IDS = new int[]{
+            R.drawable.sultation, R.drawable.monitor, R.drawable.measure, R.drawable.encyclo
+            , R.drawable.diet, R.drawable.jifen, R.drawable.help, R.drawable.quan
+            , R.drawable.clazz, R.drawable.story, R.drawable.safe};
     private static final String[] mFunDes = MyApp.getAppContext().getResources().getStringArray(R.array.home_fun);
     private ArrayList<PicDesBean> mFunPicBeans = new ArrayList<>();
+    private AsyncTask<Object, Object, String> mBannerTask;
+    private AsyncTask<Object, Object, String> mSignTask;
+    private AsyncTask<Object, Object, String> mUserInfoTask;
+    private ArrayList<HospitalBean> mHospitalList = new ArrayList<>();
+
+    private AsyncTask<Object, Object, String> mHospitalTask;
+    private UserBean mUserBean;
 
     @Override
     protected int setLayoutResId() {
@@ -105,7 +124,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
         initFunGridListener();
         initBannerPagerListener();
-        LocationUtils.setUpdateLocationListener(this);
     }
 
     @Override
@@ -115,8 +133,27 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 sign();
                 break;
             case R.id.tv_location:
+                getCity();
+                break;
+            default:
+                showToast(getString(R.string.fun_undo));
+        }
+    }
+
+    public void getCity() {
+        startActivityForResult(new Intent(activity, AddressListActivity.class), MyConstant.REQUEST_CITY);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null)
+            return;
+        switch (requestCode) {
+            case MyConstant.REQUEST_CITY:
+                refreshLocationIndicator(data.getStringExtra("city"));
                 break;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initFunGridListener() {
@@ -131,7 +168,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void initBannerPagerListener() {
-        mBannerPagerAdapter = new MyBannerAdapter();
+        mBannerPagerAdapter = new DefaultBannerAdapter(mBannerBeans, viewPager);
         mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -180,7 +217,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initData() {
-        requestBannerData();
+        requestBanner();
         getUserInfo();
         setFunGridData();
     }
@@ -194,49 +231,99 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
-    public void requestBannerData() {
-        mBannerBeans.clear();
+    public void requestBanner() {
+        if (mBannerTask != null)
+            mBannerTask.cancel(true);
+        HashMap<String, Object> params = new HashMap<>();
+        mBannerTask = new BannerTask(this, null).execute(BannerTask.METHOD, params);
+
+    }
+
+    @Override
+    public void onBannerResult(String result) {
+        try {
+            JsonUtils.parseListResult(mBannerBeans, DecorateImgBean.class, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        initDots();
+        mBannerPagerAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void sign() {
-
+        if (mSignTask != null)
+            mSignTask.cancel(true);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(SignTask.PHONE, activity.mPrefManager.getAccountUsername());
+        mSignTask = new SignTask(this, tv_sign).execute(SignTask.METHOD, params);
     }
 
     @Override
     public void getUserInfo() {
+        if (mUserInfoTask != null)
+            mUserInfoTask.cancel(true);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(UserInfoTask.PHONE, activity.mPrefManager.getAccountUsername());
+        mUserInfoTask = new UserInfoTask(this, null).execute(UserInfoTask.METHOD, params);
+    }
 
+    @Override
+    public void onUserInfoResult(UserBean userBean) {
+        mUserBean = userBean;
+        if (mUserBean == null)
+            onUserError();
+        else {
+            tv_user_status.setText(userBean.user_status);
+            item_status.setText(userBean.pregnant_check_status);
+            item_title.setText(userBean.pregnant_check_item);
+            item_des.setText(userBean.pregnant_check_detail);
+        }
+    }
+
+    @Override
+    public void onUserError() {
+        showToast(getString(R.string.user_error));
+        LocationUtils.setUpdateLocationListener(this);
+        tv_location.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.gd_fun:
-                dispatchFun(position);
+                switch (position) {
+                    case 0:
+                        goToChat();
+                        break;
+                    case 2:
+                        goToMeasure();
+                        break;
+                    default:
+                        showToast(String.format("%s%s", mFunDes[position], getString(R.string.fun_undo)));
+                }
                 break;
         }
     }
 
-    /**
-     * 分发功能点击时间
-     *
-     * @param position 位置
-     */
-    private void dispatchFun(int position) {
-        switch (position) {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-        }
+    public void goToMeasure() {
+        startActivity(new Intent(activity, MeasureActivity.class));
+    }
+
+    public void goToChat() {
+        if (mUserBean != null && mUserBean.bindHospitalId != null)
+            goToHospital();
+        else
+            goToHospitalList();
+    }
+
+    private void goToHospital() {
+        startActivity(new Intent(getActivity(), DepartmentActivity.class).putExtra("hospitalId", mUserBean.bindHospitalId));
+    }
+
+    private void goToHospitalList() {
+        if (checkCityNameAndHospital())
+            startActivity(new Intent(getActivity(), HospitalListActivity.class).putExtra("hospital", mHospitalList));
     }
 
     @Override
@@ -254,11 +341,46 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
+    /**
+     * 验证城市名字
+     *
+     * @return 非空
+     */
+    private boolean checkCityNameAndHospital() {
+        if (TextUtils.isEmpty(mCityName)) {
+            showToast(getString(R.string.select_city));
+            return false;
+        }
+        if (mHospitalList == null || mHospitalList.size() == 0) {
+            showToast(getString(R.string.no_hospital));
+            return false;
+        }
+        return true;
+
+    }
+
+    @Override
+    public void requestCityHospital() {
+        if (mHospitalTask != null)
+            mHospitalTask.cancel(true);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(HospitalCityTask.CITYNAME, mCityName);
+        mHospitalTask = new HospitalCityTask(this, null).execute(HospitalCityTask.METHOD, params);
+    }
+
+    @Override
+    public void onHospitalResult(String result) {
+        try {
+            JsonUtils.parseListResult(mHospitalList, HospitalBean.class, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onResume() {
-        tv_location.setText(mLocationCity);
-        if (mBannerPagerAdapter.getCount() > 1)
-            viewPager.startRoll();
+        tv_location.setText(mCityName);
+        viewPager.startRoll();
         super.onResume();
     }
 
@@ -274,32 +396,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             viewPager.removeOnPageChangeListener(mPageChangeListener);
         if (mLocationTask != null)
             mLocationTask.cancel(true);
+        if (mBannerTask != null)
+            mBannerTask.cancel(true);
+        if (mSignTask != null)
+            mSignTask.cancel(true);
+        if (mUserInfoTask != null)
+            mUserInfoTask.cancel(true);
+        if (mHospitalTask != null)
+            mHospitalTask.cancel(true);
         super.onDestroy();
     }
-
-    private class MyBannerAdapter extends DefaultPagerAdapter {
-        @Override
-        public int getCount() {
-            return mBannerBeans.size();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = new ImageView(activity);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            Picasso.with(getContext())
-                    .load(MyConstant.NAMESPACE + mBannerBeans.get(position).decorate_img)
-                    .resize(viewPager.getWidth(), viewPager.getHeight())
-                    .placeholder(BANNER_PLACE_HOLDER[position % 3])
-                    .error(BANNER_PLACE_HOLDER[position % 3])
-//                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                    .into(imageView);
-            container.addView(imageView);
-            return imageView;
-        }
-    }
-
 
     private class LocationAsyncTask extends AsyncTask<Location, Void, String> {
         private WeakReference<HomeFragment> wrHomeFragment;
@@ -344,9 +450,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
      * @param locationCity 新位置
      */
     private void refreshLocationIndicator(String locationCity) {
-        if (!TextUtils.isEmpty(locationCity) && !locationCity.equalsIgnoreCase(mLocationCity)) {
-            mLocationCity = locationCity;
+        if (!TextUtils.isEmpty(locationCity) && !locationCity.equalsIgnoreCase(mCityName)) {
+            mCityName = locationCity;
             tv_location.setText(locationCity);
+            requestCityHospital();
         }
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yimeng.hyzchbczhwq.view.GridViewForScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gd_schedule"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    android:numColumns="7"
+    android:verticalSpacing="1dp"/>

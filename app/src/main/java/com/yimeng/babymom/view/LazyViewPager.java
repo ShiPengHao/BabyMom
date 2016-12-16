@@ -58,7 +58,7 @@ import java.util.Comparator;
  * through pages of data.  You supply an implementation of a
  * {@link PagerAdapter} to generate the pages that the view shows.
  *
- * <p>Note this class is currently under early design and
+ * <p>Note this clazz is currently under early design and
  * development.  The API will likely change in later updates of
  * the compatibility library, requiring changes to the source code
  * of apps when they are compiled against the newer version.</p>

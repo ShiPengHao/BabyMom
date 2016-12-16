@@ -122,7 +122,7 @@
     <string name="prescribe_get_time">取药时间</string>
     <string name="prescribe_has_got">已取药</string>
     <string name="introduce">简介</string>
-    <string name="select_address">选择省市区</string>
+    <string name="select_address">选择地址</string>
     <string name="address">地址</string>
     <string name="suggest_pharmacy">推荐药店</string>
     <string name="prescription_id">药方单号</string>
@@ -472,18 +472,18 @@
     <string name="general_doctor">医师</string>
     <string name="chief_doctor">主治医师</string>
     <string name="doctor_title">医生职称</string>
-    <string name="select_department">选择医院科室</string>
+    <string name="select_hospital">选择医院</string>
     <string name="work_department">执业医院</string>
-    <string name="about_company">关于华医之春</string>
+    <string name="about_company">关于孕妈妈</string>
     <string name="quit_app">完全退出应用</string>
     <string name="check_update">检查新版本</string>
     <string name="suggest">意见反馈</string>
     <string name="is_new">当前版本已是最新版本</string>
-    <string name="suggest_introduce">您的每个意见和建议都是我们进步的动力</string>
+    <string name="suggest_introduce">我们致力于提供最优质、合适的服务，努力让全中国每个孕妈妈都生一个健康、聪明的宝宝。您的每个意见和建议都是我们进步的动力!</string>
     <string name="input_suggest">请输入您的意见或者建议</string>
     <string name="can_input">还可输入</string>
     <string name="charactor">字符</string>
-    <string name="contact_way">联系方式：\nQQ邮箱:  286797498@qq.com\n电话号码:  15837120019</string>
+    <string name="contact_way">您也可以通过以下方式与我们取得联系：\nQQ邮箱:  286797498@qq.com\n电话号码:  15837120019</string>
     <string name="forget_pwd">忘记密码？</string>
     <string name="phone_nullable">手机号码（可选填）</string>
     <string name="reset_pwd">重置密码</string>
@@ -520,7 +520,7 @@
     <string name="get_msg_verify">获取短信验证码</string>
     <string name="protocol_agree">我已阅读并同意用户协议</string>
     <string name="verify">短信验证</string>
-    <string name="register_ok">恭喜，注册成功！</string>
+    <string name="register_ok">恭喜，注册成功！您已获得100个孕力,可以在积分商城兑换礼品或孕检服务哦!</string>
     <string name="sms_check_ok">短信验证码验证成功！</string>
     <string name="sms_check_error">短信验证码验证失败</string>
     <string name="about">关于</string>
@@ -615,11 +615,42 @@
     <string name="pregnant_week">孕周信息</string>
     <string name="pregnant_week_check">孕周检查项目</string>
     <string name="pregnant_week_check_detail">孕周检查项目详情</string>
+    <string name="register_gift">注册有礼</string>
+    <string name="no_hospital">本地区暂无合作医院</string>
+    <string name="user_error">获取用户信息失败</string>
+    <string name="no_doctor">暂无医生</string>
+    <string name="select_city">请选择您所在的城市</string>
+    <string name="measure">测算工具</string>
+    <string name="blood_type_daddy">父亲血型</string>
+    <string name="blood_type_mom">母亲血型</string>
+    <string name="blood_a">A</string>
+    <string name="blood_b">B</string>
+    <string name="blood_ab">AB</string>
+    <string name="blood_o">O</string>
+    <string name="woman_month_short">最短月经周期</string>
+    <string name="woman_month_long">最长月经周期</string>
+    <string name="woman_month_last">末次月经日期</string>
+    <string name="head_width">双顶径</string>
+    <string name="mm">mm</string>
+    <string name="body_width">腹围</string>
+    <string name="ass_width">股骨长</string>
+    <string name="height_daddy">父亲身高</string>
+    <string name="cm">cm</string>
+    <string name="height_mom">母亲身高</string>
+    <string name="promotion">活动</string>
+    <string name="promotion_time">活动倒计时</string>
+    <string name="promotion_over">活动已结束</string>
     <array name="home_fun">
         <item>在线咨询</item>
         <item>健康监测</item>
         <item>测算工具</item>
         <item>孕育百科</item>
         <item>营养食谱</item>
+        <item>积分商城</item>
+        <item>急诊通道</item>
+        <item>妈妈圈</item>
+        <item>精品课堂</item>
+        <item>会心故事</item>
+        <item>孕妇险</item>
     </array>
 </resources>

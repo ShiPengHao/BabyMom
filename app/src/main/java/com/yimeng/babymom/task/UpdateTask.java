@@ -14,7 +14,12 @@ import org.json.JSONObject;
  * 检查更新任务
  */
 
-public class UpdateTask extends SoapAsyncTask<GeneralUpdateInterface> {
+public class UpdateTask extends BaseTask<GeneralUpdateInterface> {
+
+    public static final String METHOD = "getUpdate";
+
+    public static final String APP_TYPE = "app_type";
+
 
     public UpdateTask(SplashActivity activity) {
         super(activity, null);

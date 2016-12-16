@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/head_width"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/et_head_width"
+            style="@style/myEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_margin"
+            android:layout_weight="1"
+            android:hint="@string/head_width"
+            android:inputType="numberDecimal"
+            android:padding="2dp"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/mm"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/body_width"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/et_body_width"
+            style="@style/myEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_margin"
+            android:layout_weight="1"
+            android:hint="@string/body_width"
+            android:inputType="numberDecimal"
+            android:padding="2dp"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/mm"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/ass_width"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/et_ass_width"
+            style="@style/myEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_margin"
+            android:layout_weight="1"
+            android:hint="@string/ass_width"
+            android:inputType="numberDecimal"
+            android:padding="2dp"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/mm"
+            android:textColor="@color/black_item_title"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:lineSpacingMultiplier="1.5"
+        android:padding="5dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/bt_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/selector_bt_bg_accent"
+        android:text="@string/submit"
+        android:textColor="@color/white"
+        android:textSize="16dp" />
+
+</LinearLayout>

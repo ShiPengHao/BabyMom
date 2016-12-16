@@ -9,4 +9,15 @@ public interface GeneralLoginInterface {
      * 登陆
      */
     void login();
+
+    /**
+     * 登陆成功回调
+     */
+    void onLoginOk();
+
+    /**
+     * 登陆失败回调
+     */
+    void onLoginError();
+
 }

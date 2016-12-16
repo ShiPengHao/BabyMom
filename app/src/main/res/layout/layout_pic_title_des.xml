@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_bg_transparent_grey"
+    android:background="@drawable/selector_bg_transparent_light_green"
     android:padding="@dimen/general_margin">
 
     <TextView
@@ -21,7 +21,7 @@
         android:layout_width="@dimen/general_pic"
         android:layout_height="@dimen/general_pic"
         android:layout_centerVertical="true"
-        android:src="@mipmap/icon_launcher" />
+        android:src="@mipmap/ic_launcher" />
 
 
     <TextView

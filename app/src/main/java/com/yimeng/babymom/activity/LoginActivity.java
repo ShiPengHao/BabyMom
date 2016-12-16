@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.LoginUIInterface;
+import com.yimeng.babymom.interFace.LoginInterface;
 import com.yimeng.babymom.task.LoginTask;
 import com.yimeng.babymom.utils.KeyBoardUtils;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 登陆界面
  */
-public class LoginActivity extends BaseActivity implements LoginUIInterface,CompoundButton.OnCheckedChangeListener {
+public class LoginActivity extends BaseActivity implements LoginInterface, CompoundButton.OnCheckedChangeListener {
 
     private EditText et_phone;
     private EditText et_pwd;
@@ -150,12 +150,23 @@ public class LoginActivity extends BaseActivity implements LoginUIInterface,Comp
         if (mLoginTask != null)
             mLoginTask.cancel(true);
         mParams.clear();
-        mParams.put("phone", mPhone);
-        mParams.put("password", mPassword);
-        mLoginTask = new LoginTask(this, bt_login).execute("login", mParams);
+        mParams.put(LoginTask.PHONE, mPhone);
+        mParams.put(LoginTask.PASSWORD, mPassword);
+        mLoginTask = new LoginTask(this, bt_login).execute(LoginTask.METHOD, mParams);
     }
 
-    public void saveAccountInfo() {
+    @Override
+    public void onLoginOk() {
+        saveAccountInfo();
+        goToHome();
+    }
+
+    @Override
+    public void onLoginError() {
+        showToast(getString(R.string.connect_error));
+    }
+
+    private void saveAccountInfo() {
         mPrefManager.setAccountAutoLogin(cb_auto.isChecked())
                 .setAccountLastRemember(cb_remember.isChecked())
                 .setAccountUsername(mPhone)

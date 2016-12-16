@@ -17,7 +17,7 @@ import com.luseen.autolinklibrary.AutoLinkMode;
 import com.luseen.autolinklibrary.AutoLinkOnClickListener;
 import com.luseen.autolinklibrary.AutoLinkTextView;
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.interFace.SuggestUIInterface;
+import com.yimeng.babymom.interFace.SuggestInterface;
 import com.yimeng.babymom.task.SuggestTask;
 import com.yimeng.babymom.utils.KeyBoardUtils;
 
@@ -28,7 +28,7 @@ import java.util.HashMap;
  * 意见与反馈界面
  */
 
-public class SuggestActivity extends BaseActivity implements AutoLinkOnClickListener, SuggestUIInterface {
+public class SuggestActivity extends BaseActivity implements AutoLinkOnClickListener, SuggestInterface {
 
     private ImageView iv_back;
     private EditText et_suggest;
@@ -113,9 +113,9 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
 
     public void suggest() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("msg", mSuggest);
-        params.put("phone", mPhone);
-        mSuggestTask = new SuggestTask(this, bt_submit).execute("AddGuestbook", params);
+        params.put(SuggestTask.MSG, mSuggest);
+        params.put(SuggestTask.PHONE, mPhone);
+        mSuggestTask = new SuggestTask(this, bt_submit).execute(SuggestTask.METHOD, params);
     }
 
     @Override

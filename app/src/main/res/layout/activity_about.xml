@@ -12,13 +12,7 @@
             style="@style/TextTitle"
             android:text="@string/about" />
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:src="@mipmap/back" />
+        <include layout="@layout/layout_imageview_back" />
     </RelativeLayout>
 
     <LinearLayout
@@ -32,7 +26,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_marginTop="20dp"
-            android:src="@mipmap/icon_launcher" />
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/tv_version"
@@ -75,7 +69,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="10dp"
-                    android:drawableRight="@mipmap/next"
+                    android:drawableRight="@mipmap/r_arrow"
                     android:text="@string/check_update"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -103,7 +97,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="10dp"
-                    android:drawableRight="@mipmap/next"
+                    android:drawableRight="@mipmap/r_arrow"
                     android:text="@string/suggest"
                     android:textColor="@color/black"
                     android:textSize="18dp" />

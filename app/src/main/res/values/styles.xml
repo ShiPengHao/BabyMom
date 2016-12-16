@@ -9,7 +9,7 @@
     </style>
 
     <!--<style name="SplashTheme" parent="AppTheme">-->
-        <!--<item name="android:windowBackground">@drawable/splash</item>-->
+    <!--<item name="android:windowBackground">@drawable/splash</item>-->
     <!--</style>-->
 
     <style name="TextTitle">
@@ -36,5 +36,33 @@
         <item name="android:button">@drawable/eye_toggle</item>
         <item name="android:maxHeight">36dip</item>
         <item name="android:maxWidth">36dip</item>
+    </style>
+
+    <style name="mySmallRatingBar" parent="@android:style/Widget.Holo.RatingBar.Small">
+        <item name="android:progressDrawable">@drawable/progress_ratingbar_small</item>
+        <item name="android:minHeight">18dp</item>
+        <item name="android:maxHeight">18dp</item>
+    </style>
+
+    <style name="myRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/progress_ratingbar</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:maxHeight">36dp</item>
+    </style>
+
+    <style name="myEditText" parent="@android:style/Widget.EditText">
+        <item name="android:textCursorDrawable">@drawable/edit_cursor_color</item>
+        <item name="android:background">@drawable/edit_bg</item>
+    </style>
+
+    <style name="myListView" parent="@android:style/Widget.ListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:divider">@color/grey_line</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scrollbars">none</item>
     </style>
 </resources>

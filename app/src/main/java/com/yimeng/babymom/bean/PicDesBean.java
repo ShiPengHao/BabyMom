@@ -7,9 +7,16 @@ package com.yimeng.babymom.bean;
 public class PicDesBean {
     public int picResId;
     public String des;
+    public boolean enable = true;
 
-    public PicDesBean(int picResId,String des){
+    public PicDesBean(int picResId, String des) {
         this.picResId = picResId;
         this.des = des;
+    }
+
+    public PicDesBean(int picResId, String des, boolean enable) {
+        this.picResId = picResId;
+        this.des = des;
+        this.enable = enable;
     }
 }

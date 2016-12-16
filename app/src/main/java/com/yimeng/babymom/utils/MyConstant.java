@@ -18,6 +18,19 @@ public class MyConstant {
      * 请求码
      */
     public static final String REQUEST_CODE = "REQUEST_CODE";
+
+    /**
+     * 获得城市名称
+     */
+    public static final int REQUEST_CITY = 1001;
+    /**
+     * 获得医院信息
+     */
+    public static final int REQUEST_HOSPITAL = 1002;
+    /**
+     * 去医院页面
+     */
+    public static final int REQUEST_TO_HOSPITAL = 1003;
     /**
      * android
      */

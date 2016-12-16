@@ -10,7 +10,8 @@ import android.widget.LinearLayout;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.adapter.DefaultFragmentPagerAdapter;
 import com.yimeng.babymom.fragment.HomeFragment;
-import com.yimeng.babymom.fragment.TestFragment;
+import com.yimeng.babymom.fragment.MyFragment;
+import com.yimeng.babymom.fragment.PromotionFragment;
 import com.yimeng.babymom.interFace.HomeAInterface;
 
 import java.util.ArrayList;
@@ -63,10 +64,8 @@ public class HomeActivity extends BaseActivity implements HomeAInterface {
     @Override
     protected void initData() {
         mFragments.add(new HomeFragment());
-        int childCount = ll_tab.getChildCount();
-        for (int i = 1; i < childCount; i++) {
-            mFragments.add(new TestFragment());
-        }
+        mFragments.add(new PromotionFragment());
+        mFragments.add(new MyFragment());
         mPagerAdapter.notifyDataSetChanged();
     }
 

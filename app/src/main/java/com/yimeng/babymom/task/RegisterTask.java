@@ -12,7 +12,14 @@ import org.json.JSONObject;
  * 注册任务
  */
 
-public class RegisterTask extends SoapAsyncTask<RegisterActivity> {
+public class RegisterTask extends BaseTask<RegisterActivity> {
+
+    public static final String METHOD = "pwdRest";
+
+    public static final String PHONE = "phone";
+
+    public static final String PASSWORD = "password";
+
 
     public RegisterTask(RegisterActivity activity, View view) {
         super(activity, view);

@@ -10,7 +10,14 @@ import org.json.JSONObject;
  * 提交建议任务
  */
 
-public class SuggestTask extends SoapAsyncTask<SuggestActivity> {
+public class SuggestTask extends BaseTask<SuggestActivity> {
+
+    public static final String METHOD = "AddGuestbook";
+
+    public static final String PHONE = "phone";
+
+    public static final String MSG = "msg";
+
 
     public SuggestTask(SuggestActivity activity, View view) {
         super(activity, view);

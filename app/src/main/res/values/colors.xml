@@ -15,6 +15,7 @@
     <color name="bt_yellow">#fb7e00</color>
     <color name="bt_yellow_dark">#ac6926</color>
     <color name="bg_grey_aaa">#aaa</color>
+    <color name="light_green">#D8F1D7</color>
 
     <!--扫描二维码颜色-->
     <!-- 二维码 -->

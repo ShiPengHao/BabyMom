@@ -1,6 +1,6 @@
 package com.yimeng.babymom.fragment;
 
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,21 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yimeng.babymom.utils.MyToast;
+import com.yimeng.babymom.activity.BaseActivity;
 import com.yimeng.babymom.utils.UiUtils;
 
 
 /**
  * fragment抽象基类
  */
-public abstract class BaseFragment extends Fragment {
-    protected Activity activity;
+public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+    protected BaseActivity activity;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (activity == null) {
-            activity = getActivity();
+            activity = (BaseActivity) getActivity();
         }
         View view = getView();
         if (null == view) {
@@ -61,9 +61,36 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * 吐司
+     *
      * @param message 内容
      */
-    protected void showToast(String message) {
-        MyToast.show(activity, message);
+    public void showToast(String message) {
+        activity.showToast(message);
+    }
+
+    /**
+     * 显示提示对话框
+     *
+     * @param message         显示消息
+     * @param onClickListener 确定按钮的点击事件监听
+     */
+    public void showOkTips(String message, DialogInterface.OnClickListener onClickListener) {
+        activity.showOkTips(message, onClickListener);
+    }
+
+    /**
+     * 显示过渡view
+     *
+     * @param message 加载视图文字指示
+     */
+    public void showLoadingView(String message) {
+        activity.showLoadingView(message);
+    }
+
+    /**
+     * 消失过渡view
+     */
+    public void dismissLoadingView() {
+        activity.dismissLoadingView();
     }
 }

@@ -107,9 +107,19 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
         if (mLoginTask != null)
             mLoginTask.cancel(true);
         mParams.clear();
-        mParams.put("phone", mPhone);
-        mParams.put("password", mPassword);
-        mLoginTask = new LoginTask(this).execute("login", mParams);
+        mParams.put(LoginTask.PHONE, mPhone);
+        mParams.put(LoginTask.PASSWORD, mPassword);
+        mLoginTask = new LoginTask(this).execute(LoginTask.METHOD, mParams);
+    }
+
+    @Override
+    public void onLoginOk() {
+        goToHome();
+    }
+
+    @Override
+    public void onLoginError() {
+        goToLogin();
     }
 
     public void goToLogin() {
@@ -129,8 +139,8 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
 
     public void checkUpdate() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("app_type", MyConstant.ANDROID);
-        mUpdateTask = new UpdateTask(this).execute("getUpdate", map);
+        map.put(UpdateTask.APP_TYPE, MyConstant.ANDROID);
+        mUpdateTask = new UpdateTask(this).execute(UpdateTask.METHOD, map);
     }
 
     public void showUpdateDialog() {

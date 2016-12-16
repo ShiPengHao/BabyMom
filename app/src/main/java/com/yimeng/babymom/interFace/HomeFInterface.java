@@ -1,13 +1,11 @@
 package com.yimeng.babymom.interFace;
 
+import com.yimeng.babymom.utils.LocationUtils;
+
 /**
  * homeFragment主页功能
  */
-public interface HomeFInterface {
-    /**
-     * 获取轮播图的内容
-     */
-    void requestBannerData();
+public interface HomeFInterface extends HospitalCityInterface, GeneralUserInfoInterface, GeneralBannerInterface, LocationUtils.UpdateLocationListener {
 
     /**
      * 用户签到
@@ -15,7 +13,17 @@ public interface HomeFInterface {
     void sign();
 
     /**
-     * 获得用户相关的信息：孕周、检查提醒、检查状态等
+     * 手动选择地区
      */
-    void getUserInfo();
+    void getCity();
+
+    /**
+     * 在线咨询
+     */
+    void goToChat();
+
+    /**
+     * 跳转测算工具
+     */
+    void goToMeasure();
 }

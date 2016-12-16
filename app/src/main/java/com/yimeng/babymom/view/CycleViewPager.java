@@ -88,8 +88,8 @@ public class CycleViewPager extends ViewPager {
                 case WHAT_ROLL:
                     if (innerPagerAdapter != null && innerPagerAdapter.getCount() > 3) {
                         setCurrentItem(position + 1);
+                        handler.sendEmptyMessageDelayed(WHAT_ROLL, duration);
                     }
-                    handler.sendEmptyMessageDelayed(WHAT_ROLL, duration);
             }
         }
     };

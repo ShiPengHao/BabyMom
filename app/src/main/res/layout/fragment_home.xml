@@ -10,7 +10,7 @@
 
         <TextView
             style="@style/TextTitle"
-            android:text="@string/home" />
+            android:text="@string/app_name" />
 
         <TextView
             android:id="@+id/tv_location"
@@ -18,14 +18,13 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/general_margin"
-            android:drawablePadding="6dp"
-            android:drawableRight="@drawable/dot_normal"
             android:gravity="center"
             android:minWidth="@dimen/item_width"
             android:padding="4dp"
             android:text="@string/location"
             android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:textSize="14dp"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/tv_sign"
@@ -43,9 +42,9 @@
     </RelativeLayout>
 
     <ScrollView
-        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,8 +69,8 @@
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:text="@string/remark"
-                    android:textColor="@color/black_item_title"
-                    android:textSize="16dp" />
+                    android:textColor="@color/black_item_content"
+                    android:textSize="14dp" />
 
                 <LinearLayout
                     android:id="@+id/ll_points"
@@ -90,8 +89,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey"
-                android:drawableLeft="@drawable/function"
-                android:drawablePadding="6dp"
                 android:gravity="center_vertical"
                 android:minHeight="@dimen/finger_width"
                 android:paddingLeft="@dimen/general_margin"
@@ -110,8 +107,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey"
-                android:drawableLeft="@drawable/state"
-                android:drawablePadding="6dp"
                 android:gravity="center_vertical"
                 android:minHeight="@dimen/finger_width"
                 android:paddingLeft="@dimen/general_margin"
@@ -123,7 +118,7 @@
                 android:id="@+id/rl_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_transparent_grey"
+                android:background="@drawable/selector_bg_transparent_light_green"
                 android:padding="@dimen/general_margin">
 
                 <ImageView
@@ -161,7 +156,7 @@
                 android:id="@+id/rl_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_transparent_grey"
+                android:background="@drawable/selector_bg_transparent_light_green"
                 android:padding="@dimen/general_margin">
 
                 <TextView
