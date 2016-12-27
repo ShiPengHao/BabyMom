@@ -19,7 +19,7 @@ public class UserProtocolActivity extends BaseActivity {
     @Override
     protected void initView() {
         TextView tv_protocol = (TextView) findViewById(R.id.tv_protocol);
-        tv_protocol.setTextSize(8 * (float) DensityUtil.SCREEN_WIDTH / 320f);
+        tv_protocol.setTextSize((float) DensityUtil.SCREEN_WIDTH / 40f);
     }
 
     @Override

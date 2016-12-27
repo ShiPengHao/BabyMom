@@ -92,7 +92,6 @@ public class SuggestActivity extends BaseActivity implements AutoLinkOnClickList
 
     @Override
     public void onInnerClick(int id) {
-        KeyBoardUtils.closeKeybord(et_phone, this);
         switch (id) {
             case R.id.bt_submit:
                 checkInput();

@@ -128,6 +128,7 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_sign:
                 sign();

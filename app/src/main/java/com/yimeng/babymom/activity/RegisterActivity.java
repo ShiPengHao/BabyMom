@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.interFace.RegisterInterface;
 import com.yimeng.babymom.task.RegisterTask;
-import com.yimeng.babymom.utils.KeyBoardUtils;
 
 import java.util.HashMap;
 
@@ -74,7 +73,6 @@ public class RegisterActivity extends BaseActivity implements RegisterInterface 
 
     @Override
     protected void onInnerClick(int viewId) {
-        KeyBoardUtils.closeKeybord(et_phone, this);
         switch (viewId) {
             case R.id.tv_protocol:
                 goToProtocol();
@@ -125,7 +123,7 @@ public class RegisterActivity extends BaseActivity implements RegisterInterface 
 
 
     public void goToCheckSms() {
-        Intent intent = new Intent(activity, SMSVerifyActivity.class).putExtra("phone", mPhone);
+        Intent intent = new Intent(mActivity, SMSVerifyActivity.class).putExtra("phone", mPhone);
         startActivityForResult(intent, REQUEST_CODE_SMS_REGISTER);
     }
 

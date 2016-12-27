@@ -3,12 +3,12 @@ package com.yimeng.babymom.fragment;
 import android.app.DatePickerDialog;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
+import com.yimeng.babymom.activity.MeasureActivity;
 import com.yimeng.babymom.utils.KeyBoardUtils;
 import com.yimeng.babymom.utils.Lunar;
 import com.yimeng.babymom.view.ClearEditText;
@@ -20,12 +20,11 @@ import java.util.Locale;
  * 预产期计算
  */
 
-public class BirthDayFragment extends BaseFragment {
+public class BirthDayFragment extends BaseFragment implements MeasureActivity.MeasureSubmitListener {
     private EditText et_woman_month_short;
     private EditText et_woman_month_long;
     private TextView tv_woman_month_last;
     private TextView tv;
-    private Button bt_submit;
     private DatePickerDialog mDatePickerDialog;
     private long mLongChooseDayMills;
     private static final String[] DAYS_OF_WEEK = new String[]{"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
@@ -46,13 +45,11 @@ public class BirthDayFragment extends BaseFragment {
         et_woman_month_long = (EditText) view.findViewById(R.id.et_woman_month_long);
         tv_woman_month_last = (TextView) view.findViewById(R.id.tv_woman_month_last);
         tv = (TextView) view.findViewById(R.id.tv);
-        bt_submit = (Button) view.findViewById(R.id.bt_submit);
     }
 
     @Override
     protected void setListener() {
         tv_woman_month_last.setOnClickListener(this);
-        bt_submit.setOnClickListener(this);
         mTextWatcher1 = new ClearEditText.SimpleTextChangedListener() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -78,13 +75,10 @@ public class BirthDayFragment extends BaseFragment {
 
     @Override
     public void onClick(View v) {
-        KeyBoardUtils.closeKeybord(et_woman_month_long, activity);
+        KeyBoardUtils.closeKeybord(et_woman_month_long);
         switch (v.getId()) {
             case R.id.tv_woman_month_last:
                 showDatePickDialog();
-                break;
-            case R.id.bt_submit:
-                checkInput();
                 break;
         }
     }
@@ -165,5 +159,10 @@ public class BirthDayFragment extends BaseFragment {
         if (et_woman_month_long != null && mTextWatcher2 != null)
             et_woman_month_long.removeTextChangedListener(mTextWatcher2);
         super.onDestroy();
+    }
+
+    @Override
+    public void onSubmit() {
+        checkInput();
     }
 }

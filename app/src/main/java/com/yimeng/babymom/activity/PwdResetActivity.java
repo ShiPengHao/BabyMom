@@ -13,7 +13,6 @@ import android.widget.EditText;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.interFace.PwdResetInterface;
 import com.yimeng.babymom.task.PwdResetTask;
-import com.yimeng.babymom.utils.KeyBoardUtils;
 
 import java.util.HashMap;
 
@@ -69,7 +68,6 @@ public class PwdResetActivity extends BaseActivity implements PwdResetInterface,
 
     @Override
     protected void onInnerClick(int viewId) {
-        KeyBoardUtils.closeKeybord(et_phone, this);
         switch (viewId) {
             case R.id.bt_submit:
                 checkInput();
@@ -111,7 +109,7 @@ public class PwdResetActivity extends BaseActivity implements PwdResetInterface,
 
     @Override
     public void goToCheckSms() {
-        Intent intent = new Intent(activity, SMSVerifyActivity.class).putExtra("phone", mPhone);
+        Intent intent = new Intent(mActivity, SMSVerifyActivity.class).putExtra("phone", mPhone);
         startActivityForResult(intent, REQUEST_CODE_SMS_RESET);
     }
 

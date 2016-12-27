@@ -6,4 +6,6 @@
     android:cacheColorHint="@android:color/transparent"
     android:divider="@color/grey_line"
     android:dividerHeight="1dp"
-    android:listSelector="@android:color/transparent" />
+    android:listSelector="@android:color/transparent"
+    android:scrollbarThumbVertical="@drawable/scrollbar"
+    android:scrollbars="vertical" />

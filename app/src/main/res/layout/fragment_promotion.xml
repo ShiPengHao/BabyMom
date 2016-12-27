@@ -5,11 +5,11 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_title"
         style="@style/TextTitle"
         android:text="@string/promotion" />
 
     <ListView
         android:id="@+id/lv"
-        android:background="@color/light_green"
         style="@style/myListView" />
 </LinearLayout>

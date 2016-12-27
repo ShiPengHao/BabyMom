@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 
 public class DefaultBannerAdapter extends DefaultPagerAdapter {
-    private static final int[] BANNER_PLACE_HOLDER = new int[]{R.drawable.banner_mask1, R.drawable.banner_mask2, R.drawable.banner_mask3};
+    private static final int[] BANNER_PLACE_HOLDER = new int[]{R.drawable.bannermask1, R.drawable.bannermask2, R.drawable.bannermask3};
     private ArrayList<DecorateImgBean> mBannerBeans;
 
     private ViewPager viewPager;
@@ -43,7 +43,7 @@ public class DefaultBannerAdapter extends DefaultPagerAdapter {
         Picasso.with(context)
                 .load(MyConstant.NAMESPACE + mBannerBeans.get(position).decorate_img)
                 .resize(viewPager.getWidth(), viewPager.getHeight())
-                .placeholder(BANNER_PLACE_HOLDER[position % 3])
+                .placeholder(R.drawable.bannerplace)
                 .error(BANNER_PLACE_HOLDER[position % 3])
 //                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(imageView);

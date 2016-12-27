@@ -14,7 +14,7 @@ public class MyToast {
      * toast一个内容
      *
      * @param content  内容
-     * @param activity activity
+     * @param activity mActivity
      */
     public static void show(Activity activity, final String content) {
         activity.runOnUiThread(new Runnable() {

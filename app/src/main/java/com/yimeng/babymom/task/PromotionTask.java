@@ -21,4 +21,9 @@ public class PromotionTask extends BaseTask<PromotionFragment> {
     public void parseResult(PromotionFragment activity, String result) {
         activity.onPromotionResult(result);
     }
+
+    @Override
+    protected void onError(PromotionFragment activity) {
+//        super.onError(mActivity);
+    }
 }

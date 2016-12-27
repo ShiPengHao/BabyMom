@@ -185,7 +185,7 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
             mRequestCall.cancel();
         }
         mRequestCall = OkHttpUtils.get().url(mDownloadUrl).build().connTimeOut(300000).readTimeOut(300000).writeTimeOut(300000);
-        DownloadManager.downPackage(activity, mRequestCall, getString(R.string.apk_name), mApkSize == 0 ? FAKE_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
+        DownloadManager.downPackage(mActivity, mRequestCall, getString(R.string.apk_name), mApkSize == 0 ? FAKE_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
             @Override
             public void onError() {
                 dispatchLogin();

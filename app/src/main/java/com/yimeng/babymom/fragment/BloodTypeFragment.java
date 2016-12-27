@@ -1,11 +1,11 @@
 package com.yimeng.babymom.fragment;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
+import com.yimeng.babymom.activity.MeasureActivity;
 import com.yimeng.babymom.utils.BloodTypeUtils;
 
 import java.util.HashMap;
@@ -15,12 +15,11 @@ import java.util.Map;
  * 测算血型的fragment
  */
 
-public class BloodTypeFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener {
+public class BloodTypeFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener, MeasureActivity.MeasureSubmitListener {
 
     private TextView tv;
     private RadioGroup groupDaddy;
     private RadioGroup groupMom;
-    private Button button;
     private int mDaddyCheckedId;
     private int mMomcheckedId;
 
@@ -34,7 +33,6 @@ public class BloodTypeFragment extends BaseFragment implements RadioGroup.OnChec
         tv = (TextView) view.findViewById(R.id.tv);
         groupDaddy = (RadioGroup) view.findViewById(R.id.rg_blood_type_daddy);
         groupMom = (RadioGroup) view.findViewById(R.id.rg_blood_type_mom);
-        button = (Button) view.findViewById(R.id.bt_submit);
         setButtonId();
     }
 
@@ -52,7 +50,6 @@ public class BloodTypeFragment extends BaseFragment implements RadioGroup.OnChec
 
     @Override
     protected void setListener() {
-        button.setOnClickListener(this);
         groupDaddy.setOnCheckedChangeListener(this);
         groupMom.setOnCheckedChangeListener(this);
     }
@@ -64,11 +61,6 @@ public class BloodTypeFragment extends BaseFragment implements RadioGroup.OnChec
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_submit:
-                getTypeResult();
-                break;
-        }
     }
 
     private void getTypeResult() {
@@ -98,5 +90,10 @@ public class BloodTypeFragment extends BaseFragment implements RadioGroup.OnChec
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onSubmit() {
+        getTypeResult();
     }
 }

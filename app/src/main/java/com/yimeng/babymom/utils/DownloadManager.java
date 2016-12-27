@@ -38,7 +38,7 @@ public class DownloadManager {
 
     /**
      * 下载安装包，完成后自动安装
-     * @param activity activity
+     * @param activity mActivity
      * @param requestCall http请求
      * @param fileName 文件名称
      * @param apkSize 文件大小

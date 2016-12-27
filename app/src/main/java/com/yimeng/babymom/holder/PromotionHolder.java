@@ -42,8 +42,8 @@ public class PromotionHolder extends BaseHolder<PromotionBean> {
         Picasso.with(context)
                 .load(MyConstant.NAMESPACE + data.url)
                 .resize(view.getWidth(), view.getHeight())
-                .error(R.drawable.banner_mask1)
-                .placeholder(R.drawable.banner_mask1)
+                .error(R.drawable.bannerplace)
+                .placeholder(R.drawable.bannerplace)
                 .into(iv);
         if (data.endTime == 0)
             return;

@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.yimeng.babymom.R;
+import com.yimeng.babymom.utils.KeyBoardUtils;
 import com.yimeng.babymom.utils.MyApp;
 import com.yimeng.babymom.utils.MyConstant;
 import com.yimeng.babymom.utils.MyToast;
@@ -42,11 +45,23 @@ import java.util.Map;
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     protected View mStatusBarView;
-    protected Activity activity;
+    protected Activity mActivity;
     public PreferenceManager mPrefManager = PreferenceManager.getInstance();
     private Dialog mLoadingDialog;
     private AlertDialog mOkDialog;
     private DialogInterface.OnClickListener mOnclickListener;
+    private Handler mShowLoadingHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case WHAT_SHOW_LOADING:
+                    mLoadingDialog.show();
+                    return true;
+            }
+            return false;
+        }
+    });
+    private static final int WHAT_SHOW_LOADING = 100;
 
     /**
      * 使用ksoap框架执行WebService请求的异步任务类
@@ -70,9 +85,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyApp.getAppContext().addActivity(this);
-        if (activity == null) {
-            activity = this;
-        }
+        if (mActivity == null)
+            mActivity = this;
         setContentView(setLayoutResId());
         setStatusBar();
         initView();
@@ -233,6 +247,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        KeyBoardUtils.closeKeybord(v);
         int id = v.getId();
         if (id == R.id.iv_back)
             finish();
@@ -261,7 +276,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
         TextView tv = (TextView) mLoadingDialog.findViewById(R.id.tv);
         tv.setText(message == null ? getString(R.string.loading) : message);
-        mLoadingDialog.show();
+        mShowLoadingHandler.removeMessages(WHAT_SHOW_LOADING);
+        mShowLoadingHandler.sendEmptyMessageDelayed(WHAT_SHOW_LOADING, 500);
     }
 
     /**
@@ -273,7 +289,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void showOkTips(String message, DialogInterface.OnClickListener onClickListener) {
         dismissLoadingView();
         if (null == mOkDialog) {
-            mOkDialog = new AlertDialog.Builder(activity)
+            mOkDialog = new AlertDialog.Builder(mActivity)
                     .setTitle(getString(R.string.tip))
                     .setCancelable(false)
                     .create();
@@ -296,6 +312,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void dismissLoadingView() {
         if (mLoadingDialog != null && mLoadingDialog.isShowing())
             mLoadingDialog.dismiss();
+        mShowLoadingHandler.removeMessages(WHAT_SHOW_LOADING);
     }
 
     /**
@@ -304,7 +321,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @param message 内容
      */
     public void showToast(String message) {
-        MyToast.show(activity, message);
+        MyToast.show(mActivity, message);
     }
 
 }

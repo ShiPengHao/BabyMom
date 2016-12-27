@@ -2,12 +2,11 @@ package com.yimeng.babymom.fragment;
 
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.utils.KeyBoardUtils;
+import com.yimeng.babymom.activity.MeasureActivity;
 import com.yimeng.babymom.view.ClearEditText;
 
 import java.text.DecimalFormat;
@@ -16,12 +15,11 @@ import java.text.DecimalFormat;
  * 胎儿体重计算
  */
 
-public class BabyWeightFragment extends BaseFragment {
+public class BabyWeightFragment extends BaseFragment implements MeasureActivity.MeasureSubmitListener {
     private EditText et_head_width;
     private EditText et_body_width;
     private EditText et_ass_width;
     private TextView tv;
-    private Button bt_submit;
     private ClearEditText.SimpleTextChangedListener mTextWatcher1;
     private ClearEditText.SimpleTextChangedListener mTextWatcher2;
     private String mHeadWidth;
@@ -39,13 +37,11 @@ public class BabyWeightFragment extends BaseFragment {
         et_head_width = (EditText) view.findViewById(R.id.et_head_width);
         et_body_width = (EditText) view.findViewById(R.id.et_body_width);
         et_ass_width = (EditText) view.findViewById(R.id.et_ass_width);
-        bt_submit = (Button) view.findViewById(R.id.bt_submit);
         tv = (TextView) view.findViewById(R.id.tv);
     }
 
     @Override
     protected void setListener() {
-        bt_submit.setOnClickListener(this);
         mTextWatcher1 = new ClearEditText.SimpleTextChangedListener() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -79,12 +75,6 @@ public class BabyWeightFragment extends BaseFragment {
 
     @Override
     public void onClick(View v) {
-        KeyBoardUtils.closeKeybord(et_body_width, activity);
-        switch (v.getId()) {
-            case R.id.bt_submit:
-                checkInput();
-                break;
-        }
     }
 
     private void checkInput() {
@@ -115,5 +105,10 @@ public class BabyWeightFragment extends BaseFragment {
         if (et_ass_width != null && mTextWatcher3 != null)
             et_ass_width.removeTextChangedListener(mTextWatcher3);
         super.onDestroy();
+    }
+
+    @Override
+    public void onSubmit() {
+        checkInput();
     }
 }

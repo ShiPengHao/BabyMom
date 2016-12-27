@@ -128,14 +128,5 @@
         android:textColor="@color/colorAccent"
         android:textSize="16dp" />
 
-    <Button
-        android:id="@+id/bt_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@drawable/selector_bt_bg_accent"
-        android:text="@string/submit"
-        android:textColor="@color/white"
-        android:textSize="16dp" />
 
 </LinearLayout>

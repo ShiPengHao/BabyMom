@@ -9,10 +9,14 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import static android.graphics.BitmapFactory.decodeStream;
 
 /**
  * bitmap工具类
@@ -21,7 +25,7 @@ public class BitmapUtils {
     /**
      * 通过资源id获取bitmap对象，宽高适应手机屏幕
      *
-     * @param activity activity
+     * @param activity mActivity
      * @param resId    资源id
      * @return bitmap对象
      */
@@ -34,14 +38,42 @@ public class BitmapUtils {
         BitmapFactory.decodeResource(activity.getResources(), resId, opts);
         float imgWidth = opts.outWidth;
         float imgHeight = opts.outHeight;
-
         // 获得缩放比例
-
-        opts.inSampleSize = (int) (Math.min(imgWidth / DensityUtil.SCREEN_WIDTH, imgHeight / DensityUtil.SCREEN_HEIGHT) + 0.5f);
-
+        opts.inSampleSize = Math.max(((int) (Math.min(imgWidth / DensityUtil.SCREEN_WIDTH, imgHeight / DensityUtil.SCREEN_HEIGHT) + 0.5f))
+                , 1);
         // 设置开关
         opts.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(activity.getResources(), resId, opts);
+    }
+
+    /**
+     * 通过content uri获取bitmap对象，宽高适应手机屏幕
+     *
+     * @param uri local uri
+     * @return bitmap对象
+     */
+    public static Bitmap getImgFromUri(Context context, Uri uri) throws Exception {
+        Bitmap bitmap;
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        // 获得本地图片宽高
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        // 设置开关
+        opts.inJustDecodeBounds = true;
+        opts.inPreferredConfig = Bitmap.Config.RGB_565;
+        opts.inDither = true;
+        BitmapFactory.decodeStream(inputStream, null, opts);
+        inputStream.close();
+        int imgWidth = opts.outWidth;
+        int imgHeight = opts.outHeight;
+        // 获得缩放比例
+        opts.inSampleSize = Math.max(((int) (Math.min(imgWidth / DensityUtil.SCREEN_WIDTH, imgHeight / DensityUtil.SCREEN_HEIGHT) + 0.5f))
+                , 1);
+        // 设置开关
+        opts.inJustDecodeBounds = false;
+        inputStream = context.getContentResolver().openInputStream(uri);
+        bitmap = BitmapFactory.decodeStream(inputStream, null, opts);
+        inputStream.close();
+        return bitmap;
     }
 
     /**
@@ -97,7 +129,7 @@ public class BitmapUtils {
                                        int newHeight) {
         // 图片源
         try {
-            Bitmap bm = BitmapFactory.decodeStream(context.getAssets()
+            Bitmap bm = decodeStream(context.getAssets()
                     .open(fileName));
             if (null != bm) {
                 return zoomBitmap(bm, newWidth, newHeight);
@@ -197,10 +229,11 @@ public class BitmapUtils {
     /**
      * 将图片对象压缩为不大于2M的string
      *
-     * @param bitmap 图片对象
+     * @param bitmap  图片对象
+     * @param maxSize 目标图片大小，单位byte
      * @return 压缩成功返回string，否则null
      */
-    public static String compressBitmap2Base64String(Bitmap bitmap) {
+    public static String compressBitmap2Base64String(Bitmap bitmap, int maxSize) {
         if (bitmap == null) {
             return null;
         }
@@ -209,7 +242,7 @@ public class BitmapUtils {
         int quality = 100;
         while (quality > 0) {
             if (bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos)
-                    && (bytes = baos.toByteArray()).length < 2 * 1024 * 1024) {
+                    && (bytes = baos.toByteArray()).length < maxSize) {
                 try {
                     baos.close();
                 } catch (Exception e) {

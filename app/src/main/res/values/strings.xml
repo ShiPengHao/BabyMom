@@ -488,7 +488,7 @@
     <string name="phone_nullable">手机号码（可选填）</string>
     <string name="reset_pwd">重置密码</string>
     <string name="input_new_pwd">请输入您的新密码</string>
-    <string name="edit">编辑</string>
+    <string name="edit">修改</string>
     <string name="finish">完成</string>
     <string name="old_pwd">老密码</string>
     <string name="new_pwd">新密码</string>

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.adapter.DefaultFragmentPagerAdapter;
+import com.yimeng.babymom.adapter.SaveFragmentPagerAdapter;
 import com.yimeng.babymom.fragment.HomeFragment;
 import com.yimeng.babymom.fragment.MyFragment;
 import com.yimeng.babymom.fragment.PromotionFragment;
@@ -26,7 +26,7 @@ public class HomeActivity extends BaseActivity implements HomeAInterface {
 
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
-    private DefaultFragmentPagerAdapter mPagerAdapter;
+    private SaveFragmentPagerAdapter mPagerAdapter;
     private int mLastPageIndex;
     /**
      * 点击返回键时的时间
@@ -48,7 +48,7 @@ public class HomeActivity extends BaseActivity implements HomeAInterface {
 
     @Override
     protected void setListener() {
-        mPagerAdapter = new DefaultFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
+        mPagerAdapter = new SaveFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
         viewPager.setAdapter(mPagerAdapter);
         mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
 

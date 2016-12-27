@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yimeng.babymom.activity.BaseActivity;
+import com.yimeng.babymom.utils.KeyBoardUtils;
 import com.yimeng.babymom.utils.UiUtils;
 
 
@@ -92,5 +93,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      */
     public void dismissLoadingView() {
         activity.dismissLoadingView();
+    }
+
+    @Override
+    public void onClick(View v) {
+        KeyBoardUtils.closeKeybord(v);
     }
 }

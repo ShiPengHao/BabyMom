@@ -410,7 +410,7 @@ public class DepartmentActivity extends BaseActivity implements AdapterView.OnIt
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         otherParams.leftMargin = DensityUtil.dip2px(15);
         for (int i = 0; i < size; i++) {
-            imageView = new ImageView(activity);
+            imageView = new ImageView(mActivity);
             imageView.setBackgroundResource(R.drawable.selector_dot);
             if (i == 0) {
                 imageView.setEnabled(false);

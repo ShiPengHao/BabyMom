@@ -45,9 +45,9 @@ public class IntroduceActivity extends BaseActivity implements IntroduceInterfac
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = new ImageView(activity);
+            ImageView imageView = new ImageView(mActivity);
 //            imageView.setBackgroundResource(PIC_RES_IDS[position]);
-            imageView.setBackgroundDrawable(BitmapUtils.bitmapToDrawable(activity, BitmapUtils.getResImg(activity, PIC_RES_IDS[position])));
+            imageView.setBackgroundDrawable(BitmapUtils.bitmapToDrawable(mActivity, BitmapUtils.getResImg(mActivity, PIC_RES_IDS[position])));
             container.addView(imageView);
             return imageView;
         }

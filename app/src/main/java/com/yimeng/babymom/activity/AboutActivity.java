@@ -130,7 +130,7 @@ public class AboutActivity extends BaseActivity implements AboutInterface {
             mRequestCall.cancel();
         }
         mRequestCall = OkHttpUtils.get().url(mDownloadUrl).build().connTimeOut(300000).readTimeOut(300000).writeTimeOut(300000);
-        DownloadManager.downPackage(activity, mRequestCall, getString(R.string.app_name), mApkSize == 0 ? VIDEO_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
+        DownloadManager.downPackage(mActivity, mRequestCall, getString(R.string.app_name), mApkSize == 0 ? VIDEO_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
             @Override
             public void onError() {
                 showToast(getString(R.string.connect_error));

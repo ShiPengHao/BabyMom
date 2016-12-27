@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_green"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/TextTitle"
+            android:text="@string/account_info" />
+
+        <include layout="@layout/layout_imageview_back" />
+
+        <TextView
+            android:id="@+id/tv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/general_margin"
+            android:gravity="center"
+            android:minWidth="@dimen/item_width"
+            android:padding="4dp"
+            android:text="@string/edit"
+            android:textColor="@color/white"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginBottom="4dp"
+        android:padding="@dimen/general_margin"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:inputType="phone"
+        android:padding="4dp"
+        android:text="孕力 10086"
+        android:textColor="@color/black_item_content"
+        android:textSize="14dp" />
+
+
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/general_margin"
+        android:hint="@string/phone"
+        android:inputType="phone"
+        android:textColor="@color/black_item_title"
+        android:textSize="16dp" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/general_margin"
+        android:hint="@string/name"
+        android:textColor="@color/black_item_title"
+        android:textSize="16dp" />
+
+
+</LinearLayout>

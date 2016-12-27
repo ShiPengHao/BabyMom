@@ -2,23 +2,21 @@ package com.yimeng.babymom.fragment;
 
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.utils.KeyBoardUtils;
+import com.yimeng.babymom.activity.MeasureActivity;
 import com.yimeng.babymom.view.ClearEditText;
 
 /**
  * 身高预测
  */
 
-public class BabyHeightFragment extends BaseFragment {
+public class BabyHeightFragment extends BaseFragment implements MeasureActivity.MeasureSubmitListener {
     private EditText et_head_width;
     private EditText et_body_width;
     private TextView tv;
-    private Button bt_submit;
     private String mHeadWidth;
     private String mBodyWidth;
     private ClearEditText.SimpleTextChangedListener mTextWatcher1;
@@ -33,13 +31,11 @@ public class BabyHeightFragment extends BaseFragment {
     protected void initView(View view) {
         et_head_width = (EditText) view.findViewById(R.id.et_head_width);
         et_body_width = (EditText) view.findViewById(R.id.et_body_width);
-        bt_submit = (Button) view.findViewById(R.id.bt_submit);
         tv = (TextView) view.findViewById(R.id.tv);
     }
 
     @Override
     protected void setListener() {
-        bt_submit.setOnClickListener(this);
         mTextWatcher1 = new ClearEditText.SimpleTextChangedListener() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -65,12 +61,6 @@ public class BabyHeightFragment extends BaseFragment {
 
     @Override
     public void onClick(View v) {
-        KeyBoardUtils.closeKeybord(et_body_width, activity);
-        switch (v.getId()) {
-            case R.id.bt_submit:
-                checkInput();
-                break;
-        }
     }
 
     private void checkInput() {
@@ -94,5 +84,10 @@ public class BabyHeightFragment extends BaseFragment {
         if (et_body_width != null && mTextWatcher2 != null)
             et_body_width.removeTextChangedListener(mTextWatcher2);
         super.onDestroy();
+    }
+
+    @Override
+    public void onSubmit() {
+        checkInput();
     }
 }

@@ -40,7 +40,7 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Object, String> {
      * 检查引用状态，根据当前状态来选择对应的操作（显示进度或者隐藏）
      *
      * @param state    需要显示true，否则false
-     * @param activity activity
+     * @param activity mActivity
      * @return 如果activity引用不存在返回true，否则false
      */
     private boolean checkReference(T activity, boolean state) {
@@ -87,7 +87,7 @@ public abstract class BaseTask<T> extends AsyncTask<Object, Object, String> {
     /**
      * 获取数据过程发生异常回调
      *
-     * @param activity activity
+     * @param activity mActivity
      */
     protected void onError(T activity) {
         if (activity instanceof BaseActivity)

@@ -10,6 +10,8 @@
         style="@style/TextTitle"
         android:text="@string/my" />
 
+
+
     <LinearLayout
         android:id="@+id/ll_account_info"
         android:layout_width="fill_parent"

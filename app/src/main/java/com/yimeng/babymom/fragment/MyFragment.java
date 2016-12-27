@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.activity.AboutActivity;
+import com.yimeng.babymom.activity.AccountActivity;
 import com.yimeng.babymom.activity.SettingActivity;
 import com.yimeng.babymom.utils.MyApp;
 
@@ -51,12 +52,13 @@ public class MyFragment extends BaseFragment {
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
         switch (v.getId()) {
             case R.id.ll_account_info:
-//                startActivity(new Intent(activity, AccountInfoActivity.class));
+                startActivity(new Intent(activity, AccountActivity.class));
                 break;
             case R.id.ll_appointment_history:
-//                startActivity(new Intent(activity, AppointHistoryActivity.class));
+//                startActivity(new Intent(mActivity, AppointHistoryActivity.class));
                 break;
             case R.id.ll_settings:
                 startActivity(new Intent(activity, SettingActivity.class));

@@ -15,6 +15,7 @@ import com.yimeng.babymom.bean.PromotionBean;
 import com.yimeng.babymom.holder.BaseHolder;
 import com.yimeng.babymom.holder.PromotionHolder;
 import com.yimeng.babymom.task.PromotionTask;
+import com.yimeng.babymom.utils.BitmapUtils;
 import com.yimeng.babymom.utils.JsonUtils;
 import com.yimeng.babymom.utils.MyConstant;
 
@@ -44,6 +45,8 @@ public class PromotionFragment extends BaseFragment implements AdapterView.OnIte
     @Override
     protected void initView(View view) {
         lv = (ListView) view.findViewById(R.id.lv);
+        lv.setBackgroundDrawable(BitmapUtils.bitmapToDrawable(activity,
+                BitmapUtils.getResImg(activity, R.drawable.promotion_place)));
     }
 
     @Override
@@ -92,6 +95,5 @@ public class PromotionFragment extends BaseFragment implements AdapterView.OnIte
             startActivity(new Intent(activity, WebViewActivity.class).putExtra("url", url));
         }
     }
-
 
 }

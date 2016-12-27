@@ -74,7 +74,6 @@ public class LoginActivity extends BaseActivity implements LoginInterface, Compo
 
     @Override
     public void onInnerClick(int viewId) {
-        KeyBoardUtils.closeKeybord(et_pwd, this);
         switch (viewId) {
             case R.id.bt_register:
                 goToRegister();

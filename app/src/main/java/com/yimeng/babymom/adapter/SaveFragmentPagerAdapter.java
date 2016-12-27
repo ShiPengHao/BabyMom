@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 /**
- * fragmentPagerAdapter简化基类，可以保存fragment视图也不被销毁
+ * fragmentPagerAdapter简化基类，可以保存fragment视图不被销毁
  */
 
-public class DefaultFragmentPagerAdapter extends FragmentPagerAdapter {
+public class SaveFragmentPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<Fragment> mFragments;
     private FragmentManager fm;
 
-    public DefaultFragmentPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
+    public SaveFragmentPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
         super(fm);
         this.mFragments = fragments;
         this.fm = fm;
