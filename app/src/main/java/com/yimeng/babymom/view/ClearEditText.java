@@ -12,7 +12,7 @@ import com.yimeng.babymom.R;
 
 
 /**
- * Created by 依萌 on 2016/6/22.
+ * 带有删除内容按钮的edittext
  */
 public class ClearEditText extends EditText {
     /**
@@ -131,7 +131,7 @@ public class ClearEditText extends EditText {
     /**
      * 设置清除图标的显示与隐藏，调用setCompoundDrawables为EditText绘制上去
      *
-     * @param visible
+     * @param visible 是否可见
      */
     protected void setClearIconVisible(boolean visible) {
         Drawable right = visible ? mClearDrawable : null;

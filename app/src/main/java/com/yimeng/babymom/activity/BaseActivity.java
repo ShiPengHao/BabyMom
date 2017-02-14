@@ -147,9 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * 处理状态栏
      */
     protected void setStatusBar() {
-        final int sdk = Build.VERSION.SDK_INT;
-
-        if (sdk >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window window = getWindow();
             WindowManager.LayoutParams params = window.getAttributes();
             int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;

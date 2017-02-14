@@ -172,7 +172,7 @@ public class FlowLayout extends ViewGroup {
         /**
          * 获取当前行高
          *
-         * @return
+         * @return 行高
          */
         public int getHeight() {
             return height;

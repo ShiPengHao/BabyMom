@@ -5,9 +5,8 @@
     android:id="@+id/ll_refresh_header_root"
     android:orientation="vertical" >
 	<!-- 刷新头所在的布局文件 -->
-	<LinearLayout 
-		android:id="@+id/ll_refresh_header_view"
-	    android:layout_width="match_parent"
+	<LinearLayout
+		android:layout_width="match_parent"
 	    android:orientation="horizontal"
     	android:layout_height="wrap_content">
     	<RelativeLayout 

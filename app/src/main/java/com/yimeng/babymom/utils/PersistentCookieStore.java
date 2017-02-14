@@ -54,7 +54,7 @@ public class PersistentCookieStore implements CookieStore {
                     }
 
                     entry = (Entry)var3.next();
-                } while((String)entry.getValue() == null);
+                } while(entry.getValue() == null);
             } while(((String)entry.getValue()).startsWith("cookie_"));
 
             String[] cookieNames = TextUtils.split((String)entry.getValue(), ",");
@@ -63,7 +63,7 @@ public class PersistentCookieStore implements CookieStore {
 
             for(int var8 = 0; var8 < var7; ++var8) {
                 String name = var6[var8];
-                String encodedCookie = this.cookiePrefs.getString("cookie_" + name, (String)null);
+                String encodedCookie = this.cookiePrefs.getString("cookie_" + name, null);
                 if(encodedCookie != null) {
                     Cookie decodedCookie = this.decodeCookie(encodedCookie);
                     if(decodedCookie != null) {

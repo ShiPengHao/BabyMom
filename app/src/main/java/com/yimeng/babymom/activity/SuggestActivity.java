@@ -19,7 +19,6 @@ import com.luseen.autolinklibrary.AutoLinkTextView;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.interFace.SuggestInterface;
 import com.yimeng.babymom.task.SuggestTask;
-import com.yimeng.babymom.utils.KeyBoardUtils;
 
 import java.util.HashMap;
 

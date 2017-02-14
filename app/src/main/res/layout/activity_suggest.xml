@@ -55,8 +55,6 @@
         android:id="@+id/tv_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/et_suggest"
         android:gravity="right|center_vertical"
         android:padding="@dimen/general_margin"
         android:textColor="@color/black_item_content"

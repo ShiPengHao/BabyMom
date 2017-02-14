@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Process;
 import android.os.SystemClock;
 
+import com.squareup.leakcanary.LeakCanary;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.cookie.CookieJarImpl;
 
@@ -43,7 +44,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-//        LeakCanary.install(this);
+        LeakCanary.install(this);
 //        ThreadUtils.runOnUIThread(null);
         activities.clear();
         PreferenceManager.init(this);

@@ -1,4 +1,4 @@
-package com.yimeng.babymom.activity.view;
+package com.yimeng.babymom.view;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
@@ -188,7 +188,7 @@ public class LazyViewPager extends ViewGroup {
          * @param positionOffset Value from [0, 1) indicating the offset from the page at position.
          * @param positionOffsetPixels Value in pixels indicating the offset from position.
          */
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+        void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
 
         /**
          * This method will be invoked when a new page becomes selected. Animation is not
@@ -196,7 +196,7 @@ public class LazyViewPager extends ViewGroup {
          *
          * @param position Position index of the new selected page.
          */
-        public void onPageSelected(int position);
+        void onPageSelected(int position);
 
         /**
          * Called when the scroll state changes. Useful for discovering when the user
@@ -208,7 +208,7 @@ public class LazyViewPager extends ViewGroup {
          * @see android.support.v4.view.ViewPager#SCROLL_STATE_DRAGGING
          * @see android.support.v4.view.ViewPager#SCROLL_STATE_SETTLING
          */
-        public void onPageScrollStateChanged(int state);
+        void onPageScrollStateChanged(int state);
     }
 
 
@@ -1241,8 +1241,7 @@ public class LazyViewPager extends ViewGroup {
                 break;
             case MotionEventCompat.ACTION_POINTER_DOWN: {
                 final int index = MotionEventCompat.getActionIndex(ev);
-                final float x = MotionEventCompat.getX(ev, index);
-                mLastMotionX = x;
+                mLastMotionX = MotionEventCompat.getX(ev, index);
                 mActivePointerId = MotionEventCompat.getPointerId(ev, index);
                 break;
             }
@@ -1273,8 +1272,8 @@ public class LazyViewPager extends ViewGroup {
 
                 canvas.rotate(270);
                 canvas.translate(-height + getPaddingTop(), 0);
-                mLeftEdge.setSize(height, getWidth());
-                needsInvalidate |= mLeftEdge.draw(canvas);
+                mLeftEdge.setSize(getWidth(), height);
+                needsInvalidate = mLeftEdge.draw(canvas);
                 canvas.restoreToCount(restoreCount);
             }
             if (!mRightEdge.isFinished()) {
@@ -1286,7 +1285,7 @@ public class LazyViewPager extends ViewGroup {
                 canvas.rotate(90);
                 canvas.translate(-getPaddingTop(),
                         -itemCount * (width + mPageMargin) + mPageMargin);
-                mRightEdge.setSize(height, width);
+                mRightEdge.setSize(width, height);
                 needsInvalidate |= mRightEdge.draw(canvas);
                 canvas.restoreToCount(restoreCount);
             }
@@ -1646,9 +1645,7 @@ public class LazyViewPager extends ViewGroup {
                     isInTouchMode() && !isFocusableInTouchMode()) {
                 return;
             }
-            if (views != null) {
-                views.add(this);
-            }
+            views.add(this);
         }
     }
 

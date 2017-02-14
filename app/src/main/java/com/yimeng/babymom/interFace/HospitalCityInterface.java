@@ -6,7 +6,7 @@ package com.yimeng.babymom.interFace;
 
 public interface HospitalCityInterface {
     /**
-     * 请求医院数据
+     * 根据城市名称请求医院数据
      */
     void requestCityHospital();
 

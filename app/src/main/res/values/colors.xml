@@ -11,7 +11,6 @@
     <color name="black_item_title">#333</color>
     <color name="black_item_content">#666</color>
     <color name="bg_light_green">#0aa880</color>
-    <color name="bg_light_green_66">#aa0aa880</color>
     <color name="bt_yellow">#fb7e00</color>
     <color name="bt_yellow_dark">#ac6926</color>
     <color name="bg_grey_aaa">#aaa</color>
@@ -19,14 +18,5 @@
 
     <!--扫描二维码颜色-->
     <!-- 二维码 -->
-    <color name="viewfinder_frame">#ff000000</color>
-    <color name="viewfinder_laser">#ffff0000</color>
-    <color name="viewfinder_mask">#60000000</color>
-    <color name="result_image_border">#ffffffff</color>
-    <color name="result_minor_text">#ffc0c0c0</color>
-    <color name="result_points">#c000ff00</color>
-    <color name="result_text">#ffffffff</color>
-    <color name="result_view">#b0000000</color>
-    <color name="possible_result_points">#c0ffff00</color>
 
 </resources>

@@ -1,9 +1,13 @@
 package com.yimeng.babymom.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,8 +22,10 @@ import android.widget.TextView;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.activity.AddressListActivity;
 import com.yimeng.babymom.activity.DepartmentActivity;
+import com.yimeng.babymom.activity.HealthMonitorActivity;
 import com.yimeng.babymom.activity.HospitalListActivity;
 import com.yimeng.babymom.activity.MeasureActivity;
+import com.yimeng.babymom.activity.TestActivity;
 import com.yimeng.babymom.activity.WebViewActivity;
 import com.yimeng.babymom.adapter.DefaultAdapter;
 import com.yimeng.babymom.adapter.DefaultBannerAdapter;
@@ -47,6 +53,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.yimeng.babymom.utils.LocationUtils.sLocationReceiverIntent;
+
 /**
  * 主页fragment
  */
@@ -66,27 +74,39 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
     private RelativeLayout rl_tip;
 
     private ArrayList<DecorateImgBean> mBannerBeans = new ArrayList<>();
-
     private PagerAdapter mBannerPagerAdapter;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
-
-    private String mCityName;
-    private AsyncTask<Location, Void, String> mLocationTask;
 
     private DefaultAdapter<PicDesBean> mFunGridAdapter;
     private static final int[] FUN_ICON_IDS = new int[]{
             R.drawable.sultation, R.drawable.monitor, R.drawable.measure, R.drawable.encyclo
             , R.drawable.diet, R.drawable.jifen, R.drawable.help, R.drawable.quan
             , R.drawable.clazz, R.drawable.story, R.drawable.safe};
-    private static final String[] mFunDes = MyApp.getAppContext().getResources().getStringArray(R.array.home_fun);
+    private static final String[] Fun_Des = MyApp.getAppContext().getResources().getStringArray(R.array.home_fun);
     private ArrayList<PicDesBean> mFunPicBeans = new ArrayList<>();
     private AsyncTask<Object, Object, String> mBannerTask;
     private AsyncTask<Object, Object, String> mSignTask;
     private AsyncTask<Object, Object, String> mUserInfoTask;
     private ArrayList<HospitalBean> mHospitalList = new ArrayList<>();
-
     private AsyncTask<Object, Object, String> mHospitalTask;
     private UserBean mUserBean;
+    private String mCityName;
+    private AsyncTask<Location, Void, String> mLocationTask;
+    private LocationReceiver mLocationReceiver;
+
+    private class LocationReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                Location location = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
+                if (location != null)
+                    getLocationCity(location);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     protected int setLayoutResId() {
@@ -112,7 +132,6 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
 
         rl_status = (RelativeLayout) view.findViewById(R.id.rl_status);
         rl_tip = (RelativeLayout) view.findViewById(R.id.rl_tip);
-
     }
 
     @Override
@@ -157,6 +176,9 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * 设置功能区域
+     */
     private void initFunGridListener() {
         mFunGridAdapter = new DefaultAdapter<PicDesBean>(mFunPicBeans) {
             @Override
@@ -168,6 +190,9 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
         gd_fun.setOnItemClickListener(this);
     }
 
+    /**
+     * 设置轮播图
+     */
     private void initBannerPagerListener() {
         mBannerPagerAdapter = new DefaultBannerAdapter(mBannerBeans, viewPager);
         mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
@@ -223,10 +248,13 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
         setFunGridData();
     }
 
+    /**
+     * 获取功能区域数据
+     */
     private void setFunGridData() {
         mFunPicBeans.clear();
         for (int i = 0; i < FUN_ICON_IDS.length; i++) {
-            mFunPicBeans.add(new PicDesBean(FUN_ICON_IDS[i], mFunDes[i]));
+            mFunPicBeans.add(new PicDesBean(FUN_ICON_IDS[i], Fun_Des[i]));
         }
         mFunGridAdapter.notifyDataSetChanged();
     }
@@ -284,8 +312,10 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
 
     @Override
     public void onUserError() {
-        showToast(getString(R.string.user_error));
-        LocationUtils.setUpdateLocationListener(this);
+        showToast(getString(R.string.user_error));//TODO 广播不解
+        LocationUtils.addReceiverIntent(sLocationReceiverIntent);
+        mLocationReceiver = new LocationReceiver();
+        activity.registerReceiver(mLocationReceiver, new IntentFilter(LocationUtils.LOCATION_ACTION));
         tv_location.setVisibility(View.VISIBLE);
     }
 
@@ -297,14 +327,24 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
                     case 0:
                         goToChat();
                         break;
+                    case 1:
+                        goToHealthMonitor();
+                        break;
                     case 2:
                         goToMeasure();
                         break;
+                    case 3:
+                        startActivity(new Intent(activity, TestActivity.class));
+                        break;
                     default:
-                        showToast(String.format("%s%s", mFunDes[position], getString(R.string.fun_undo)));
+                        showToast(String.format("%s%s", Fun_Des[position], getString(R.string.fun_undo)));
                 }
                 break;
         }
+    }
+
+    public void goToHealthMonitor() {
+        startActivity(new Intent(activity, HealthMonitorActivity.class));
     }
 
     public void goToMeasure() {
@@ -325,13 +365,6 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
     private void goToHospitalList() {
         if (checkCityNameAndHospital())
             startActivity(new Intent(getActivity(), HospitalListActivity.class).putExtra("hospital", mHospitalList));
-    }
-
-    @Override
-    public void updateWithNewLocation(Location location) {
-        if (mLocationTask != null)
-            mLocationTask.cancel(true);
-        mLocationTask = new LocationAsyncTask(this).execute(location);
     }
 
     @Override
@@ -360,23 +393,6 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
 
     }
 
-    @Override
-    public void requestCityHospital() {
-        if (mHospitalTask != null)
-            mHospitalTask.cancel(true);
-        HashMap<String, Object> params = new HashMap<>();
-        params.put(HospitalCityTask.CITYNAME, mCityName);
-        mHospitalTask = new HospitalCityTask(this, null).execute(HospitalCityTask.METHOD, params);
-    }
-
-    @Override
-    public void onHospitalResult(String result) {
-        try {
-            JsonUtils.parseListResult(mHospitalList, HospitalBean.class, result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onResume() {
@@ -393,6 +409,9 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
 
     @Override
     public void onDestroy() {
+        if (mLocationReceiver != null)
+            activity.unregisterReceiver(mLocationReceiver);
+        LocationUtils.removeReceiverIntent(LocationUtils.sLocationReceiverIntent);
         if (viewPager != null && mPageChangeListener != null)
             viewPager.removeOnPageChangeListener(mPageChangeListener);
         if (mLocationTask != null)
@@ -401,11 +420,23 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
             mBannerTask.cancel(true);
         if (mSignTask != null)
             mSignTask.cancel(true);
-        if (mUserInfoTask != null)
+        if (mUserInfoTask != null)//凯旋
             mUserInfoTask.cancel(true);
         if (mHospitalTask != null)
             mHospitalTask.cancel(true);
         super.onDestroy();
+    }
+
+
+    /**
+     * 根据定位信息，获取对应的城市信息
+     *
+     * @param location 定位
+     */
+    public void getLocationCity(Location location) {
+        if (mLocationTask != null)
+            mLocationTask.cancel(true);
+        mLocationTask = new LocationAsyncTask(HomeFragment.this).execute(location);
     }
 
     private class LocationAsyncTask extends AsyncTask<Location, Void, String> {
@@ -448,13 +479,31 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
     /**
      * 刷新显示位置
      *
-     * @param locationCity 新位置
+     * @param locationCity 新位置-城市名
      */
     private void refreshLocationIndicator(String locationCity) {
         if (!TextUtils.isEmpty(locationCity) && !locationCity.equalsIgnoreCase(mCityName)) {
             mCityName = locationCity;
             tv_location.setText(locationCity);
             requestCityHospital();
+        }
+    }
+
+    @Override
+    public void requestCityHospital() {
+        if (mHospitalTask != null)
+            mHospitalTask.cancel(true);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(HospitalCityTask.CITYNAME, mCityName);
+        mHospitalTask = new HospitalCityTask(this, null).execute(HospitalCityTask.METHOD, params);
+    }
+
+    @Override
+    public void onHospitalResult(String result) {
+        try {
+            JsonUtils.parseListResult(mHospitalList, HospitalBean.class, result);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

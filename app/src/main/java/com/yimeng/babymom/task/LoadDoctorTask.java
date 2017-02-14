@@ -18,7 +18,7 @@ public class LoadDoctorTask extends BaseTask<DepartmentActivity> {
     private int flag;
 
     /**
-     * @param activity
+     * @param activity activity
      * @param flag     加载科室或是加载值班医生的标志
      */
     public LoadDoctorTask(DepartmentActivity activity, int flag) {

@@ -38,7 +38,7 @@ public class AddressListActivity extends BaseActivity implements AdapterView.OnI
     private ArrayAdapter<AddressBean> mProvinceAdapter;
     private ArrayAdapter<AddressBean> mCityAdapter;
     private ArrayAdapter<AddressBean> mAreaAdapter;
-    HashMap<String, Object> params = new HashMap<>();
+    private HashMap<String, Object> params = new HashMap<>();
     private int mProvincePosition;
     private int mCityPosition;
     private int mRequestCode;

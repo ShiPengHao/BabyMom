@@ -3,7 +3,7 @@ package com.yimeng.babymom.utils;
 import android.view.View;
 
 /**
- * Created by 依萌 on 2016/6/17.
+ * ui工具类
  */
 public class UiUtils {
     /**

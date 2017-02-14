@@ -1,11 +1,9 @@
 package com.yimeng.babymom.interFace;
 
-import com.yimeng.babymom.utils.LocationUtils;
-
 /**
  * homeFragment主页功能
  */
-public interface HomeFInterface extends HospitalCityInterface, GeneralUserInfoInterface, GeneralBannerInterface, LocationUtils.UpdateLocationListener {
+public interface HomeFInterface extends HospitalCityInterface, GeneralUserInfoInterface, GeneralBannerInterface {
 
     /**
      * 用户签到
@@ -26,4 +24,9 @@ public interface HomeFInterface extends HospitalCityInterface, GeneralUserInfoIn
      * 跳转测算工具
      */
     void goToMeasure();
+
+    /**
+     * 跳转健康检测
+     */
+    void goToHealthMonitor();
 }

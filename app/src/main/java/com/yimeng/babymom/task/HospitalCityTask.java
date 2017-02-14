@@ -2,7 +2,6 @@ package com.yimeng.babymom.task;
 
 import android.view.View;
 
-import com.yimeng.babymom.interFace.HospitalAreaInterface;
 import com.yimeng.babymom.interFace.HospitalCityInterface;
 
 /**

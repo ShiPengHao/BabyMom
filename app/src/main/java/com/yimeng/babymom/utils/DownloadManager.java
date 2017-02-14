@@ -37,12 +37,13 @@ public class DownloadManager {
     }
 
     /**
-     * 下载安装包，完成后自动安装
-     * @param activity mActivity
+     * 下载安装包，完成后自动安装，下载过程中用户按返回键取消下载
+     *
+     * @param activity    mActivity
      * @param requestCall http请求
-     * @param fileName 文件名称
-     * @param apkSize 文件大小
-     * @param callback 异常回调
+     * @param fileName    文件名称
+     * @param apkSize     文件大小
+     * @param callback    异常回调
      */
     public static void downPackage(final Activity activity, final RequestCall requestCall, String fileName, final int apkSize, final ErrorCallback callback) {
         String fileDir;
@@ -55,24 +56,19 @@ public class DownloadManager {
 
             ProgressDialog progressDialog;
             private boolean cancelByUser;
+            private int progressMax = apkSize;
 
             @Override
             public void onBefore(Request request, int id) {
-                int contentLength = 0;
-                try {
-                    contentLength = (int) request.body().contentLength();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
                 progressDialog = new ProgressDialog(activity);
                 progressDialog.setMessage("拼命下载中...");
                 progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
                     @Override
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                        if (progressDialog != null && progressDialog.isShowing()) {
+                        if (keyCode == KeyEvent.KEYCODE_BACK && progressDialog != null && progressDialog.isShowing()) {
                             cancelByUser = true;
                             requestCall.cancel();
-                            MyToast.show(activity, "下载已取消");
                             return true;
                         }
                         return false;
@@ -80,13 +76,17 @@ public class DownloadManager {
                 });
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDialog.show();
-                progressDialog.setMax(contentLength == 0 ? apkSize : contentLength);
+                progressDialog.setMax(progressMax);
             }
 
             @Override
             public void inProgress(float progress, long total, int id) {
+                if (total != 0 && total != progressMax) {
+                    progressMax = (int) total;
+                    progressDialog.setMax(progressMax);
+                }
                 if (progressDialog != null && progressDialog.isShowing())
-                    progressDialog.setProgress(progress > 0 ? (int) (progress * progressDialog.getMax()) : -(int) progress);
+                    progressDialog.setProgress(progress > 0 ? (int) (progress * progressMax) : -(int) progress);
             }
 
             @Override

@@ -88,6 +88,7 @@ public class MeasureActivity extends BaseActivity implements AdapterView.OnItemC
         }
         mFunGridAdapter.notifyDataSetChanged();
 
+        fragments.clear();
         fragments.add(new BloodTypeFragment());
         fragments.add(new BirthDayFragment());
         fragments.add(new BabyWeightFragment());

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.interFace.LoginInterface;
 import com.yimeng.babymom.task.LoginTask;
-import com.yimeng.babymom.utils.KeyBoardUtils;
 
 import java.util.HashMap;
 import java.util.Map;

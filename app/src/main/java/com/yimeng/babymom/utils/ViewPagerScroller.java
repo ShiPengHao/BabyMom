@@ -21,7 +21,7 @@ public class ViewPagerScroller extends Scroller {
     /**
      * 设置速度速度
      *
-     * @param duration
+     * @param duration 切换的时间，ms
      */
 
     public void setScrollDuration(int duration) {

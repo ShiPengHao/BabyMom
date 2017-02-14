@@ -70,11 +70,6 @@ public class QuickIndexBar extends View {
 
     /**
      * 每次测量完成后  值改变的时候调用
-     *
-     * @param w
-     * @param h
-     * @param oldw
-     * @param oldh
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -114,9 +109,7 @@ public class QuickIndexBar extends View {
                 setBackgroundColor(getResources().getColor(R.color.grey));
                 int downY = (int) event.getY();
                 currentIndex = downY / mCellHeight;
-                if (currentIndex < 0 || currentIndex > LETTERS.length - 1) {
-
-                } else {
+                if (currentIndex >= 0 && currentIndex <= LETTERS.length - 1) {
                     if (onLetterChangeListener != null) {
                         onLetterChangeListener.onLetterChange(LETTERS[currentIndex]);
                     }
@@ -128,9 +121,7 @@ public class QuickIndexBar extends View {
             case MotionEvent.ACTION_MOVE:
                 int moveY = (int) event.getY();
                 currentIndex = moveY / mCellHeight;
-                if (currentIndex < 1 || currentIndex > LETTERS.length - 2) {
-
-                } else {
+                if (currentIndex >= 1 && currentIndex <= LETTERS.length - 2) {
                     if (onLetterChangeListener != null) {
                         onLetterChangeListener.onLetterChange(LETTERS[currentIndex]);
                     }
