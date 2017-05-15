@@ -3,7 +3,6 @@ package com.yimeng.babymom.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -125,12 +124,18 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         arrayList.clear();
         try {
             JSONArray array = new JSONObject(result).optJSONArray("data");
+            Gson gson = new Gson();
             for (int i = 0; i < array.length(); i++) {
-                arrayList.add(new Gson().fromJson(array.optString(i), clazz));
+                arrayList.add(gson.fromJson(array.optString(i), clazz));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        try {
+//            arrayList = new Gson().fromJson(new JSONObject(result).optString("data"),new TypeToken<List<T>>(){}.getType());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -177,7 +182,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             View statusBarView = new View(this);
             statusBarView.setId(R.id.iv_back);
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(this));
+                    ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight());
             contentLayout.addView(statusBarView, lp);
 
             mStatusBarView = statusBarView;
@@ -191,15 +196,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @return 颜色
      */
     public int setStatusBarColor() {
-        return getResources().getColor(R.color.colorStatusBar);
+        return MyApp.getAppContext().getResources().getColor(R.color.colorStatusBar);
     }
 
     /**
      * 获得状态栏高度
      */
-    private static int getStatusBarHeight(Context context) {
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        return context.getResources().getDimensionPixelSize(resourceId);
+    private static int getStatusBarHeight() {
+        int resourceId = MyApp.getAppContext().getResources().getIdentifier("status_bar_height", "dimen", "android");
+        return MyApp.getAppContext().getResources().getDimensionPixelSize(resourceId);
     }
 
     @Override
@@ -245,7 +250,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        KeyBoardUtils.closeKeybord(v);
+        KeyBoardUtils.closeKeyboard(v);
         int id = v.getId();
         if (id == R.id.iv_back)
             finish();
@@ -273,7 +278,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             mLoadingDialog.setCanceledOnTouchOutside(false);
         }
         TextView tv = (TextView) mLoadingDialog.findViewById(R.id.tv);
-        tv.setText(message == null ? getString(R.string.loading) : message);
+        tv.setText(isEmpty(message) ? getString(R.string.loading) : message);
         mShowLoadingHandler.removeMessages(WHAT_SHOW_LOADING);
         mShowLoadingHandler.sendEmptyMessageDelayed(WHAT_SHOW_LOADING, 500);
     }

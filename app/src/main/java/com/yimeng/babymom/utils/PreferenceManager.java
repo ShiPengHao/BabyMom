@@ -5,11 +5,11 @@ import android.content.SharedPreferences;
 
 public class PreferenceManager {
     /**
-     * name of preference
+     * preference文件名
      */
     private static final String PREFERENCE_NAME = "PREFS_ACCOUNT";
     private static SharedPreferences mSharedPreferences;
-    private static PreferenceManager mPreferencemManager;
+    private static PreferenceManager mPreferenceManager;
     private static SharedPreferences.Editor mEditor;
     /**
      * 设置声音提醒的键
@@ -55,8 +55,8 @@ public class PreferenceManager {
     }
 
     public static synchronized void init(Context cxt) {
-        if (mPreferencemManager == null) {
-            mPreferencemManager = new PreferenceManager(cxt);
+        if (mPreferenceManager == null) {
+            mPreferenceManager = new PreferenceManager(cxt);
         }
     }
 
@@ -66,10 +66,10 @@ public class PreferenceManager {
      * @return instance
      */
     public synchronized static PreferenceManager getInstance() {
-        if (mPreferencemManager == null) {
+        if (mPreferenceManager == null) {
             throw new RuntimeException("please init first!");
         }
-        return mPreferencemManager;
+        return mPreferenceManager;
     }
 
     public PreferenceManager setSettingMsgSound(boolean paramBoolean) {

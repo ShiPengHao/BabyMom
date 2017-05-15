@@ -16,7 +16,7 @@ public class KeyBoardUtils {
      *
      * @param view     一个控件引用
      */
-    public static void openKeybord(View view) {
+    public static void openKeyboard(View view) {
         IMM.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
         IMM.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
@@ -27,7 +27,7 @@ public class KeyBoardUtils {
      *
      * @param view     一个控件引用
      */
-    public static void closeKeybord(View view) {
+    public static void closeKeyboard(View view) {
         IMM.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

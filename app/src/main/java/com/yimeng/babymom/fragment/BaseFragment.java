@@ -97,6 +97,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        KeyBoardUtils.closeKeybord(v);
+        KeyBoardUtils.closeKeyboard(v);
     }
 }

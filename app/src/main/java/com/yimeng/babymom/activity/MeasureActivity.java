@@ -114,7 +114,7 @@ public class MeasureActivity extends BaseActivity implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        KeyBoardUtils.closeKeybord(viewPager);
+        KeyBoardUtils.closeKeyboard(viewPager);
         viewPager.setCurrentItem(position);
         tv_title.setText(FUN_DES[position]);
         if (position != mCheckedItemPosition) {

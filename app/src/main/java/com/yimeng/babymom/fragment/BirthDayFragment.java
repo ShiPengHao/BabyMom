@@ -75,7 +75,7 @@ public class BirthDayFragment extends BaseFragment implements MeasureActivity.Me
 
     @Override
     public void onClick(View v) {
-        KeyBoardUtils.closeKeybord(et_woman_month_long);
+        KeyBoardUtils.closeKeyboard(et_woman_month_long);
         switch (v.getId()) {
             case R.id.tv_woman_month_last:
                 showDatePickDialog();

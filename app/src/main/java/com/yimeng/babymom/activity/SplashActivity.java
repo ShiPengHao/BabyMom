@@ -29,12 +29,14 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
      * 虚拟的文件大小，当服务器返回的大小异常时使用
      */
     private static final int FAKE_SIZE = 1024 * 1024 * (10 + new Random().nextInt(6)) + new Random().nextInt(1000);
-    private static Handler handler = new Handler();
-    private String mDownloadUrl;
+    /**
+     * 延迟分发操作的handler
+     */
+    private Handler mDelayDispatchHandler = new Handler();
     private AlertDialog mUpdateDialog;
     private int mApkSize;
-    private RequestCall mRequestCall;
-    private HashMap<String, Object> mParams = new HashMap<>();
+    private String mDownloadUrl;
+    private RequestCall mDownCall;
     private AsyncTask<Object, Object, String> mLoginTask;
     private AsyncTask<Object, Object, String> mUpdateTask;
     private String mPhone;
@@ -78,35 +80,38 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
     public void dispatchEvent() {
         if (mPrefManager.getAccountFirstRunning()) {
             copyRes2Local();
-            handler.postDelayed(new Runnable() {
+            mDelayDispatchHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     goToIntroduce();
                 }
             }, 2000);
-        } else
-            handler.postDelayed(new Runnable() {
+        } else {
+            mDelayDispatchHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     checkUpdate();
                 }
             }, 2000);
+        }
 
     }
 
     public void autoLogin() {
         mPhone = mPrefManager.getAccountUsername();
         mPassword = mPrefManager.getAccountPassword();
-        if (isEmpty(mPhone) || isEmpty(mPassword))
+        if (isEmpty(mPhone) || isEmpty(mPassword)) {
             goToLogin();
-        else
+        } else {
             login();
+        }
     }
 
     public void login() {
-        if (mLoginTask != null)
+        if (mLoginTask != null) {
             mLoginTask.cancel(true);
-        mParams.clear();
+        }
+        HashMap<String, Object> mParams = new HashMap<>();
         mParams.put(LoginTask.PHONE, mPhone);
         mParams.put(LoginTask.PASSWORD, mPassword);
         mLoginTask = new LoginTask(this).execute(LoginTask.METHOD, mParams);
@@ -174,18 +179,19 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
      * 判断是否自动登陆，是则尝试自动登陆，否则跳转登陆页面
      */
     public void dispatchLogin() {
-        if (mPrefManager.getAccountAutoLogin())
+        if (mPrefManager.getAccountAutoLogin()) {
             autoLogin();
-        else
+        } else {
             goToLogin();
+        }
     }
 
     public void downPackage() {
-        if (mRequestCall != null) {
-            mRequestCall.cancel();
+        if (mDownCall != null) {
+            mDownCall.cancel();
         }
-        mRequestCall = OkHttpUtils.get().url(mDownloadUrl).build().connTimeOut(300000).readTimeOut(300000).writeTimeOut(300000);
-        DownloadManager.downPackage(mActivity, mRequestCall, getString(R.string.apk_name), mApkSize == 0 ? FAKE_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
+        mDownCall = OkHttpUtils.get().url(mDownloadUrl).build().connTimeOut(300000).readTimeOut(300000).writeTimeOut(300000);
+        DownloadManager.downPackage(mActivity, mDownCall, getString(R.string.apk_name), mApkSize == 0 ? FAKE_SIZE : mApkSize, new DownloadManager.ErrorCallback() {
             @Override
             public void onError() {
                 dispatchLogin();
@@ -208,15 +214,19 @@ public class SplashActivity extends BaseActivity implements SplashInterface {
 
     @Override
     protected void onDestroy() {
-        if (mUpdateDialog != null && mUpdateDialog.isShowing())
+        if (mUpdateDialog != null && mUpdateDialog.isShowing()) {
             mUpdateDialog.dismiss();
-        if (mRequestCall != null)
-            mRequestCall.cancel();
-        if (mUpdateTask != null)
+        }
+        if (mDownCall != null) {
+            mDownCall.cancel();
+        }
+        if (mUpdateTask != null) {
             mUpdateTask.cancel(true);
-        if (mLoginTask != null)
+        }
+        if (mLoginTask != null) {
             mLoginTask.cancel(true);
-        handler.removeCallbacksAndMessages(null);
+        }
+        mDelayDispatchHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 }
