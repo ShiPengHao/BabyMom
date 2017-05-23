@@ -16,27 +16,72 @@
         <include layout="@layout/layout_imageview_back" />
     </RelativeLayout>
 
-    <!--<jp.co.recruit_mp.android.lightcalendarview.LightCalendarView-->
-        <!--android:id="@+id/calendarView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content" />-->
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mcv_showOtherDates="all"
-        app:mcv_titleAnimationOrientation="horizontal"
-        app:mcv_tileHeight="@dimen/finger_width"
-        app:mcv_firstDayOfWeek="monday"
+        android:visibility="gone"
         app:mcv_arrowColor="@color/colorAccent"
+        app:mcv_firstDayOfWeek="monday"
         app:mcv_selectionColor="@color/colorAccent"
-        />
+        app:mcv_showOtherDates="all"
+        app:mcv_tileHeight="@dimen/item_width"
+        app:mcv_titleAnimationOrientation="horizontal" />
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="100dp" />
+
+    <TextView
+        android:id="@+id/tv_beat_cur"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_width"
+        android:layout_marginLeft="@dimen/general_margin"
+        android:layout_marginRight="@dimen/general_margin"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_beat_sel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_width"
+        android:layout_marginLeft="@dimen/general_margin"
+        android:layout_marginRight="@dimen/general_margin"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:textColor="@color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/bt_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_bt_bg_accent"
+            android:gravity="center"
+            android:text="@string/start"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/bt_save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_bt_bg_yellow"
+            android:gravity="center"
+            android:text="@string/save"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </LinearLayout>
