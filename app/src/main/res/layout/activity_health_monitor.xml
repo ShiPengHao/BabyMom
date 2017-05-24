@@ -29,6 +29,15 @@
         app:mcv_tileHeight="@dimen/item_width"
         app:mcv_titleAnimationOrientation="horizontal" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_width"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:text="@string/heart_rate"
+        android:textColor="@color/colorAccent" />
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
@@ -43,18 +52,17 @@
         android:layout_marginBottom="5dp"
         android:gravity="center_vertical"
         android:padding="4dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/bg_light_green" />
 
-    <TextView
-        android:id="@+id/tv_beat_sel"
+    <Button
+        android:id="@+id/bt_submit"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_width"
-        android:layout_marginLeft="@dimen/general_margin"
-        android:layout_marginRight="@dimen/general_margin"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textColor="@color/black" />
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/selector_bt_bg_accent"
+        android:gravity="center"
+        android:text="@string/start"
+        android:textColor="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,25 +71,26 @@
         android:padding="10dp">
 
         <Button
-            android:id="@+id/bt_submit"
+            android:id="@+id/bt_save_img"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_bt_bg_accent"
             android:gravity="center"
-            android:text="@string/start"
+            android:text="@string/save_img"
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/bt_save"
+            android:id="@+id/bt_save_data"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:background="@drawable/selector_bt_bg_yellow"
             android:gravity="center"
-            android:text="@string/save"
+            android:text="@string/save_data"
             android:textColor="@color/white" />
     </LinearLayout>
+
 
 </LinearLayout>

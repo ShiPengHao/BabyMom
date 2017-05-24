@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -267,7 +268,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      *
      * @param message 加载视图文字指示
      */
-    public void showLoadingView(String message) {
+    public void showLoadingView(@Nullable String message) {
         if (mLoadingDialog == null) {
             mLoadingDialog = new Dialog(this, R.style.MyDialogStyle);
             mLoadingDialog.setContentView(R.layout.layout_loading);
@@ -289,7 +290,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @param message         显示消息
      * @param onClickListener 确定按钮的点击事件监听
      */
-    public void showOkTips(String message, DialogInterface.OnClickListener onClickListener) {
+    public void showOkTips(String message, @Nullable DialogInterface.OnClickListener onClickListener) {
         dismissLoadingView();
         if (null == mOkDialog) {
             mOkDialog = new AlertDialog.Builder(mActivity)

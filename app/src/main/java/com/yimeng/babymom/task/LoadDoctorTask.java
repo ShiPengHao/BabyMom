@@ -7,7 +7,7 @@ import com.yimeng.babymom.activity.DepartmentActivity;
  * 请求医生
  */
 
-public class LoadDoctorTask extends BaseTask<DepartmentActivity> {
+public class LoadDoctorTask extends WebServiceTask<DepartmentActivity> {
 
     public static final String METHOD = "Load_Doctor";
     public static final String DEPARTMENTS_ID = "departments_id";

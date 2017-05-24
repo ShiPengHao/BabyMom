@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * 登录任务
  */
 
-public class LoginTask extends BaseTask<GeneralLoginInterface> {
+public class LoginTask extends WebServiceTask<GeneralLoginInterface> {
 
     public static final String METHOD = "login";
 

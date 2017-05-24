@@ -8,7 +8,7 @@ import com.yimeng.babymom.interFace.AddressInterface;
  * 获取一个区集合数据的任务
  */
 
-public class AddressAreaTask extends BaseTask<AddressInterface> {
+public class AddressAreaTask extends WebServiceTask<AddressInterface> {
 
     public static final String METHOD = "GetArea";
 

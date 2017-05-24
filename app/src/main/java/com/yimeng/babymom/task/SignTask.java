@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * 签到任务
  */
 
-public class SignTask extends BaseTask<HomeFragment> {
+public class SignTask extends WebServiceTask<HomeFragment> {
     public static final String METHOD = "sign";
 
     public static final String PHONE = "phone";

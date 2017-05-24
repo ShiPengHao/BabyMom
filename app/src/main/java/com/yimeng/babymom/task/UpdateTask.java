@@ -14,7 +14,7 @@ import org.json.JSONObject;
  * 检查更新任务
  */
 
-public class UpdateTask extends BaseTask<GeneralUpdateInterface> {
+public class UpdateTask extends WebServiceTask<GeneralUpdateInterface> {
 
     public static final String METHOD = "getUpdate";
 

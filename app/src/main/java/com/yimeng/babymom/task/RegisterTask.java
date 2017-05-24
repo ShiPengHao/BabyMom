@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * 注册任务
  */
 
-public class RegisterTask extends BaseTask<RegisterActivity> {
+public class RegisterTask extends WebServiceTask<RegisterActivity> {
 
     public static final String METHOD = "pwdRest";
 

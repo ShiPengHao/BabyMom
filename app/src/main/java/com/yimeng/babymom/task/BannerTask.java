@@ -8,7 +8,7 @@ import com.yimeng.babymom.interFace.GeneralBannerInterface;
  * 获取一个banner集合数据的任务
  */
 
-public class BannerTask extends BaseTask<GeneralBannerInterface> {
+public class BannerTask extends WebServiceTask<GeneralBannerInterface> {
 
     public static final String METHOD = "getBanner";
 

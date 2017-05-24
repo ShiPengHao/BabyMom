@@ -1,5 +1,8 @@
 package com.yimeng.babymom.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.LimitLine;
@@ -12,7 +15,12 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.yimeng.babymom.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * 图表相关工具类
@@ -25,6 +33,7 @@ public class ChartUtils {
     public static final int PAGE_SIZE = POINT_PER_PAGE * POINT_SPACE;
     public static final int COLOR_ACCENT = MyApp.getAppContext().getResources().getColor(R.color.colorAccent);
     public static final int BG_LIGHT_GREEN = MyApp.getAppContext().getResources().getColor(R.color.bg_light_green);
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
 
     /**
      * 设置图标控件的样式
@@ -33,15 +42,13 @@ public class ChartUtils {
         //chart
 //        //设置手势滑动事件
 //        lineChart.setOnChartGestureListener(this);
-//        //设置数值选择监听
-//        lineChart.setOnChartValueSelectedListener(this);
         //拖拽
         lineChart.setDragEnabled(true);
         //缩放
         lineChart.setPinchZoom(true);
         // 标签
         lineChart.getDescription().setEnabled(false);
-        lineChart.setNoDataText("无当天数据");
+        lineChart.setNoDataText("无数据");
         lineChart.setNoDataTextColor(BG_LIGHT_GREEN);
 
         //x轴
@@ -55,10 +62,23 @@ public class ChartUtils {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if (value == 0)
-                    return "0";
                 int val = (int) value;
-                return val % PAGE_SIZE == 0 ? val / PAGE_SIZE + "min" : val % PAGE_SIZE + "s";
+                int sec = val % ChartUtils.PAGE_SIZE;
+                int min = val / ChartUtils.PAGE_SIZE;
+                String time;
+                if (sec == 0) {
+                    time = min + "分";
+                } else if (min == 0) {
+                    time = sec + "秒";
+                } else {
+                    time = min + "分" + sec + "秒";
+                }
+                return time;
+//                if (value == 0)
+//                    return "0";
+//                int val = (int) value;
+//                return val % PAGE_SIZE == 0 ? val / PAGE_SIZE + "min" : "";
+//                return val % PAGE_SIZE == 0 ? val / PAGE_SIZE + "min" : val % PAGE_SIZE + "s";
             }
         });
 
@@ -66,6 +86,9 @@ public class ChartUtils {
         YAxis yAxis = lineChart.getAxisLeft();
         yAxis.enableGridDashedLine(10f, 10f, 0f);
         yAxis.setDrawZeroLine(false);
+//        yAxis.setSpaceMin(1f);
+        yAxis.setAxisMaximum(200f);
+        yAxis.setAxisMinimum(80f);
 //        yAxis.setDrawGridLines(false);
         yAxis.setDrawLimitLinesBehindData(true);
         // y轴范围上限
@@ -122,8 +145,8 @@ public class ChartUtils {
     /**
      * 设置数据线的样式和数据，设置初始值
      *
-     * @param lineChart   图表控件
-     * @param values 初始值集合
+     * @param lineChart 图表控件
+     * @param values    初始值集合
      */
     public static void initLineData(LineChart lineChart, ArrayList<Entry> values) {
         LineDataSet mLineDataSet = new LineDataSet(values, "");
@@ -143,5 +166,44 @@ public class ChartUtils {
         lineChart.setData(new LineData(dataSets));
     }
 
+    /**
+     * 根据日期获取sp文件，日期与文件名绑定，每天对应一个文件
+     *
+     * @param date
+     * @return
+     */
+    public static SharedPreferences getPrefs(Date date) {
+        String prefsName = simpleDateFormat.format(date);
+        return MyApp.getAppContext().getSharedPreferences(prefsName, Context.MODE_PRIVATE);
+    }
 
+    /**
+     * 向文件中写入一个点
+     *
+     * @param prefs sp
+     * @param entry 点信息
+     */
+    public static void putEntry(SharedPreferences prefs, Entry entry) {
+        prefs.edit().putFloat(String.valueOf(entry.getX()), entry.getY()).apply();
+    }
+
+    /**
+     * 获取该文件下的所有键值对，返回包含所有点的信息的集合
+     *
+     * @param prefs sp
+     * @return 包含所有点的信息的集合
+     */
+    public static ArrayList<Entry> getAllEntry(SharedPreferences prefs) {
+        ArrayList<Entry> values = new ArrayList<>();
+        for (String key : prefs.getAll().keySet()) {
+            values.add(new Entry(Float.parseFloat(key), prefs.getFloat(key, 0)));
+            Collections.sort(values, new Comparator<Entry>() {
+                @Override
+                public int compare(Entry o1, Entry o2) {
+                    return (int) (1000 * (o1.getX() - o2.getX()));
+                }
+            });
+        }
+        return values;
+    }
 }

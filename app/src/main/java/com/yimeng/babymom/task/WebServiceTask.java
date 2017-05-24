@@ -19,12 +19,12 @@ import java.util.Map;
  * 3.对服务器返回的数据进行了非空判断，子类需要重写parseResult方法
  * 4.提供了异常回调onError方法
  */
-public abstract class BaseTask<T> extends AsyncTask<Object, Object, String> {
+public abstract class WebServiceTask<T> extends AsyncTask<Object, Object, String> {
 
     private WeakReference<T> activityWR;
     private WeakReference<View> viewWR;
 
-    public BaseTask(T activity, View view) {
+    public WebServiceTask(T activity, View view) {
         activityWR = new WeakReference<>(activity);
         if (view != null)
             viewWR = new WeakReference<>(view);

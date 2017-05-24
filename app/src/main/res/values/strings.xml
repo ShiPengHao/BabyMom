@@ -189,9 +189,12 @@
     <string name="health_monitor">健康检测</string>
     <string name="test">测试</string>
     <string name="start">开始</string>
-    <string name="save">保存当前可见图片</string>
+    <string name="save_img">保存图片</string>
     <string name="reset">重置</string>
     <string name="stop">停止</string>
+    <string name="heart_rate">胎心率 FHR/BPM</string>
+    <string name="save_data">保存数据</string>
+    <string name="heart_now">胎心率瞬时值</string>
     <array name="home_fun">
         <item>在线咨询</item>
         <item>健康监测</item>

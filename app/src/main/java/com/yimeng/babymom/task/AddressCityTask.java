@@ -8,7 +8,7 @@ import com.yimeng.babymom.interFace.AddressInterface;
  * 获取一个市集合数据的任务
  */
 
-public class AddressCityTask extends BaseTask<AddressInterface> {
+public class AddressCityTask extends WebServiceTask<AddressInterface> {
     public static final String METHOD = "GetCity";
     public static final String PROVINCECODE = "provincecode";
 

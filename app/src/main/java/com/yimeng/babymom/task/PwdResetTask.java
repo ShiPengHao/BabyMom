@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * 重置密码任务
  */
 
-public class PwdResetTask extends BaseTask<PwdResetActivity> {
+public class PwdResetTask extends WebServiceTask<PwdResetActivity> {
     public static final String METHOD = "pwdRest";
 
     public static final String PHONE = "phone";

@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * 获取用户信息
  */
 
-public class UserInfoTask extends BaseTask<GeneralUserInfoInterface> {
+public class UserInfoTask extends WebServiceTask<GeneralUserInfoInterface> {
     public static final String METHOD = "getUser";
 
     public static final String PHONE = "phone";

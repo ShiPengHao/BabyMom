@@ -3,14 +3,16 @@ package com.yimeng.babymom.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.github.mikephil.charting.data.Entry;
+
 public class PreferenceManager {
     /**
      * preference文件名
      */
     private static final String PREFERENCE_NAME = "PREFS_ACCOUNT";
-    private static SharedPreferences mSharedPreferences;
     private static PreferenceManager mPreferenceManager;
-    private static SharedPreferences.Editor mEditor;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mAccountEditor;
     /**
      * 设置声音提醒的键
      */
@@ -51,7 +53,7 @@ public class PreferenceManager {
 
     private PreferenceManager(Context cxt) {
         mSharedPreferences = cxt.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        mEditor = mSharedPreferences.edit();
+        mAccountEditor = mSharedPreferences.edit();
     }
 
     public static synchronized void init(Context cxt) {
@@ -73,7 +75,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setSettingMsgSound(boolean paramBoolean) {
-        mEditor.putBoolean(KEY_SETTING_SOUND, paramBoolean).apply();
+        mAccountEditor.putBoolean(KEY_SETTING_SOUND, paramBoolean).apply();
         return this;
     }
 
@@ -82,7 +84,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setSettingMsgVibrate(boolean paramBoolean) {
-        mEditor.putBoolean(KEY_SETTING_VIBRATE, paramBoolean).apply();
+        mAccountEditor.putBoolean(KEY_SETTING_VIBRATE, paramBoolean).apply();
         return this;
     }
 
@@ -91,7 +93,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setAccountFirstRunning(boolean paramBoolean) {
-        mEditor.putBoolean(KEY_ACCOUNT_FIRST_RUNNING, paramBoolean).apply();
+        mAccountEditor.putBoolean(KEY_ACCOUNT_FIRST_RUNNING, paramBoolean).apply();
         return this;
     }
 
@@ -100,7 +102,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setAccountAutoUpdate(boolean paramBoolean) {
-        mEditor.putBoolean(KEY_ACCOUNT_AUTO_UPDATE, paramBoolean).apply();
+        mAccountEditor.putBoolean(KEY_ACCOUNT_AUTO_UPDATE, paramBoolean).apply();
         return this;
     }
 
@@ -109,7 +111,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setAccountAutoLogin(boolean paramBoolean) {
-        mEditor.putBoolean(KEY_ACCOUNT_AUTO_LOGIN, paramBoolean).apply();
+        mAccountEditor.putBoolean(KEY_ACCOUNT_AUTO_LOGIN, paramBoolean).apply();
         return this;
     }
 
@@ -118,7 +120,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setAccountLastRemember(boolean paramBoolean) {
-        mEditor.putBoolean(KEY_ACCOUNT_LAST_REMEMBER, paramBoolean).apply();
+        mAccountEditor.putBoolean(KEY_ACCOUNT_LAST_REMEMBER, paramBoolean).apply();
         return this;
     }
 
@@ -127,7 +129,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setAccountUsername(String paramString) {
-        mEditor.putString(KEY_ACCOUNT_LAST_USERNAME, paramString).apply();
+        mAccountEditor.putString(KEY_ACCOUNT_LAST_USERNAME, paramString).apply();
         return this;
     }
 
@@ -136,7 +138,7 @@ public class PreferenceManager {
     }
 
     public PreferenceManager setAccountPassword(String paramString) {
-        mEditor.putString(KEY_ACCOUNT_LAST_PASSWORD, paramString).apply();
+        mAccountEditor.putString(KEY_ACCOUNT_LAST_PASSWORD, paramString).apply();
         return this;
     }
 

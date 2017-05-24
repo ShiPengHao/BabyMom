@@ -8,7 +8,7 @@ import com.yimeng.babymom.interFace.HospitalCityInterface;
  * 获取一个banner集合数据的任务
  */
 
-public class HospitalCityTask extends BaseTask<HospitalCityInterface> {
+public class HospitalCityTask extends WebServiceTask<HospitalCityInterface> {
 
     public static final String METHOD = "get_City_Hospital";
     public static final String CITYNAME = "cityname";

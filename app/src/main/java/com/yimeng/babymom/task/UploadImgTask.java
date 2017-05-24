@@ -8,7 +8,7 @@ import org.json.JSONObject;
  * 上传图片任务
  */
 
-public class UploadImgTask extends BaseTask<UploadImgTask.UploadImgInterface> {
+public class UploadImgTask extends WebServiceTask<UploadImgTask.UploadImgInterface> {
     public static final String METHOD = "upload_img";
     public static final String FILE_NAME = "fileName";
     public static final String DEL_FILE_PATH = "DelFilePath";

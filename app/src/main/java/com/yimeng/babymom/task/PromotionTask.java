@@ -8,7 +8,7 @@ import com.yimeng.babymom.fragment.PromotionFragment;
  * 获得活动列表任务
  */
 
-public class PromotionTask extends BaseTask<PromotionFragment> {
+public class PromotionTask extends WebServiceTask<PromotionFragment> {
 
     public static final String METHOD = "promotion";
 

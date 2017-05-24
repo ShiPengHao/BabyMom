@@ -10,7 +10,7 @@ import org.json.JSONObject;
  * 提交建议任务
  */
 
-public class SuggestTask extends BaseTask<SuggestActivity> {
+public class SuggestTask extends WebServiceTask<SuggestActivity> {
 
     public static final String METHOD = "AddGuestbook";
 
