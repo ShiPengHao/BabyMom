@@ -194,7 +194,7 @@
     <string name="stop">停止</string>
     <string name="heart_rate">胎心率 FHR/BPM</string>
     <string name="save_data">保存数据</string>
-    <string name="heart_now">胎心率瞬时值</string>
+    <string name="heart_now">瞬时值</string>
     <array name="home_fun">
         <item>在线咨询</item>
         <item>健康监测</item>

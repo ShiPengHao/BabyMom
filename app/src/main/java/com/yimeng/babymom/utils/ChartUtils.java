@@ -28,9 +28,7 @@ import java.util.Locale;
 public class ChartUtils {
 
 
-    public static final int POINT_PER_PAGE = 60;
-    public static final int POINT_SPACE = 1;
-    public static final int PAGE_SIZE = POINT_PER_PAGE * POINT_SPACE;
+    public static final int PAGE_SIZE = 60;
     public static final int COLOR_ACCENT = MyApp.getAppContext().getResources().getColor(R.color.colorAccent);
     public static final int BG_LIGHT_GREEN = MyApp.getAppContext().getResources().getColor(R.color.bg_light_green);
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
@@ -169,7 +167,7 @@ public class ChartUtils {
     /**
      * 根据日期获取sp文件，日期与文件名绑定，每天对应一个文件
      *
-     * @param date
+     * @param date 与文件绑定的日期
      * @return
      */
     public static SharedPreferences getPrefs(Date date) {

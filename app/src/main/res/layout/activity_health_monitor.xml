@@ -5,7 +5,9 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+
     <RelativeLayout
+        android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -14,83 +16,109 @@
             android:text="@string/health_monitor" />
 
         <include layout="@layout/layout_imageview_back" />
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="@dimen/general_margin"
+            android:layout_marginRight="@dimen/general_margin"
+            android:src="@drawable/list" />
     </RelativeLayout>
 
-
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/calendarView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:mcv_arrowColor="@color/colorAccent"
-        app:mcv_firstDayOfWeek="monday"
-        app:mcv_selectionColor="@color/colorAccent"
-        app:mcv_showOtherDates="all"
-        app:mcv_tileHeight="@dimen/item_width"
-        app:mcv_titleAnimationOrientation="horizontal" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_width"
-        android:layout_margin="5dp"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:text="@string/heart_rate"
-        android:textColor="@color/colorAccent" />
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
-
-    <TextView
-        android:id="@+id/tv_beat_cur"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_width"
-        android:layout_marginLeft="@dimen/general_margin"
-        android:layout_marginRight="@dimen/general_margin"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textColor="@color/bg_light_green" />
-
-    <Button
-        android:id="@+id/bt_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@drawable/selector_bt_bg_accent"
-        android:gravity="center"
-        android:text="@string/start"
-        android:textColor="@color/white" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <Button
-            android:id="@+id/bt_save_img"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selector_bt_bg_accent"
-            android:gravity="center"
-            android:text="@string/save_img"
-            android:textColor="@color/white" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/bt_save_data"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/selector_bt_bg_yellow"
-            android:gravity="center"
-            android:text="@string/save_data"
-            android:textColor="@color/white" />
-    </LinearLayout>
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mcv_arrowColor="@color/colorAccent"
+                app:mcv_firstDayOfWeek="monday"
+                app:mcv_selectionColor="@color/colorAccent"
+                app:mcv_showOtherDates="all"
+                app:mcv_tileHeight="@dimen/item_width"
+                app:mcv_titleAnimationOrientation="horizontal" />
+
+            <RelativeLayout
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_width"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
+                    android:text="@string/heart_rate"
+                    android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:id="@+id/tv_beat_cur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_width"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="@dimen/general_margin"
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/bg_light_green" />
+            </RelativeLayout>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/bt_save_img"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_bt_bg_yellow"
+                    android:gravity="center"
+                    android:text="@string/save_img"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/bt_submit"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/selector_bt_bg_circle_red"
+                    android:gravity="center"
+                    android:text="@string/start"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/bt_save_data"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_bt_bg_yellow"
+                    android:gravity="center"
+                    android:text="@string/save_data"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
