@@ -186,7 +186,7 @@
     <string name="promotion">活动</string>
     <string name="promotion_time">活动倒计时</string>
     <string name="promotion_over">活动已结束</string>
-    <string name="health_monitor">健康检测</string>
+    <string name="health_monitor">健康监测</string>
     <string name="test">测试</string>
     <string name="start">开始</string>
     <string name="save_img">保存图片</string>
@@ -195,6 +195,7 @@
     <string name="heart_rate">胎心率 FHR/BPM</string>
     <string name="save_data">保存数据</string>
     <string name="heart_now">瞬时值</string>
+    <string name="no_device">请先连接设备</string>
     <array name="home_fun">
         <item>在线咨询</item>
         <item>健康监测</item>

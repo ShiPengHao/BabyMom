@@ -32,6 +32,7 @@ import com.yimeng.babymom.utils.DensityUtil;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -77,6 +78,14 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      * 每次监测获取的有效数据的最低个数限制，在保存数据时判断
      */
     private final int VALID_NUMBER_MIN = 300;
+    /**
+     * 读取监测数据的异步任务
+     */
+    private AsyncTask<Void, Void, ArrayList<Entry>> mReadTask;
+    /**
+     * 缓存所选日期对应的历史记录数据的集合
+     */
+    private HashMap<String, ArrayList<Entry>> mEntryData = new HashMap<>();
 
     @Override
     protected int setLayoutResId() {
@@ -230,7 +239,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      * 保存图表图片到本地
      */
     private void saveImg() {
-        String imgName = String.valueOf(System.currentTimeMillis());
+        String imgName = ChartUtils.getFileName(mSelectedDate) + "-" + System.currentTimeMillis();
         if (mLineChart.saveToGallery(imgName, 100)) {
             showToast("保存图片成功");
         } else {
@@ -248,7 +257,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             return;
         }
         // 判断有无数据
-        if(null == mLineChart.getLineData()){
+        if (null == mLineChart.getLineData()) {
             showToast("无数据");
             return;
         }
@@ -262,13 +271,13 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
             @Override
             protected void onPreExecute() {
-                bt_save_data.setEnabled(false);
+//                bt_save_data.setEnabled(false);
                 showLoadingView("保存中。。。");
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                SharedPreferences prefs = ChartUtils.getPrefs(new Date());
+                SharedPreferences prefs = ChartUtils.getPrefs(ChartUtils.getFileName(new Date()));
                 prefs.edit().clear().commit();
                 for (Entry e : values) {
                     ChartUtils.putEntry(prefs, e);
@@ -280,7 +289,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             protected void onPostExecute(Void aVoid) {
                 dismissLoadingView();
                 showToast("保存数据成功");
-                bt_save_data.setEnabled(true);
+//                bt_save_data.setEnabled(true);
             }
         }.execute();
     }
@@ -289,13 +298,39 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      * 从本地读取图表数据
      */
     private void readChartData() {
-        ArrayList<Entry> entries = ChartUtils.getAllEntry(ChartUtils.getPrefs(mSelectedDate));
-        if (entries.size() != 0) {
-            bt_submit.setText(getString(R.string.reset));
-            isStop = true;
-            mLineChart.getXAxis().resetAxisMaximum();
-            ChartUtils.initLineData(mLineChart, entries);
+        if (null != mReadTask && mReadTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mReadTask.cancel(true);
         }
+        mReadTask = new AsyncTask<Void, Void, ArrayList<Entry>>() {
+
+            @Override
+            protected void onPreExecute() {
+                showLoadingView("正在读取记录，请稍等");
+            }
+
+            @Override
+            protected ArrayList<Entry> doInBackground(Void... params) {
+                String fileName = ChartUtils.getFileName(mSelectedDate);
+                ArrayList<Entry> result = mEntryData.get(fileName);
+                if (null == result) {
+                    result = ChartUtils.getAllEntry(ChartUtils.getPrefs(fileName));
+                    mEntryData.put(fileName, result);
+                }
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Entry> entries) {
+                if (entries.size() != 0) {
+                    bt_submit.setText(getString(R.string.reset));
+                    isStop = true;
+                    mLineChart.getXAxis().resetAxisMaximum();
+                    ChartUtils.initLineData(mLineChart, entries);
+                    mLineChart.invalidate();
+                }
+                dismissLoadingView();
+            }
+        }.execute();
     }
 
     public boolean inSameDay(Date date1, Date Date2) {
@@ -345,6 +380,9 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         if (null != mSaveTask) {
             mSaveTask.cancel(false);
         }
+        if (null != mReadTask) {
+            mReadTask.cancel(true);
+        }
         super.onDestroy();
     }
 
@@ -361,7 +399,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         } else {
             time = min + "分" + sec + "秒";
         }
-        showToast(String.format("时间：%s，值：%s", time, (int) e.getY()));
+        showToast(String.format("时间：%s，胎心率：%s", time, (int) e.getY()));
     }
 
     @Override

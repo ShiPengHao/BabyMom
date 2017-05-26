@@ -29,8 +29,8 @@ public class ChartUtils {
 
 
     public static final int PAGE_SIZE = 60;
-    public static final int COLOR_ACCENT = MyApp.getAppContext().getResources().getColor(R.color.colorAccent);
-    public static final int BG_LIGHT_GREEN = MyApp.getAppContext().getResources().getColor(R.color.bg_light_green);
+    private static final int COLOR_ACCENT = MyApp.getAppContext().getResources().getColor(R.color.colorAccent);
+    private static final int BG_LIGHT_GREEN = MyApp.getAppContext().getResources().getColor(R.color.bg_light_green);
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
 
     /**
@@ -165,13 +165,22 @@ public class ChartUtils {
     }
 
     /**
-     * 根据日期获取sp文件，日期与文件名绑定，每天对应一个文件
+     * 根据日期绑定sp文件名，每天对应一个文件
      *
-     * @param date 与文件绑定的日期
-     * @return
+     * @param date 日期
+     * @return 文件名
      */
-    public static SharedPreferences getPrefs(Date date) {
-        String prefsName = simpleDateFormat.format(date);
+    public static String getFileName(Date date) {
+        return simpleDateFormat.format(date);
+    }
+
+    /**
+     * 根据文件名获取sp文件
+     *
+     * @param prefsName 文件名：绑定的日期
+     * @return SharedPreference单例
+     */
+    public static SharedPreferences getPrefs(String prefsName) {
         return MyApp.getAppContext().getSharedPreferences(prefsName, Context.MODE_PRIVATE);
     }
 

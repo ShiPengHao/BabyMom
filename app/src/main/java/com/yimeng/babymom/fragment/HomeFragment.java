@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,7 @@ import com.yimeng.babymom.R;
 import com.yimeng.babymom.activity.AddressListActivity;
 import com.yimeng.babymom.activity.DepartmentActivity;
 import com.yimeng.babymom.activity.HealthMonitorActivity;
+import com.yimeng.babymom.activity.HealthMonitorPreActivity;
 import com.yimeng.babymom.activity.HospitalListActivity;
 import com.yimeng.babymom.activity.MeasureActivity;
 import com.yimeng.babymom.activity.TestActivity;
@@ -344,7 +346,12 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
     }
 
     public void goToHealthMonitor() {
-        startActivity(new Intent(activity, HealthMonitorActivity.class));
+        AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager.isWiredHeadsetOn()) {
+            startActivity(new Intent(activity, HealthMonitorActivity.class));
+        }else {
+            startActivity(new Intent(activity, HealthMonitorPreActivity.class));
+        }
     }
 
     public void goToMeasure() {
