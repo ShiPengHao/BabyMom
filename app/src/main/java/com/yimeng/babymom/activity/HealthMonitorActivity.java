@@ -271,8 +271,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
             @Override
             protected void onPreExecute() {
-//                bt_save_data.setEnabled(false);
-                showLoadingView("保存中。。。");
+                showLoadingView("正在保存今天的数据");
             }
 
             @Override
@@ -288,8 +287,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             @Override
             protected void onPostExecute(Void aVoid) {
                 dismissLoadingView();
-                showToast("保存数据成功");
-//                bt_save_data.setEnabled(true);
+                showToast("保存今天的数据成功");
             }
         }.execute();
     }
@@ -461,10 +459,13 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
          * 模拟胎心图表数据
          */
         Entry getEntry() {
+            // x:ms ---> s
             float x = (System.currentTimeMillis() - startTime) / 1000f;
             //波形随机因子
             float random = new Random().nextFloat();
+            // y:base+sin+random
             float y = (float) (BASE + (random + Math.sin(2 * (x % CYCLE) * Math.PI / CYCLE) / 2) * AMPLITUDE);
+            // y+quicken
             if (x > QUICKEN_CYCLE && x % QUICKEN_CYCLE < QUICKEN_LENGTH) {
                 y += QUICKEN_AMPLITUDE;
             }
