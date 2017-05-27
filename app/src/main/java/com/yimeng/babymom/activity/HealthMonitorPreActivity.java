@@ -54,6 +54,9 @@ public class HealthMonitorPreActivity extends BaseActivity {
                         new Runnable() {
                             @Override
                             public void run() {
+                                if (isDestroy) {
+                                    return;
+                                }
                                 showToast("测试时自动跳转");
                                 startActivity(new Intent(MyApp.getAppContext(), HealthMonitorActivity.class));
                                 finish();

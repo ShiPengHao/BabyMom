@@ -30,14 +30,15 @@ public class SMSVerifyActivity extends BaseActivity implements SMSVerifyInterfac
     private Button bt_submit;
 
     private EventHandler mSmsEventHandler;
-    private Handler handler = new Handler(new Handler.Callback() {
+    private Handler mCountHandler = new Handler(new Handler.Callback() {
+        private int mTimeCount = TIME_DELAY;
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case TIME_DELAY:
                     if (mTimeCount > 0) {
                         bt_verify.setText(String.format("%s秒后再次点击", mTimeCount--));
-                        handler.sendEmptyMessageDelayed(TIME_DELAY, 1000);
+                        mCountHandler.sendEmptyMessageDelayed(TIME_DELAY, 1000);
                     } else {
                         bt_verify.setEnabled(true);
                         bt_verify.setText(getString(R.string.get_msg_verify));
@@ -49,7 +50,6 @@ public class SMSVerifyActivity extends BaseActivity implements SMSVerifyInterfac
 
     });
     private static final int TIME_DELAY = 60;
-    private int mTimeCount = TIME_DELAY;
     private String mPhone;
     private String mVerifyCode;
 
@@ -199,8 +199,8 @@ public class SMSVerifyActivity extends BaseActivity implements SMSVerifyInterfac
 
 
     public void updateTextIndicator() {
-        handler.removeMessages(TIME_DELAY);
-        handler.sendEmptyMessageDelayed(TIME_DELAY, 0);
+        mCountHandler.removeMessages(TIME_DELAY);
+        mCountHandler.sendEmptyMessageDelayed(TIME_DELAY, 0);
     }
 
     public void registerSmsListener() {
@@ -211,7 +211,7 @@ public class SMSVerifyActivity extends BaseActivity implements SMSVerifyInterfac
 
     @Override
     protected void onDestroy() {
-        handler.removeCallbacksAndMessages(null);
+        mCountHandler.removeCallbacksAndMessages(null);
         unregisterSmsListener();
         super.onDestroy();
     }

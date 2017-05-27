@@ -414,44 +414,44 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         /**
          * 波形振幅
          */
-        final int amplitude = 10;
+        static final int AMPLITUDE = 10;
         /**
          * 波形基准
          */
-        final int base = 130;
+        static final int BASE = 130;
         /**
          * 波形周期
          */
-        final int cycle = 100;
+        static final int CYCLE = 100;
         /**
          * 胎动周期
          */
-        final int quickenCycle = 600;
+        static final int QUICKEN_CYCLE = 600;
         /**
          * 胎动振幅
          */
-        final int quickenAmplitude = 30;
+        static final int QUICKEN_AMPLITUDE = 30;
         /*
          * 胎动时间长度
          */
-        final int quickenLength = 20;
+        static final int QUICKEN_LENGTH = 20;
 
         /**
          * 开始
          */
-        public static final int WHAT_START = 100;
+        static final int WHAT_START = 100;
         /**
          * 生产数据
          */
-        public static final int WHAT_DATA = 101;
+        static final int WHAT_DATA = 101;
         /**
          * 停止
          */
-        public static final int WHAT_STOP = 102;
+        static final int WHAT_STOP = 102;
         /**
          * 重置
          */
-        public static final int WHAT_RESET = 103;
+        static final int WHAT_RESET = 103;
         /**
          * 开始时间
          */
@@ -464,9 +464,9 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             float x = (System.currentTimeMillis() - startTime) / 1000f;
             //波形随机因子
             float random = new Random().nextFloat();
-            float y = (float) (base + (random + Math.sin(2 * (x % cycle) * Math.PI / cycle) / 2) * amplitude);
-            if (x > quickenCycle && x % quickenCycle < quickenLength) {
-                y += quickenAmplitude;
+            float y = (float) (BASE + (random + Math.sin(2 * (x % CYCLE) * Math.PI / CYCLE) / 2) * AMPLITUDE);
+            if (x > QUICKEN_CYCLE && x % QUICKEN_CYCLE < QUICKEN_LENGTH) {
+                y += QUICKEN_AMPLITUDE;
             }
             return new Entry(x, y);
         }
