@@ -4,15 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.SystemClock;
 
 import com.yimeng.babymom.R;
-import com.yimeng.babymom.utils.MyApp;
 
 /**
- * 胎教仪说明界面
+ * 胎教仪连接说明界面
  */
-public class HealthMonitorPreActivity extends BaseActivity {
+public class HealthMonitorIntroduceActivity extends BaseActivity {
 
     private HeadsetPlugReceiver headsetPlugReceiver;
 
@@ -21,7 +19,6 @@ public class HealthMonitorPreActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra("state") && intent.getIntExtra("state", 0) == 1) {
-                isDestroy = true;
                 startActivity(new Intent(context, HealthMonitorActivity.class));
                 finish();
             }
@@ -38,33 +35,9 @@ public class HealthMonitorPreActivity extends BaseActivity {
 
     }
 
-    private boolean isDestroy;
-
     @Override
     protected void setListener() {
         registerHeadsetPlugReceiver();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SystemClock.sleep(3000);
-                if (isDestroy) {
-                    return;
-                }
-                runOnUiThread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isDestroy) {
-                                    return;
-                                }
-                                showToast("测试时自动跳转");
-                                startActivity(new Intent(MyApp.getAppContext(), HealthMonitorActivity.class));
-                                finish();
-                            }
-                        }
-                );
-            }
-        }).start();
     }
 
     @Override
@@ -77,7 +50,6 @@ public class HealthMonitorPreActivity extends BaseActivity {
         if (null != headsetPlugReceiver) {
             unregisterReceiver(headsetPlugReceiver);
         }
-        isDestroy = true;
         super.onDestroy();
     }
 

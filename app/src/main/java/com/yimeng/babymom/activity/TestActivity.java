@@ -111,8 +111,9 @@ public class TestActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             switch (getItemViewType(position)) {
                 case ITEM_TYPE_TEXT:// 纯文本，不需要holder
-                    if (convertView == null)
+                    if (convertView == null) {
                         convertView = UiUtils.inflate(android.R.layout.simple_list_item_1);
+                    }
                     ((TextView) convertView).setText(Cheeses.NAMES[position]);
                     ((TextView) convertView).setTextColor(Color.BLACK);
                     break;

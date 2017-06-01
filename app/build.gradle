@@ -8,7 +8,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
-        versionName "孕妈妈 V1.0.0"
+        versionName "babymom V1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,6 +26,9 @@ repositories {
 }
 
 dependencies {
+    compile(name: 'BlueToothFHR-release-dev-dev_64_1.2.5', ext: 'aar')
+    compile(name: 'fetalheart-release-dev-dev_64_1.2.5', ext: 'aar')
+//    compile(name: 'fhr_chart-release-dev-dev_64_1.2.5', ext: 'aar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

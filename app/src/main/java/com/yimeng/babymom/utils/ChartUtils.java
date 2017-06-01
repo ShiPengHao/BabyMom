@@ -2,6 +2,7 @@ package com.yimeng.babymom.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -72,11 +73,6 @@ public class ChartUtils {
                     time = min + "分" + sec + "秒";
                 }
                 return time;
-//                if (value == 0)
-//                    return "0";
-//                int val = (int) value;
-//                return val % PAGE_SIZE == 0 ? val / PAGE_SIZE + "min" : "";
-//                return val % PAGE_SIZE == 0 ? val / PAGE_SIZE + "min" : val % PAGE_SIZE + "s";
             }
         });
 
@@ -85,7 +81,7 @@ public class ChartUtils {
         yAxis.enableGridDashedLine(10f, 10f, 0f);
         yAxis.setDrawZeroLine(false);
 //        yAxis.setSpaceMin(1f);
-        yAxis.setAxisMaximum(200f);
+        yAxis.setAxisMaximum(190f);
         yAxis.setAxisMinimum(80f);
 //        yAxis.setDrawGridLines(false);
         yAxis.setDrawLimitLinesBehindData(true);
@@ -177,11 +173,26 @@ public class ChartUtils {
     /**
      * 根据文件名获取sp文件
      *
-     * @param prefsName 文件名：绑定的日期
+     * @param prefsName SharedPreference文件名：绑定的日期
      * @return SharedPreference单例
      */
     public static SharedPreferences getPrefs(String prefsName) {
         return MyApp.getAppContext().getSharedPreferences(prefsName, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * 根据文件名删除sp文件
+     *
+     * @param prefsName SharedPreference文件名：绑定的日期
+     * @return 操作是否成功
+     */
+    public static boolean delPrefs(String prefsName) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return MyApp.getAppContext().deleteSharedPreferences(prefsName);
+        }else {
+            getPrefs(prefsName).edit().clear().apply();
+            return true;
+        }
     }
 
     /**

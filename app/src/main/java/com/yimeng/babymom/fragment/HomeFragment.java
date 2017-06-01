@@ -24,7 +24,7 @@ import com.yimeng.babymom.R;
 import com.yimeng.babymom.activity.AddressListActivity;
 import com.yimeng.babymom.activity.DepartmentActivity;
 import com.yimeng.babymom.activity.HealthMonitorActivity;
-import com.yimeng.babymom.activity.HealthMonitorPreActivity;
+import com.yimeng.babymom.activity.HealthMonitorIntroduceActivity;
 import com.yimeng.babymom.activity.HospitalListActivity;
 import com.yimeng.babymom.activity.MeasureActivity;
 import com.yimeng.babymom.activity.TestActivity;
@@ -350,7 +350,7 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
         if (audioManager.isWiredHeadsetOn()) {
             startActivity(new Intent(activity, HealthMonitorActivity.class));
         }else {
-            startActivity(new Intent(activity, HealthMonitorPreActivity.class));
+            startActivity(new Intent(activity, HealthMonitorIntroduceActivity.class));
         }
     }
 
