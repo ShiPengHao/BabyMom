@@ -455,6 +455,11 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
                 int y = fhrInfo.getFhr();
                 tv_beat_cur.setText(String.format("%s:%s", getString(R.string.heart_now), y));
                 if (isRecord) {
+                    if (y > 185) {
+                        y = 185;
+                    } else if (y < 85) {
+                        y = 85;
+                    }
                     ChartUtils.addLineData(mLineChart, new Entry((System.currentTimeMillis() - mStartTime) / 1000f, y));
                 }
             }

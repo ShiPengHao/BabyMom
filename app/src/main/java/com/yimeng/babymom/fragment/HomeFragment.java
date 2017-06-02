@@ -335,9 +335,6 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
                     case 2:
                         goToMeasure();
                         break;
-                    case 3:
-                        startActivity(new Intent(activity, TestActivity.class));
-                        break;
                     default:
                         showToast(String.format("%s%s", Fun_Des[position], getString(R.string.fun_undo)));
                 }
@@ -427,7 +424,7 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
             mBannerTask.cancel(true);
         if (mSignTask != null)
             mSignTask.cancel(true);
-        if (mUserInfoTask != null)//凯旋
+        if (mUserInfoTask != null)
             mUserInfoTask.cancel(true);
         if (mHospitalTask != null)
             mHospitalTask.cancel(true);

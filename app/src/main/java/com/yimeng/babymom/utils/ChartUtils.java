@@ -148,7 +148,7 @@ public class ChartUtils {
 //        mLineDataSet.enableDashedLine(10f, 5f, 0f);
 //        mLineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
         mLineDataSet.setColor(BG_LIGHT_GREEN); // 数据连接线颜色
-        mLineDataSet.setLineWidth(2f);
+        mLineDataSet.setLineWidth(1.5f);
         mLineDataSet.setDrawCircles(false);
         mLineDataSet.setDrawValues(false);
         mLineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);

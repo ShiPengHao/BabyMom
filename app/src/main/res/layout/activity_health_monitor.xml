@@ -15,7 +15,7 @@
             style="@style/TextTitle"
             android:text="@string/health_monitor" />
 
-        <!--<include layout="@layout/layout_imageview_back" />-->
+        <include layout="@layout/layout_imageview_back" />
 
         <ImageView
             android:id="@+id/iv"

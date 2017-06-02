@@ -14,7 +14,7 @@
             style="@style/TextTitle"
             android:text="@string/no_device" />
 
-        <!--<include layout="@layout/layout_imageview_back" />-->
+        <include layout="@layout/layout_imageview_back" />
 
     </RelativeLayout>
 

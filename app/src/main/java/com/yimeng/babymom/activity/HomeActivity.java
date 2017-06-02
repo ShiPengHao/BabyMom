@@ -23,9 +23,14 @@ import java.util.ArrayList;
 public class HomeActivity extends BaseActivity implements HomeAInterface {
     private ViewPager viewPager;
     private LinearLayout ll_tab;
-
+    /**
+     * 此activity中ViewPager控件持有的Fragment集合
+     */
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
+    /**
+     * 不销毁Fragment，只控制显示和隐藏的PagerAdapter
+     */
     private SaveFragmentPagerAdapter mPagerAdapter;
     private int mLastPageIndex;
     /**
@@ -54,8 +59,9 @@ public class HomeActivity extends BaseActivity implements HomeAInterface {
 
             @Override
             public void onPageSelected(int position) {
-                if (position != mLastPageIndex)
+                if (position != mLastPageIndex) {
                     refreshIndicator(position);
+                }
             }
         };
         viewPager.addOnPageChangeListener(mPageChangeListener);

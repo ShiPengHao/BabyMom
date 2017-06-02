@@ -34,7 +34,7 @@ public class FHRService extends Service {
      */
     public interface FHRReceiver {
         /**
-         * 通知客户端数据更新
+         * 通知客户端数据更新的回调，非UI线程
          *
          * @param fhrInfo 数据
          */

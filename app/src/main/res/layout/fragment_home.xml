@@ -10,18 +10,20 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/title"
             style="@style/TextTitle"
             android:text="@string/app_name" />
 
-        <TextView
+        <com.yimeng.babymom.view.CustomMarqueeTextView
             android:id="@+id/tv_location"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/general_margin"
-            android:gravity="center"
-            android:minWidth="@dimen/item_width"
+            android:gravity="center_vertical"
+            android:maxLines="1"
             android:padding="4dp"
+            android:singleLine="true"
             android:text="@string/location"
             android:textColor="@color/white"
             android:textSize="14dp"
@@ -119,7 +121,6 @@
                 android:id="@+id/rl_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_transparent_light_green"
                 android:padding="@dimen/general_margin">
 
                 <ImageView
@@ -157,7 +158,6 @@
                 android:id="@+id/rl_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_transparent_light_green"
                 android:padding="@dimen/general_margin">
 
                 <TextView
@@ -205,9 +205,10 @@
                     android:layout_toLeftOf="@id/item_status"
                     android:layout_toRightOf="@id/item_pic"
                     android:ellipsize="end"
+                    android:gravity="center_vertical"
                     android:maxLines="3"
-                    android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
+                    android:paddingBottom="1dp"
+                    android:paddingTop="1dp"
                     android:text="@string/pregnant_week_check_detail"
                     android:textColor="@color/black_item_content"
                     android:textSize="14dp" />

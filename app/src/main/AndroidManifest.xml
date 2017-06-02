@@ -37,12 +37,12 @@
             android:name="com.yimeng.babymom.activity.SplashActivity"
             android:screenOrientation="portrait">
             <!--android:theme="@style/SplashTheme"-->
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-            <!--&lt;!&ndash;<action android:name="android.intent.action.VIEW" />&ndash;&gt;-->
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.VIEW" />
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name="com.yimeng.babymom.activity.IntroduceActivity" />
         <activity
@@ -114,12 +114,12 @@
             android:name="com.yimeng.babymom.activity.HealthMonitorIntroduceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <!--<action android:name="android.intent.action.VIEW" />-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.VIEW" />&ndash;&gt;-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <service android:name=".service.FHRService"/>
