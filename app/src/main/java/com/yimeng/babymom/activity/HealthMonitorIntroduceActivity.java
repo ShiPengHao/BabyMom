@@ -8,7 +8,7 @@ import android.content.IntentFilter;
 import com.yimeng.babymom.R;
 
 /**
- * 胎教仪连接说明界面
+ * 胎教仪连接说明界面，使用{@link Intent#ACTION_HEADSET_PLUG}广播实时检测耳机插孔状态，如果连接则跳转到{@link HealthMonitorActivity}页面
  */
 public class HealthMonitorIntroduceActivity extends BaseActivity {
 

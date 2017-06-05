@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .clazz file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package com.yimeng.babymom.utils;
 
 import android.content.Context;

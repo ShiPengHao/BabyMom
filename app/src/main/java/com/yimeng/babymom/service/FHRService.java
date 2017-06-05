@@ -30,7 +30,7 @@ public class FHRService extends Service {
     private boolean isRunning;
 
     /**
-     * 让客户端实现的数据更新接口
+     * 让客户端实现的数据更新接口，通过{@link FHRReceiver#onReceived(FHRInfo)}方法实现
      */
     public interface FHRReceiver {
         /**

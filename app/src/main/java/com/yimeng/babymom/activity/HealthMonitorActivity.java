@@ -44,7 +44,13 @@ import java.util.HashMap;
 
 
 /**
- * 健康监测页面
+ * 健康监测页面，主要功能有：<br/>
+ * <li>通过{@link FHRService}服务获取胎心率
+ * <li>使用第三方图表控件库MPAndroidChart的{@link LineChart}展示胎心率波形，这里封装了一个图表有关的工具类{@link ChartUtils}
+ * <li>通过{@link AsyncTask}缓存、读取胎心率数据到本地SharedPreference
+ * <li>使用{@link MaterialCalendarView}展示日历，充当查看历史纪录的入口
+ * <li>使用{@link Intent#ACTION_BATTERY_CHANGED}粘性广播在每次开始记录胎心率时查看电量，并及时提醒用户充电但不拒绝操作
+ * <li>使用{@link Intent#ACTION_HEADSET_PLUG}广播实时检测耳机插孔状态，如果拔出则跳转到{@link HealthMonitorIntroduceActivity}页面
  */
 
 public class HealthMonitorActivity extends BaseActivity implements OnDateSelectedListener, OnChartValueSelectedListener, FHRService.FHRReceiver {
@@ -96,7 +102,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      */
     private ServiceConnection mHeartServiceConnection;
     /**
-     * 用于接收到数据后处理post页面刷新逻辑到主线程的handler
+     * 用于接收到胎心率数据后处理post页面刷新逻辑到主线程的handler
      */
     private Handler mHeartDataHandler;
     /**
@@ -132,10 +138,13 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         setCalendarListener();
         setChartListener();
         mBatteryStatus = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        mHeartDataHandler = new Handler(Looper.getMainLooper());
+        registerHeadsetPlugReceiver();
     }
 
     /**
-     * 设置图表
+     * 设置图表点击事件
+     * @see #onValueSelected(Entry, Highlight)
      */
     private void setChartListener() {
         mLineChart.setOnChartValueSelectedListener(this);
@@ -143,7 +152,8 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
 
     /**
-     * 设置日历
+     * 设置日历默认值、点击事件
+     * @see #onDateSelected(MaterialCalendarView, CalendarDay, boolean)
      */
     private void setCalendarListener() {
         mCalendarView.setDateSelected(new Date(), true);
@@ -164,10 +174,9 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
     }
 
     /**
-     * 设置胎心数据的数据源和页面刷新handler
+     * 设置胎心数据的数据源（{@link FHRService}服务提供）
      */
     private void setFHRSource() {
-        mHeartDataHandler = new Handler(Looper.getMainLooper());
         mHeartServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -181,13 +190,12 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             }
         };
         bindService(new Intent(this, FHRService.class), mHeartServiceConnection, BIND_AUTO_CREATE);
-        registerHeadsetPlugReceiver();
     }
 
     @Override
     protected void onInnerClick(int viewId) {
         switch (viewId) {
-            case R.id.bt_submit:
+            case R.id.bt_submit:// 三种状态：正在记录、停止记录、重置（初始状态）
                 if (isRecord) {
                     stopRecord();
                 } else if (isStop) {
@@ -392,7 +400,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             mCalendarView.setDateSelected(new Date(), true);
             return;
         }
-        // 更新
+        // 更新日期
         mSelectedDate = temp;
         // 判断是否是今天，不是今天则只能看图表，保存图片，但是不能进行其它相关操作
         int visible = inSameDay(mSelectedDate, new Date()) ? View.VISIBLE : View.GONE;
@@ -466,10 +474,15 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         });
     }
 
-    /***********************************以下为监听耳机插拔的广播部分*********************************************/
-
+    //***********************************以下为监听耳机插拔的广播部分*********************************************
+    /**
+     * 耳机拔插的广播
+     */
     private HeadsetPlugReceiver mHeadsetPlugReceiver;
 
+    /**
+     * 延迟5s注册耳机拔插的广播
+     */
     private void registerHeadsetPlugReceiver() {
         mHeartDataHandler.postDelayed(new Runnable() {
             @Override
@@ -481,6 +494,9 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         }, 5000);
     }
 
+    /**
+     * 耳机拔插的广播
+     */
     public class HeadsetPlugReceiver extends BroadcastReceiver {
 
         @Override
