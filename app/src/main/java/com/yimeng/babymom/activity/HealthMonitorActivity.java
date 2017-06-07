@@ -45,7 +45,7 @@ import java.util.HashMap;
 
 /**
  * 健康监测页面，主要功能有：<br/>
- * <li>通过{@link FHRService}服务获取胎心率
+ * <li>通过绑定{@link FHRService}服务获取胎心率
  * <li>使用第三方图表控件库MPAndroidChart的{@link LineChart}展示胎心率波形，这里封装了一个图表有关的工具类{@link ChartUtils}
  * <li>通过{@link AsyncTask}缓存、读取胎心率数据到本地SharedPreference
  * <li>使用{@link MaterialCalendarView}展示日历，充当查看历史纪录的入口
@@ -144,6 +144,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
     /**
      * 设置图表点击事件
+     *
      * @see #onValueSelected(Entry, Highlight)
      */
     private void setChartListener() {
@@ -153,6 +154,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
     /**
      * 设置日历默认值、点击事件
+     *
      * @see #onDateSelected(MaterialCalendarView, CalendarDay, boolean)
      */
     private void setCalendarListener() {
@@ -241,10 +243,12 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
     private void startRecord() {
         // 判断电量，如果不足，则提示充电
         if (null != mBatteryStatus) {
+            int level = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            int scale = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
             int status = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    status == BatteryManager.BATTERY_STATUS_FULL;
-            if (!isCharging) {
+            boolean isChargingOrGood = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL || 1.0f * level / scale > 0.2f;
+            if (!isChargingOrGood) {
                 showToast("手机电量不足，请及时充电");
             }
         }
@@ -317,9 +321,9 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             @SuppressLint("ApplySharedPref")
             @Override
             protected Void doInBackground(Void... params) {
-                String fileName = ChartUtils.getFileName(mSelectedDate);
+                String fileName = ChartUtils.getFileName(new Date());
                 mEntryData.put(fileName, values);
-                SharedPreferences prefs = ChartUtils.getPrefs(ChartUtils.getFileName(new Date()));
+                SharedPreferences prefs = ChartUtils.getPrefs(fileName);
                 prefs.edit().clear().commit();
                 for (Entry e : values) {
                     ChartUtils.putEntry(prefs, e);
