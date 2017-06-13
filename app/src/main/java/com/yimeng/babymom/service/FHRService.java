@@ -13,6 +13,7 @@ import com.jumper.fetalheart.ConnectCallback;
 import com.jumper.fetalheart.Mode;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -55,10 +56,10 @@ public class FHRService extends Service {
          */
         private final Timer mTimer;
         /**
-         * client端通过{@link #setHeartDataIReceiver(FHRReceiver)}设置的客户端监听的引用<br/>
+         * client端通过{@link #addFHRReceiver(FHRReceiver)}设置的客户端监听的引用的集合<br/>
          * 使用弱引用避免客户端内存泄漏
          */
-        private WeakReference<FHRReceiver> mHeartDataIReceiver;
+        private ArrayList<WeakReference<FHRReceiver>> mFHRReceiverList = new ArrayList<>();
 
         /**
          * 获取{@link ADFetalHeart}实例，使用定时器获取数据并通知客户端
@@ -85,16 +86,30 @@ public class FHRService extends Service {
             mTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
+                    FHRReceiver fhrReceiver;
                     // 此逻辑在工作线程中，所以执行前检查服务状态和客户端引用状态
-                    if (isRunning && null != mHeartDataIReceiver && null != mHeartDataIReceiver.get()) {
-                        mHeartDataIReceiver.get().onReceived(mADFetalHeart.getFHRInfo());
+                    for (int i = 0; i < mFHRReceiverList.size(); i++) {
+                        if (!isRunning) {
+                            break;
+                        }
+                        fhrReceiver = mFHRReceiverList.get(i).get();
+                        if (fhrReceiver == null) {
+                            mFHRReceiverList.remove(mFHRReceiverList.get(i));
+                        } else {
+                            fhrReceiver.onReceived(mADFetalHeart.getFHRInfo());
+                        }
                     }
                 }
             }, 0, 1000);
         }
 
-        public void setHeartDataIReceiver(FHRReceiver FHRReceiver) {
-            mHeartDataIReceiver = new WeakReference<>(FHRReceiver);
+        /**
+         * 添加FHR服务的客户端
+         *
+         * @param FHRReceiver FHR数据接收器
+         */
+        public void addFHRReceiver(FHRReceiver FHRReceiver) {
+            mFHRReceiverList.add(new WeakReference<>(FHRReceiver));
         }
 
         /**

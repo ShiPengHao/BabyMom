@@ -185,8 +185,8 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         mFHRServiceConn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                FHRService.FHRBinder FHRBinder = (FHRService.FHRBinder) service;
-                FHRBinder.setHeartDataIReceiver(HealthMonitorActivity.this);
+                FHRService.FHRBinder binder = (FHRService.FHRBinder) service;
+                binder.addFHRReceiver(HealthMonitorActivity.this);
             }
 
             @Override
@@ -418,6 +418,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         int visible = inSameDay(mSelectedDate, new Date()) ? View.VISIBLE : View.GONE;
         bt_save_data.setVisibility(visible);
         bt_submit.setVisibility(visible);
+        tv_beat_cur.setVisibility(visible);
         // 重置图表
         resetChart();
         // 读取选择日期对应的数据
@@ -438,6 +439,9 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         }
         if (null != mFHRServiceConn) {
             unbindService(mFHRServiceConn);
+        }
+        if (null != mLineChart) {
+            mLineChart.setOnChartValueSelectedListener(null);
         }
         if (null != mHeadsetPlugReceiver) {
             unregisterReceiver(mHeadsetPlugReceiver);
@@ -473,6 +477,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
     /**
      * 接收到胎心率数据展示，如果正在监测则添加到图表上
+     *
      * @param fhrInfo 数据
      */
     @Override
@@ -482,7 +487,9 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             @Override
             public void run() {
                 int y = fhrInfo.getFhr();
-                tv_beat_cur.setText(String.format("%s:%s", getString(R.string.heart_now), y));
+                if (tv_beat_cur.getVisibility() == View.VISIBLE) {
+                    tv_beat_cur.setText(String.format("%s:%s", getString(R.string.heart_now), y));
+                }
                 if (isRecording) {
                     if (y > 185) {
                         y = 185;

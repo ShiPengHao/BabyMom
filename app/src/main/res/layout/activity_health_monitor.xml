@@ -68,7 +68,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/item_width"
                     android:layout_alignParentRight="true"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginRight="@dimen/general_margin"
                     android:gravity="center_vertical"
                     android:padding="4dp"

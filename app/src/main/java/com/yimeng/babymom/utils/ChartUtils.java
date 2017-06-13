@@ -35,7 +35,7 @@ public class ChartUtils {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
 
     /**
-     * 设置图标控件的样式
+     * 设置图表控件的样式
      */
     public static void initChartView(LineChart lineChart) {
         //chart
@@ -104,7 +104,7 @@ public class ChartUtils {
         yAxis.addLimitLine(limitBellow);
 
         lineChart.getAxisRight().setEnabled(false);
-        // 隐藏图标标题
+        // 隐藏图表标题
         lineChart.getLegend().setEnabled(false);
     }
 
@@ -156,7 +156,7 @@ public class ChartUtils {
         //添加数据集
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(mLineDataSet);
-        //图标添加数据集
+        //图表添加数据集
         lineChart.setData(new LineData(dataSets));
     }
 
