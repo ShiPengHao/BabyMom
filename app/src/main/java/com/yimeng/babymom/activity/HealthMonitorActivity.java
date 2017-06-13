@@ -66,11 +66,11 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
     /**
      * 状态：正在接收数据
      */
-    private boolean isRecord;
+    private boolean isRecording;
     /**
      * 状态：已停止接收数据，可以重置
      */
-    private boolean isStop;
+    private boolean isRecordStopped;
     /**
      * 保存监测数据的异步任务
      */
@@ -85,10 +85,13 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      * 用于在每次开始监测时{@link #startRecord()}检查电量状态
      */
     private Intent mBatteryStatus;
+
     /**
      * 每次监测获取的有效数据的最低个数限制，在保存数据时判断
      */
+    @SuppressWarnings("all")
     private final int VALID_NUMBER_MIN = 300;
+
     /**
      * 读取监测数据的异步任务
      */
@@ -96,15 +99,15 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
     /**
      * 缓存所选日期对应的历史记录数据的集合
      */
-    private HashMap<String, ArrayList<Entry>> mEntryData = new HashMap<>();
+    private HashMap<String, ArrayList<Entry>> mHistoryMap = new HashMap<>();
     /**
      * {@link FHRService}服务的连接对象，用于获取设备的胎心数据
      */
-    private ServiceConnection mHeartServiceConnection;
+    private ServiceConnection mFHRServiceConn;
     /**
      * 用于接收到胎心率数据后处理post页面刷新逻辑到主线程的handler
      */
-    private Handler mHeartDataHandler;
+    private Handler mFHRHandler;
     /**
      * 开始记录胎心的时间
      */
@@ -138,7 +141,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         setCalendarListener();
         setChartListener();
         mBatteryStatus = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        mHeartDataHandler = new Handler(Looper.getMainLooper());
+        mFHRHandler = new Handler(Looper.getMainLooper());
         registerHeadsetPlugReceiver();
     }
 
@@ -179,7 +182,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      * 设置胎心数据的数据源（{@link FHRService}服务提供）
      */
     private void setFHRSource() {
-        mHeartServiceConnection = new ServiceConnection() {
+        mFHRServiceConn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 FHRService.FHRBinder FHRBinder = (FHRService.FHRBinder) service;
@@ -191,16 +194,16 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
             }
         };
-        bindService(new Intent(this, FHRService.class), mHeartServiceConnection, BIND_AUTO_CREATE);
+        bindService(new Intent(this, FHRService.class), mFHRServiceConn, BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onInnerClick(int viewId) {
         switch (viewId) {
             case R.id.bt_submit:// 三种状态：正在记录、停止记录、重置（初始状态）
-                if (isRecord) {
+                if (isRecording) {
                     stopRecord();
-                } else if (isStop) {
+                } else if (isRecordStopped) {
                     resetChart();
                 } else {
                     startRecord();
@@ -253,7 +256,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             }
         }
         bt_submit.setText(getString(R.string.stop));
-        isRecord = true;
+        isRecording = true;
         mStartTime = System.currentTimeMillis();
     }
 
@@ -262,11 +265,11 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      * 停止记录监测数据
      */
     private void stopRecord() {
-        isStop = true;
+        isRecordStopped = true;
         bt_submit.setText(getString(R.string.reset));
         mLineChart.setVisibleXRangeMaximum(Math.max(mLineChart.getXChartMax(), 10));
         mLineChart.moveViewToX(0);
-        isRecord = false;
+        isRecording = false;
     }
 
     /**
@@ -276,7 +279,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         mLineChart.clear();
         mLineChart.getXAxis().setAxisMaximum(ChartUtils.PAGE_SIZE);
         bt_submit.setText(getString(R.string.start));
-        isStop = false;
+        isRecordStopped = false;
     }
 
     /**
@@ -292,11 +295,11 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
     }
 
     /**
-     * 保存图表数据到本地
+     * 保存图表数据到本地，只可能是当天数据
      */
     private void saveData() {
         // 判断是否正在记录
-        if (isRecord) {
+        if (isRecording) {
             showToast("正在胎心监测，请先停止再保存数据");
             return;
         }
@@ -322,7 +325,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             @Override
             protected Void doInBackground(Void... params) {
                 String fileName = ChartUtils.getFileName(new Date());
-                mEntryData.put(fileName, values);
+                mHistoryMap.put(fileName, values);
                 SharedPreferences prefs = ChartUtils.getPrefs(fileName);
                 prefs.edit().clear().commit();
                 for (Entry e : values) {
@@ -356,10 +359,10 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             @Override
             protected ArrayList<Entry> doInBackground(Void... params) {
                 String fileName = ChartUtils.getFileName(mSelectedDate);
-                ArrayList<Entry> result = mEntryData.get(fileName);
+                ArrayList<Entry> result = mHistoryMap.get(fileName);
                 if (null == result) {
                     result = ChartUtils.getAllEntry(ChartUtils.getPrefs(fileName));
-                    mEntryData.put(fileName, result);
+                    mHistoryMap.put(fileName, result);
                 }
                 return result;
             }
@@ -368,7 +371,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             protected void onPostExecute(ArrayList<Entry> entries) {
                 if (entries.size() != 0) {
                     bt_submit.setText(getString(R.string.reset));
-                    isStop = true;
+                    isRecordStopped = true;
                     mLineChart.getXAxis().resetAxisMaximum();
                     ChartUtils.initLineData(mLineChart, entries);
                     mLineChart.invalidate();
@@ -389,7 +392,12 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         return (year1 == year2) && (day1 == day2);
     }
 
-
+    /**
+     * 日历控件上的日期被选中时显示对应日期的胎心监测记录：<br/>
+     * <li>如果点击的时期就是当前选择的日期，则不做处理。此日历控件{@link MaterialCalendarView}默认未做重复选中处理</li>
+     * <li>如果当前正在胎心检测，则提示用户此操作无效，并恢复日历上的选中指示到今天。</li>
+     * <li>非以上两种情况，则响应用户意图，切换日期，读取对应记录并展示到图表控件</li>
+     */
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         // 判断是否与当前选择的日期一致，一致不处理
@@ -398,7 +406,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
             return;
         }
         // 判断是否正在监测
-        if (isRecord) {
+        if (isRecording) {
             showToast("正在胎心监测，请先停止再切换日期");
             mCalendarView.setDateSelected(date, false);
             mCalendarView.setDateSelected(new Date(), true);
@@ -425,11 +433,11 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         if (null != mReadTask) {
             mReadTask.cancel(true);
         }
-        if (null != mHeartDataHandler) {
-            mHeartDataHandler.removeCallbacksAndMessages(null);
+        if (null != mFHRHandler) {
+            mFHRHandler.removeCallbacksAndMessages(null);
         }
-        if (null != mHeartServiceConnection) {
-            unbindService(mHeartServiceConnection);
+        if (null != mFHRServiceConn) {
+            unbindService(mFHRServiceConn);
         }
         if (null != mHeadsetPlugReceiver) {
             unregisterReceiver(mHeadsetPlugReceiver);
@@ -437,18 +445,23 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
         super.onDestroy();
     }
 
+    /**
+     * MPAndroidChart 图表上的点被选中时，吐司当前点坐标时间和胎心率
+     */
     @Override
     public void onValueSelected(Entry e, Highlight h) {
+        // 获取时间
         int val = (int) e.getX();
+        // 整理时间格式
         int sec = val % ChartUtils.PAGE_SIZE;
         int min = val / ChartUtils.PAGE_SIZE;
-        String time;
+        StringBuffer time = new StringBuffer();
         if (sec == 0) {
-            time = min + "分";
+            time.append(min).append("分");
         } else if (min == 0) {
-            time = sec + "秒";
+            time.append(sec).append("秒");
         } else {
-            time = min + "分" + sec + "秒";
+            time.append(min).append("分").append(sec).append("秒");
         }
         showToast(String.format("时间：%s，胎心率：%s", time, (int) e.getY()));
     }
@@ -458,15 +471,19 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
 
     }
 
+    /**
+     * 接收到胎心率数据展示，如果正在监测则添加到图表上
+     * @param fhrInfo 数据
+     */
     @Override
     public void onReceived(final FHRInfo fhrInfo) {
         // 接收数据，主线程刷新UI
-        mHeartDataHandler.post(new Runnable() {
+        mFHRHandler.post(new Runnable() {
             @Override
             public void run() {
                 int y = fhrInfo.getFhr();
                 tv_beat_cur.setText(String.format("%s:%s", getString(R.string.heart_now), y));
-                if (isRecord) {
+                if (isRecording) {
                     if (y > 185) {
                         y = 185;
                     } else if (y < 85) {
@@ -488,7 +505,7 @@ public class HealthMonitorActivity extends BaseActivity implements OnDateSelecte
      * 延迟5s注册耳机拔插的广播
      */
     private void registerHeadsetPlugReceiver() {
-        mHeartDataHandler.postDelayed(new Runnable() {
+        mFHRHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mHeadsetPlugReceiver = new HeadsetPlugReceiver();

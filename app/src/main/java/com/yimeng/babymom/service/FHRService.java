@@ -60,6 +60,9 @@ public class FHRService extends Service {
          */
         private WeakReference<FHRReceiver> mHeartDataIReceiver;
 
+        /**
+         * 获取{@link ADFetalHeart}实例，使用定时器获取数据并通知客户端
+         */
         private FHRBinder() {
             mADFetalHeart = ADFetalHeart.getInstance(FHRService.this);
             mADFetalHeart.setMode(Mode.LINE);
@@ -97,7 +100,7 @@ public class FHRService extends Service {
         /**
          * 停止工作，释放资源
          */
-        private void stop() {
+        private void onDestroy() {
             mTimer.cancel();
             mADFetalHeart.stopWork();
         }
@@ -119,7 +122,7 @@ public class FHRService extends Service {
     public void onDestroy() {
         isRunning = false;
         if (null != mFHRBinder) {
-            mFHRBinder.stop();
+            mFHRBinder.onDestroy();
         }
     }
 }

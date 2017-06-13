@@ -27,7 +27,7 @@ public class HealthMonitorIntroduceActivity extends BaseActivity {
 
     @Override
     protected int setLayoutResId() {
-        return R.layout.activity_health_monitor_pre;
+        return R.layout.activity_health_monitor_introduce;
     }
 
     @Override
