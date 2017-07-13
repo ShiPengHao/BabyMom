@@ -42,7 +42,7 @@ public class HealthMonitorIntroduceActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        showToast("请先连接设备");
     }
 
     @Override
