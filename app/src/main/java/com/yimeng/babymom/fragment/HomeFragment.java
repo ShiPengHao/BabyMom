@@ -8,7 +8,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -24,10 +23,8 @@ import com.yimeng.babymom.R;
 import com.yimeng.babymom.activity.AddressListActivity;
 import com.yimeng.babymom.activity.DepartmentActivity;
 import com.yimeng.babymom.activity.HealthMonitorActivity;
-import com.yimeng.babymom.activity.HealthMonitorIntroduceActivity;
 import com.yimeng.babymom.activity.HospitalListActivity;
 import com.yimeng.babymom.activity.MeasureActivity;
-import com.yimeng.babymom.activity.TestActivity;
 import com.yimeng.babymom.activity.WebViewActivity;
 import com.yimeng.babymom.adapter.DefaultAdapter;
 import com.yimeng.babymom.adapter.DefaultBannerAdapter;
@@ -342,17 +339,13 @@ public class HomeFragment extends BaseFragment implements HomeFInterface, CycleV
         }
     }
 
-    public void goToHealthMonitor() {
-        AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-        if (audioManager.isWiredHeadsetOn()) {
-            startActivity(new Intent(activity, HealthMonitorActivity.class));
-        }else {
-            startActivity(new Intent(activity, HealthMonitorIntroduceActivity.class));
-        }
-    }
-
     public void goToMeasure() {
         startActivity(new Intent(activity, MeasureActivity.class));
+    }
+
+    @Override
+    public void goToHealthMonitor() {
+        startActivity(new Intent(activity, HealthMonitorActivity.class));
     }
 
     public void goToChat() {

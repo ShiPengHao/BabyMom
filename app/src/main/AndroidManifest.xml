@@ -38,10 +38,10 @@
             android:screenOrientation="portrait">
             <!--android:theme="@style/SplashTheme"-->
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name="com.yimeng.babymom.activity.IntroduceActivity" />
@@ -107,22 +107,30 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name="com.yimeng.babymom.activity.TestActivity"
+            android:name="com.yimeng.babymom.activity.FHRHistoryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name="com.yimeng.babymom.activity.HealthMonitorIntroduceActivity"
+            android:name="com.yimeng.babymom.activity.FHRMonitorActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--&lt;!&ndash;<action android:name="android.intent.action.VIEW" />&ndash;&gt;-->
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.yimeng.babymom.activity.FHRIntroduceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN" />-->
+        <!--&lt;!&ndash;<action android:name="android.intent.action.VIEW" />&ndash;&gt;-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+        <!--<category android:name="android.intent.category.LAUNCHER" />-->
+        <!--</intent-filter>-->
 
-        <service android:name=".service.FHRService"/>
+        <activity
+            android:name="com.yimeng.babymom.activity.TestActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <service android:name=".service.FHRService" />
 
         <meta-data
             android:name="com.taobao.android.hotfix.IDSECRET"

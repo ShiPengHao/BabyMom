@@ -47,7 +47,7 @@ public class ChartUtils {
         lineChart.setPinchZoom(true);
         // 标签
         lineChart.getDescription().setEnabled(false);
-        lineChart.setNoDataText("无数据");
+        lineChart.setNoDataText("没有找到当天胎心数据记录");
         lineChart.setNoDataTextColor(BG_LIGHT_GREEN);
 
         //x轴
@@ -81,8 +81,8 @@ public class ChartUtils {
         yAxis.enableGridDashedLine(10f, 10f, 0f);
         yAxis.setDrawZeroLine(false);
 //        yAxis.setSpaceMin(1f);
-        yAxis.setAxisMaximum(190f);
-        yAxis.setAxisMinimum(80f);
+        yAxis.setAxisMaximum(210f);
+        yAxis.setAxisMinimum(50f);
 //        yAxis.setDrawGridLines(false);
         yAxis.setDrawLimitLinesBehindData(true);
         // y轴范围上限

@@ -10,7 +10,7 @@ public class MyLog {
     /**
      * 调试模式/日志打印的开关
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public static void i(String tag, String msg) {
         if (DEBUG) {

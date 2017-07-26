@@ -1,20 +1,35 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in D:\Android\sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+#防止inline
+-dontoptimize
+-dontpreverify
+-dontshrink
+#ksoap--xmlpullparser
+-keep class org.xmlpull.v1.** {*;}
+-dontwarn org.xmlpull.v1.XmlPullParser
+-dontwarn org.xmlpull.v1.XmlSerializer
+#jpush
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+#==================gson==========================
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
 
-# Add any project specific keep options here:
+#==================protobuf======================
+-dontwarn com.google.**
+-keep class com.google.protobuf.** {*;}
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# clazz:
-#-keepclassmembers clazz fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+#==============huanxin===========================
+-keep class com.hyphenate.** {*;}
+-dontwarn  com.hyphenate.**
+
+#libs/jar
+-libraryjars libs/BlueToothFHR-release-dev-dev_64_1.2.5.aar
+-libraryjars libs/fetalheart-release-dev-dev_64_1.2.5.aar
+-libraryjars libs/fhr_chart-release-dev-dev_64_1.2.5.aar
+#-libraryjars libs/ksoap2-android-assembly-3.1.0-jar-with-dependencies.jar
+#-libraryjars libs/MobCommons-2016.1201.1839.jar
+#-libraryjars libs/MobTools-2016.1201.1839.jar
+#-libraryjars libs/okhttputils-2_6_1.jar
+#-libraryjars libs/SMSSDK-2.1.3.aar
 #SMSSDK
 -keep class cn.smssdk.**{*;}
 -keep class com.mob.**{*;}
@@ -22,6 +37,15 @@
 -dontwarn com.mob.**
 -dontwarn cn.smssdk.**
 
+#picasso,okhttp,okio
+-keep class com.squareup.picasso.** {*;}
+-keep public class org.codehaus.**
+-keep public class java.nio.**
+
+-dontwarn org.codehaus
+-dontwarn java.nio
+-dontwarn com.squareup.**
+-dontwarn okio.**
 #保留行号
 -keepattributes SourceFile,LineNumberTable
 
@@ -48,12 +72,11 @@
 
 #HOTFIX
 #基线包使用，生成mapping.txt
--printmapping mapping.txt
+#-printmapping mapping.txt
 #生成的mapping.txt在app/buidl/outputs/mapping/release路径下，移动到/app路径下
 #修复后的项目使用，保证混淆结果一致
-#-applymapping mapping.txt
+-applymapping mapping.txt
 #hotfix
 -keep class com.taobao.sophix.**{*;}
 -keep class com.ta.utdid2.device.**{*;}
-#防止inline
--dontoptimize
+

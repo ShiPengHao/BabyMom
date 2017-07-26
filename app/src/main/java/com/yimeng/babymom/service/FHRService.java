@@ -66,7 +66,12 @@ public class FHRService extends Service {
          */
         private FHRBinder() {
             mADFetalHeart = ADFetalHeart.getInstance(FHRService.this);
+            // 设置连接模式，有线或者蓝牙
             mADFetalHeart.setMode(Mode.LINE);
+            // 准备
+            mADFetalHeart.prepare();
+            // 开始工作
+            mADFetalHeart.startWork();
             // 设置一个空实现，不然会闪退，原因不明
             mADFetalHeart.setConnectCallback(new ConnectCallback() {
                 @Override
@@ -77,10 +82,6 @@ public class FHRService extends Service {
                 public void onConnectFail(boolean setting) {
                 }
             });
-            // 准备
-            mADFetalHeart.prepare();
-            // 开始工作
-            mADFetalHeart.startWork();
             // 开启定时器
             mTimer = new Timer(TAG);
             mTimer.scheduleAtFixedRate(new TimerTask() {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">孕妈妈</string>
+    <string name="app_name">孕妈乐</string>
     <string name="apk_name">babymom.apk</string>
     <string name="apk_short_name">babymom</string>
     <string name="login">登录</string>
@@ -194,8 +194,11 @@
     <string name="stop">停止</string>
     <string name="heart_rate">胎心率 FHR/BPM</string>
     <string name="save_data">保存数据</string>
-    <string name="heart_now">瞬时值</string>
+    <string name="heart_now">胎心率</string>
     <string name="no_device">请先连接设备</string>
+    <string name="fhr_monitor">胎心监测</string>
+    <string name="fhr_history">胎心监测记录</string>
+    <string name="fhr_start">开始胎心监测</string>
     <array name="home_fun">
         <item>在线咨询</item>
         <item>健康监测</item>

@@ -5,8 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Looper;
-import android.widget.Toast;
 
 import com.yimeng.babymom.R;
 
@@ -26,17 +24,16 @@ import java.util.Map;
 
 
 /**
- * Bug收集工具类
+ * UI线程Bug收集工具类
  */
 
 class BugHandler implements Thread.UncaughtExceptionHandler {
-    private static final boolean DEBUG = true;//调试模式
+    private static final boolean DEBUG = false;//调试模式
     private static BugHandler instance;
     //用来存储设备信息
     private Map<String, String> infos = new HashMap<>();
     //用于格式化日期,作为日志文件名的一部分
     private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.CHINA);
-    private Toast toast;
 
     private BugHandler() {
 
@@ -54,16 +51,15 @@ class BugHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        // 新建handlerThread处理toast提示
-        new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                toast = Toast.makeText(MyApp.getAppContext(), "抱歉，" + MyApp.getAppContext().getString(R.string.app_name) + "程序崩溃，应用将退出！", Toast.LENGTH_SHORT);
-                toast.show();
-                Looper.loop();
-            }
-        }.start();
+//        // 新建Thread处理toast提示
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//                Toast.makeText(MyApp.getAppContext(), "抱歉，" + MyApp.getAppContext().getString(R.string.app_name) + "程序崩溃，应用将退出！", Toast.LENGTH_SHORT).show();
+//                Looper.loop();
+//            }
+//        }.start();
         collectDeviceInfo();
         saveCrashInfo(ex);
     }
@@ -115,7 +111,7 @@ class BugHandler implements Thread.UncaughtExceptionHandler {
             if (pi != null) {
                 String versionName = pi.versionName == null ? "null" : pi.versionName;
                 String versionCode = String.valueOf(pi.versionCode);
-                sb.insert(0, "appName=" + MyApp.getAppContext().getString(R.string.app_name) + "versionName=" + versionName + "\n" + "versionCode=" + versionCode + "\n");
+                sb.insert(0, "appName=" + MyApp.getAppContext().getString(R.string.app_name) + "\nversionName=" + versionName + "\nversionCode=" + versionCode + "\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,8 +136,6 @@ class BugHandler implements Thread.UncaughtExceptionHandler {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (toast != null)
-                toast.cancel();
             MyApp.getAppContext().finish();
         } else {// 上线后将错误日志上传提交到服务器
             // map request params
@@ -167,8 +161,6 @@ class BugHandler implements Thread.UncaughtExceptionHandler {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (toast != null)
-                    toast.cancel();
                 MyApp.getAppContext().finish();
                 return null;
             }

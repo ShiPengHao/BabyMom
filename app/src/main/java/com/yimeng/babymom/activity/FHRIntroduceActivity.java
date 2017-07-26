@@ -8,18 +8,18 @@ import android.content.IntentFilter;
 import com.yimeng.babymom.R;
 
 /**
- * 胎教仪连接说明界面，使用{@link Intent#ACTION_HEADSET_PLUG}广播实时检测耳机插孔状态，如果连接则跳转到{@link HealthMonitorActivity}页面
+ * 胎教仪连接说明界面，使用{@link Intent#ACTION_HEADSET_PLUG}广播实时检测耳机插孔状态，如果连接则跳转到{@link FHRMonitorActivity}页面
  */
-public class HealthMonitorIntroduceActivity extends BaseActivity {
+public class FHRIntroduceActivity extends BaseActivity {
 
-    private HeadsetPlugReceiver headsetPlugReceiver;
+    private HeadsetPlugReceiver mHeadsetPlugReceiver;
 
     public class HeadsetPlugReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra("state") && intent.getIntExtra("state", 0) == 1) {
-                startActivity(new Intent(context, HealthMonitorActivity.class));
+                startActivity(new Intent(context, FHRMonitorActivity.class));
                 finish();
             }
         }
@@ -32,7 +32,6 @@ public class HealthMonitorIntroduceActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
     }
 
     @Override
@@ -42,13 +41,12 @@ public class HealthMonitorIntroduceActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        showToast("请先连接设备");
     }
 
     @Override
     public void onDestroy() {
-        if (null != headsetPlugReceiver) {
-            unregisterReceiver(headsetPlugReceiver);
+        if (null != mHeadsetPlugReceiver) {
+            unregisterReceiver(mHeadsetPlugReceiver);
         }
         super.onDestroy();
     }
@@ -59,8 +57,8 @@ public class HealthMonitorIntroduceActivity extends BaseActivity {
     }
 
     private void registerHeadsetPlugReceiver() {
-        headsetPlugReceiver = new HeadsetPlugReceiver();
+        mHeadsetPlugReceiver = new HeadsetPlugReceiver();
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
-        registerReceiver(headsetPlugReceiver, intentFilter);
+        registerReceiver(mHeadsetPlugReceiver, intentFilter);
     }
 }
