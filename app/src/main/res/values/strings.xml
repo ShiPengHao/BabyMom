@@ -192,13 +192,17 @@
     <string name="save_img">保存图片</string>
     <string name="reset">重置</string>
     <string name="stop">停止</string>
-    <string name="heart_rate">胎心率 FHR/BPM</string>
+    <string name="fhr">胎心率FHR/BPM</string>
     <string name="save_data">保存数据</string>
-    <string name="heart_now">胎心率</string>
     <string name="no_device">请先连接设备</string>
     <string name="fhr_monitor">胎心监测</string>
     <string name="fhr_history">胎心监测记录</string>
     <string name="fhr_start">开始胎心监测</string>
+    <string name="tip_record_reading">正在读取记录，请稍等</string>
+    <string name="tip_record_no_today">没有找到当天胎心数据记录</string>
+    <string name="tip_recording_canot_leave">您正在监测胎心，请停止后再进行操作</string>
+    <string name="fhr_skip_anim">跳过动画</string>
+    <string name="permission_audio">您未授权给本应用录音权限，请在手机设置中授权后使用此功能！</string>
     <array name="home_fun">
         <item>在线咨询</item>
         <item>健康监测</item>

@@ -3,8 +3,6 @@ package com.yimeng.babymom.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.github.mikephil.charting.data.Entry;
-
 public class PreferenceManager {
     /**
      * preference文件名

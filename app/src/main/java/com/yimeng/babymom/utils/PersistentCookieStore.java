@@ -100,10 +100,8 @@ public class PersistentCookieStore implements CookieStore {
     }
 
     public void add(HttpUrl uri, List<Cookie> cookies) {
-        Iterator var3 = cookies.iterator();
 
-        while(var3.hasNext()) {
-            Cookie cookie = (Cookie)var3.next();
+        for (Cookie cookie : cookies) {
             this.add(uri, cookie);
         }
 
@@ -113,11 +111,10 @@ public class PersistentCookieStore implements CookieStore {
         ArrayList ret = new ArrayList();
         if(this.cookies.containsKey(uri.host())) {
             Collection cookies = ((ConcurrentHashMap)this.cookies.get(uri.host())).values();
-            Iterator var4 = cookies.iterator();
 
-            while(var4.hasNext()) {
-                Cookie cookie = (Cookie)var4.next();
-                if(isCookieExpired(cookie)) {
+            for (Object cooky : cookies) {
+                Cookie cookie = (Cookie) cooky;
+                if (isCookieExpired(cookie)) {
                     this.remove(uri, cookie);
                 } else {
                     ret.add(cookie);
@@ -159,11 +156,9 @@ public class PersistentCookieStore implements CookieStore {
 
     public List<Cookie> getCookies() {
         ArrayList ret = new ArrayList();
-        Iterator var2 = this.cookies.keySet().iterator();
 
-        while(var2.hasNext()) {
-            String key = (String)var2.next();
-            ret.addAll(((ConcurrentHashMap)this.cookies.get(key)).values());
+        for (String key : this.cookies.keySet()) {
+            ret.addAll(((ConcurrentHashMap) this.cookies.get(key)).values());
         }
 
         return ret;

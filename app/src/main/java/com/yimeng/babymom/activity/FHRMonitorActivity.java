@@ -13,7 +13,6 @@ import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -180,7 +179,11 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      * 去历史记录页面
      */
     private void goHistory() {
-        startActivity(new Intent(this, FHRHistoryActivity.class));
+        if (isRecording) {
+            showToast(getString(R.string.tip_recording_canot_leave));
+        } else {
+            startActivity(new Intent(this, FHRHistoryActivity.class));
+        }
     }
 
     @Override
@@ -242,17 +245,12 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
             @Override
             public void run() {
                 int y = fhrInfo.getFhr();
-                if (tv_beat_cur.getVisibility() == View.VISIBLE) {
-                    tv_beat_cur.setText(String.format("%s:%s", getString(R.string.heart_now), y));
-                }
+                tv_beat_cur.setText(String.valueOf(y));
                 if (isRecording) {
-                    if (y > 185) {
-                        y = 185;
-                    } else if (y < 85) {
-                        y = 85;
-                    }
+                    y = Math.max(65, Math.min(200, y));
                     ChartUtils.addLineData(mLineChart, new Entry((System.currentTimeMillis() - mStartTime) / 1000f, y));
                 }
+
             }
         });
     }
@@ -272,9 +270,9 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
                 showToast("手机电量不足，请及时充电");
             }
         }
+        mStartTime = System.currentTimeMillis();
         bt_submit.setText(getString(R.string.stop));
         isRecording = true;
-        mStartTime = System.currentTimeMillis();
     }
 
 
@@ -282,10 +280,10 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      * 停止记录监测数据
      */
     private void stopRecord() {
-        isRecordStopped = true;
-        bt_submit.setText(getString(R.string.reset));
         mLineChart.setVisibleXRangeMaximum(Math.max(mLineChart.getXChartMax(), 10));
         mLineChart.moveViewToX(0);
+        bt_submit.setText(getString(R.string.reset));
+        isRecordStopped = true;
         isRecording = false;
     }
 

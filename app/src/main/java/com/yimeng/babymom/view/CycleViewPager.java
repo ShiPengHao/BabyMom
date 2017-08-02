@@ -33,10 +33,10 @@ public class CycleViewPager extends ViewPager {
         super(context);
     }
 
-    @Override
     /**
      * 重写此方法，包装adapter，并且初始化
      */
+    @Override
     public void setAdapter(PagerAdapter adapter) {
         addOnPageChangeListener(null);
         innerPagerAdapter = new InnerPagerAdapter(adapter);
@@ -107,7 +107,6 @@ public class CycleViewPager extends ViewPager {
 
     private long downTime;
 
-    @Override
     /**
      * 一、点击此ViewPager区域时，在获得down事件时请求处理事件并停止滚动，默认为点击事件
      * 二、在move事件中，1.当当前点相对于点击的点移动的横或者竖方向上的距离大于5像素时，认为是滑动事件；
@@ -117,6 +116,7 @@ public class CycleViewPager extends ViewPager {
      * 三、在up事件中，根据移动距离、事件时间间隔来执行点击事件监听中的事件点击方法，并继续开始滚动
      * 四、在cancel事件中，即此ViewPager区域失去move事件时，继续开始滚动
      */
+    @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -174,10 +174,10 @@ public class CycleViewPager extends ViewPager {
         void onItemClick(int index);
     }
 
-    @Override
     /**
      * 重写此方法，将监听包装
      */
+    @Override
     public void addOnPageChangeListener(OnPageChangeListener listener) {
         super.addOnPageChangeListener(new InnerOnPageChangeListener(listener));
     }

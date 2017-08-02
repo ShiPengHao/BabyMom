@@ -27,11 +27,18 @@ import java.util.Locale;
  * 图表相关工具类
  */
 public class ChartUtils {
-
-
+    /**
+     * 每一页的数据个数，设置为60个，1分钟，即要保证1s一个数据点
+     */
     public static final int PAGE_SIZE = 60;
-    private static final int COLOR_ACCENT = MyApp.getAppContext().getResources().getColor(R.color.colorAccent);
-    private static final int BG_LIGHT_GREEN = MyApp.getAppContext().getResources().getColor(R.color.bg_light_green);
+    /**
+     * 限制线的颜色
+     */
+    private static final int COLOR_LINE_LIMIT = MyApp.getAppContext().getResources().getColor(R.color.colorAccent);
+    /**
+     * 数据线的颜色
+     */
+    private static final int COLOR_LINE_DATA = MyApp.getAppContext().getResources().getColor(R.color.bg_light_green);
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
 
     /**
@@ -47,8 +54,7 @@ public class ChartUtils {
         lineChart.setPinchZoom(true);
         // 标签
         lineChart.getDescription().setEnabled(false);
-        lineChart.setNoDataText("没有找到当天胎心数据记录");
-        lineChart.setNoDataTextColor(BG_LIGHT_GREEN);
+        lineChart.setNoDataTextColor(COLOR_LINE_DATA);
 
         //x轴
         XAxis xAxis = lineChart.getXAxis();
@@ -88,14 +94,14 @@ public class ChartUtils {
         // y轴范围上限
         LimitLine limitTop = new LimitLine(160f, "160");
         limitTop.setLineWidth(0.5f);
-        limitTop.setTextColor(COLOR_ACCENT);
-        limitTop.setLineColor(COLOR_ACCENT);
+        limitTop.setTextColor(COLOR_LINE_LIMIT);
+        limitTop.setLineColor(COLOR_LINE_LIMIT);
         limitTop.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         // y轴范围下限
         LimitLine limitBellow = new LimitLine(110f, "110");
         limitBellow.setLineWidth(0.5f);
-        limitBellow.setTextColor(COLOR_ACCENT);
-        limitBellow.setLineColor(COLOR_ACCENT);
+        limitBellow.setTextColor(COLOR_LINE_LIMIT);
+        limitBellow.setLineColor(COLOR_LINE_LIMIT);
         limitBellow.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
 
         // y轴添加上下范围线
@@ -147,7 +153,7 @@ public class ChartUtils {
         // 设置线
 //        mLineDataSet.enableDashedLine(10f, 5f, 0f);
 //        mLineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
-        mLineDataSet.setColor(BG_LIGHT_GREEN); // 数据连接线颜色
+        mLineDataSet.setColor(COLOR_LINE_DATA); // 数据连接线颜色
         mLineDataSet.setLineWidth(1.5f);
         mLineDataSet.setDrawCircles(false);
         mLineDataSet.setDrawValues(false);
@@ -189,7 +195,7 @@ public class ChartUtils {
     public static boolean delPrefs(String prefsName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return MyApp.getAppContext().deleteSharedPreferences(prefsName);
-        }else {
+        } else {
             getPrefs(prefsName).edit().clear().apply();
             return true;
         }
@@ -209,7 +215,7 @@ public class ChartUtils {
      * 获取该文件下的所有键值对，返回包含所有点的信息的集合
      *
      * @param prefs sp
-     * @return 包含所有点的信息的集合
+     * @return 包含所有点的信息的集合，不会为空
      */
     public static ArrayList<Entry> getAllEntry(SharedPreferences prefs) {
         ArrayList<Entry> values = new ArrayList<>();

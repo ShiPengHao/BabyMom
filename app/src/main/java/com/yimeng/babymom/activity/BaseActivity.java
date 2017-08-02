@@ -31,6 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -150,6 +152,27 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * 判断两个日期是否是同一天
+     *
+     * @param date1 日期1
+     * @param date2 日期2
+     * @return 同true
+     */
+    public boolean inSameDay(Date date1, Date date2) {
+        if (null == date1 || null == date2) {
+            return false;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date1);
+        int year1 = calendar.get(Calendar.YEAR);
+        int day1 = calendar.get(Calendar.DAY_OF_YEAR);
+        calendar.setTime(date2);
+        int year2 = calendar.get(Calendar.YEAR);
+        int day2 = calendar.get(Calendar.DAY_OF_YEAR);
+        return (year1 == year2) && (day1 == day2);
+    }
+
+    /**
      * 处理状态栏
      */
     protected void setStatusBar() {
@@ -253,14 +276,24 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         KeyBoardUtils.closeKeyboard(v);
         int id = v.getId();
-        if (id == R.id.iv_back)
+        if (id == R.id.iv_back) {
             finish();
-        else
+        } else {
             onInnerClick(id);
+        }
     }
 
     public void showLoadingView() {
         showLoadingView(null);
+    }
+
+    /**
+     * 显示过渡view
+     *
+     * @param stringId 文字指示资源id
+     */
+    public void showLoadingView(int stringId) {
+        showLoadingView(getString(stringId));
     }
 
     /**
@@ -282,6 +315,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         tv.setText(isEmpty(message) ? getString(R.string.loading) : message);
         mShowLoadingHandler.removeMessages(WHAT_SHOW_LOADING);
         mShowLoadingHandler.sendEmptyMessageDelayed(WHAT_SHOW_LOADING, 500);
+    }
+
+    /**
+     * 消失过渡view
+     */
+    public void dismissLoadingView() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing())
+            mLoadingDialog.dismiss();
+        mShowLoadingHandler.removeMessages(WHAT_SHOW_LOADING);
     }
 
     /**
@@ -308,15 +350,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         mOkDialog.setMessage(message);
         mOkDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok), onClickListener == null ? mOnclickListener : onClickListener);
         mOkDialog.show();
-    }
-
-    /**
-     * 消失过渡view
-     */
-    public void dismissLoadingView() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing())
-            mLoadingDialog.dismiss();
-        mShowLoadingHandler.removeMessages(WHAT_SHOW_LOADING);
     }
 
     /**

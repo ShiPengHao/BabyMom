@@ -218,12 +218,12 @@ public class PullDownToRefreshListView extends ListView {
 
     private boolean isClick;
 
-    @Override
     /**
      * 触摸事件发生时判断是否需要下拉刷新头，如果是调用对应方法，如果不是，将事件交给listview处理
      * 判断方法：获得listview的y坐标a，再获得刷新头下的第一个条目(添加的appendHeaderView或者是第一个数据view条目)的y坐标b，
      * 如果b>=a，说明需要执行下拉刷新头的操作
      */
+    @Override
     public boolean onTouchEvent(MotionEvent ev) {
         int[] location = new int[2];
         getLocationInWindow(location);

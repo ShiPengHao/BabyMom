@@ -1,36 +1,40 @@
 package com.yimeng.babymom.activity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter;
-import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 import com.yimeng.babymom.R;
 import com.yimeng.babymom.utils.ChartUtils;
+import com.yimeng.babymom.utils.DayViewDecoratorFactory;
 import com.yimeng.babymom.utils.DensityUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.yimeng.babymom.R.id.lineChart;
+
 /**
- * 胎心监测历史页面，使用{@link MaterialCalendarView}展示日历，充当查看历史纪录的入口，通过{@link AsyncTask}从本地SharedPreference读取胎心率数据
+ * 胎心监测历史页面，使用{@link MaterialCalendarView}展示日历，充当查看历史纪录的入口<br/>
+ * 通过{@link AsyncTask}从本地SharedPreference读取胎心率数据<br/>
+ * 并将结果展示到{@link LineChart}图表上。默认在当前记录第一次加载时使用{@link ObjectAnimator}让数据线沿X轴正向描点，动画时长为记录时长的1/20
  */
 public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedListener, OnChartValueSelectedListener {
 
@@ -38,20 +42,16 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
     private LineChart mLineChart;
     private ImageView iv_cal;
     private RelativeLayout action_bar;
+    private TextView tv;
+    private TextView tv_tip;
     /**
      * 日历控件是否显示
      */
     private boolean isCalendarShow;
     /**
-     * 当前选中的日期，默认当天
+     * 当前选中的日期
      */
-    private Date mSelectedDate = new Date();
-
-    /**
-     * 每次监测获取的有效数据的最低个数限制，在保存数据时判断
-     */
-    @SuppressWarnings("all")
-    private final int VALID_NUMBER_MIN = 300;
+    private Date mSelectedDate;
 
     /**
      * 读取监测数据的异步任务
@@ -61,6 +61,18 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
      * 缓存所选日期对应的历史记录数据的集合
      */
     private HashMap<String, ArrayList<Entry>> mHistoryMap = new HashMap<>();
+    /**
+     * 胎心图播放动画
+     */
+    private ObjectAnimator mChartAnimatorX;
+    /**
+     * 胎心图动画刷新监听
+     */
+    private ValueAnimator.AnimatorUpdateListener mChartAnimatorUpdateListener;
+    /**
+     * 胎心图动画事件监听
+     */
+    private Animator.AnimatorListener mChartAnimatorListener;
 
 
     @Override
@@ -70,61 +82,53 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
 
     @Override
     protected void initView() {
+        tv = (TextView) findViewById(R.id.tv);
+        tv_tip = (TextView) findViewById(R.id.tv_tip);
         mCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
-        mLineChart = (LineChart) findViewById(R.id.lineChart);
+        mLineChart = (LineChart) findViewById(lineChart);
         iv_cal = (ImageView) findViewById(R.id.iv);
         action_bar = (RelativeLayout) findViewById(R.id.action_bar);
-        isCalendarShow = true;
-        // 日历控件今天标记
-        DayViewDecorator todayDecorator = new DayViewDecorator() {
-            @Override
-            public boolean shouldDecorate(CalendarDay day) {
-                return CalendarDay.today().getYear() == day.getYear() && CalendarDay.today().getDay() == day.getDay();
-            }
+        initCalendarView();
+        initChartView();
+    }
 
-            @Override
-            public void decorate(DayViewFacade view) {
-                view.setBackgroundDrawable(getResources().getDrawable(R.drawable.circle_green_33));
-            }
-        };
-        // 日历控件事件标记
-        DayViewDecorator eventDecorator = new DayViewDecorator() {
-
-            @Override
-            public boolean shouldDecorate(CalendarDay day) {
-                // 读取当月对应的一个“年-月”的sp文件，核对当天事件标记
-                String fileName = day.getYear() + "-" + day.getMonth();
-                SharedPreferences sharedPreferences = getSharedPreferences(fileName, Context.MODE_PRIVATE);
-                return sharedPreferences.contains("day" + day.getDay());
-            }
-
-            @Override
-            public void decorate(DayViewFacade view) {
-                view.addSpan(new DotSpan(5, getResources().getColor(R.color.colorAccent)));
-            }
-        };
-        // 日历控件未来时间标记
-        DayViewDecorator afterDecorator = new DayViewDecorator() {
-            @Override
-            public boolean shouldDecorate(CalendarDay day) {
-                return day.isAfter(CalendarDay.today());
-            }
-
-            @Override
-            public void decorate(DayViewFacade view) {
-                view.setDaysDisabled(true);
-            }
-        };
-        mCalendarView.addDecorator(todayDecorator);
-        mCalendarView.addDecorator(eventDecorator);
-        mCalendarView.addDecorator(afterDecorator);
+    /**
+     * 初始化图表控件
+     */
+    private void initChartView() {
         mLineChart.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DensityUtil.SCREEN_HEIGHT / 3));
         ChartUtils.initChartView(mLineChart);
+        mLineChart.setNoDataText(getString(R.string.tip_record_no_today));
+    }
+
+    /**
+     * 初始化日历控件
+     */
+    private void initCalendarView() {
+        isCalendarShow = true;
+        // 日历控件今天标记
+        DayViewDecorator todayDecorator = DayViewDecoratorFactory.today(this, R.drawable.circle_green_333);
+        mCalendarView.addDecorator(todayDecorator);
+        // 日历控件未来时间标记
+        DayViewDecorator afterDecorator = DayViewDecoratorFactory.after();
+        mCalendarView.addDecorator(afterDecorator);
+        // 日历控件事件标记
+        DayViewDecorator eventDecorator = DayViewDecoratorFactory.eventFromSharedPreference(this, R.color.colorAccent);
+        mCalendarView.addDecorator(eventDecorator);
+        // 每月动态设置行数为4还是5
+        mCalendarView.setDynamicHeightEnabled(true);
+        mCalendarView.setTitleFormatter(new TitleFormatter() {
+            @Override
+            public CharSequence format(CalendarDay day) {
+                return day.getYear() + "年" + (day.getMonth() + 1) + "月";
+            }
+        });
     }
 
     @Override
     protected void setListener() {
         iv_cal.setOnClickListener(this);
+        tv_tip.setOnClickListener(this);
         setCalendarListener();
         setChartListener();
     }
@@ -145,20 +149,13 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
      * @see #onDateSelected(MaterialCalendarView, CalendarDay, boolean)
      */
     private void setCalendarListener() {
-        mCalendarView.setDateSelected(new Date(), true);
-        mCalendarView.setDynamicHeightEnabled(true);
-        mCalendarView.setTitleFormatter(new TitleFormatter() {
-            @Override
-            public CharSequence format(CalendarDay day) {
-                return day.getYear() + "年" + (day.getMonth() + 1) + "月";
-            }
-        });
         mCalendarView.setOnDateChangedListener(this);
+        mCalendarView.setDateSelected(CalendarDay.today(), true);
     }
 
     @Override
     protected void initData() {
-        readChartData();
+        onDateSelected(mCalendarView, CalendarDay.today(), true);
     }
 
     @Override
@@ -166,6 +163,11 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
         switch (viewId) {
             case R.id.iv:
                 displayCalendar();
+                break;
+            case R.id.tv_tip:
+                if (null != mChartAnimatorX) {
+                    mChartAnimatorX.cancel();
+                }
                 break;
         }
     }
@@ -192,66 +194,9 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
     }
 
     /**
-     * 重置图表
-     */
-    private void resetChart() {
-        mLineChart.clear();
-        mLineChart.getXAxis().setAxisMaximum(ChartUtils.PAGE_SIZE);
-    }
-
-    /**
-     * 从本地读取图表数据
-     */
-    private void readChartData() {
-        if (null != mReadTask && mReadTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mReadTask.cancel(true);
-        }
-        mReadTask = new AsyncTask<Void, Void, ArrayList<Entry>>() {
-
-            @Override
-            protected void onPreExecute() {
-                showLoadingView("正在读取记录，请稍等");
-            }
-
-            @Override
-            protected ArrayList<Entry> doInBackground(Void... params) {
-                String fileName = ChartUtils.getFileName(mSelectedDate);
-                ArrayList<Entry> result = mHistoryMap.get(fileName);
-                if (null == result) {
-                    result = ChartUtils.getAllEntry(ChartUtils.getPrefs(fileName));
-                    mHistoryMap.put(fileName, result);
-                }
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<Entry> entries) {
-                if (entries.size() != 0) {
-                    mLineChart.getXAxis().resetAxisMaximum();
-                    ChartUtils.initLineData(mLineChart, entries);
-                    mLineChart.invalidate();
-                }
-                dismissLoadingView();
-            }
-        }.execute();
-    }
-
-    public boolean inSameDay(Date date1, Date Date2) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date1);
-        int year1 = calendar.get(Calendar.YEAR);
-        int day1 = calendar.get(Calendar.DAY_OF_YEAR);
-        calendar.setTime(Date2);
-        int year2 = calendar.get(Calendar.YEAR);
-        int day2 = calendar.get(Calendar.DAY_OF_YEAR);
-        return (year1 == year2) && (day1 == day2);
-    }
-
-    /**
      * 日历控件上的日期被选中时显示对应日期的胎心监测记录：<br/>
      * <li>如果点击的时期就是当前选择的日期，则不做处理。此日历控件{@link MaterialCalendarView}默认未做重复选中处理</li>
-     * <li>如果当前正在胎心检测，则提示用户此操作无效，并恢复日历上的选中指示到今天。</li>
-     * <li>非以上两种情况，则响应用户意图，切换日期，读取对应记录并展示到图表控件</li>
+     * <li>否则切换日期，读取对应记录并展示到图表控件</li>
      */
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -262,10 +207,122 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
         }
         // 更新日期
         mSelectedDate = temp;
-        // 重置图表
-        resetChart();
         // 读取选择日期对应的数据
-        readChartData();
+        resetChart();
+    }
+
+    /**
+     * 重置图表，可能要读取本地文件，使用异步操作
+     */
+    private void resetChart() {
+        if (null != mReadTask && mReadTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mReadTask.cancel(true);
+        }
+        mReadTask = new AsyncTask<Void, Void, ArrayList<Entry>>() {
+
+            private boolean isFirstRun;
+
+            @Override
+            protected void onPreExecute() {
+                showLoadingView(R.string.tip_record_reading);
+                if (null != mChartAnimatorX) {
+                    mChartAnimatorX.cancel();
+                }
+            }
+
+            @Override
+            protected ArrayList<Entry> doInBackground(Void... params) {
+                // 根据日期，计算记录文件名称，先在内存HashMap中找，没有的话再从本地SharedPreferences文件中读取并加入内存
+                String fileName = ChartUtils.getFileName(mSelectedDate);
+                ArrayList<Entry> result = mHistoryMap.get(fileName);
+                if (null == result) {
+                    isFirstRun = true;
+                    result = ChartUtils.getAllEntry(ChartUtils.getPrefs(fileName));
+                    mHistoryMap.put(fileName, result);
+                }
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Entry> entries) {
+                // 根据获取的数据集合进行展示
+                // 如果有数据
+                if (entries.size() != 0) {
+                    // 重置坐标范围
+                    mLineChart.getXAxis().resetAxisMaximum();
+                    // 设置新数据
+                    ChartUtils.initLineData(mLineChart, entries);
+                    // 缩放到最大
+                    while (!mLineChart.isFullyZoomedOut()) {
+                        mLineChart.zoom(0.7f, 0.7f, 0f, 0f);
+                    }
+                    // 统计胎心率、记录时长等信息并展示
+                    int count = entries.size();
+                    int sum = 0;
+                    for (int i = 0; i < count; i++) {
+                        sum += entries.get(i).getY();
+                    }
+                    int minute = (int) Math.round(count / 60d);
+                    tv.setText(String.format("胎心率:%sbpm    时长:%s分钟", sum / count, minute));
+                    // 根据时长设置描点动画
+                    if (isFirstRun) {
+                        resetChartAnimator(count);
+                    } else {
+                        mLineChart.invalidate();
+                    }
+                } else {
+                    mLineChart.clear();
+                    tv.setText(R.string.fhr);
+                    tv_tip.setVisibility(View.GONE);
+                }
+                dismissLoadingView();
+            }
+        }.execute();
+    }
+
+    /**
+     * 重置动画播放
+     *
+     * @param second 胎心检测实际时长，秒
+     */
+    private void resetChartAnimator(int second) {
+        mChartAnimatorX = ObjectAnimator.ofFloat(mLineChart.getAnimator(), "phaseX", 0f, 1f);
+        // 秒数/20，使60s的数据播放时间设置为3s，20分钟60s，符合一般感觉
+        mChartAnimatorX.setDuration(second * 1000 / 20);
+        if (null == mChartAnimatorUpdateListener) {
+            mChartAnimatorUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    mLineChart.invalidate();
+                }
+            };
+        }
+        if (null == mChartAnimatorListener) {
+            mChartAnimatorListener = new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    tv_tip.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    tv_tip.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    animation.end();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            };
+        }
+        mChartAnimatorX.addUpdateListener(mChartAnimatorUpdateListener);
+        mChartAnimatorX.addListener(mChartAnimatorListener);
+        mChartAnimatorX.start();
     }
 
     @Override
@@ -285,19 +342,7 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
      */
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        // 获取时间
-        int val = (int) e.getX();
-        // 整理时间格式
-        int sec = val % ChartUtils.PAGE_SIZE;
-        int min = val / ChartUtils.PAGE_SIZE;
-        StringBuffer time = new StringBuffer();
-        if (sec == 0) {
-            time.append(min).append("分");
-        } else if (min == 0) {
-            time.append(sec).append("秒");
-        } else {
-            time.append(min).append("分").append(sec).append("秒");
-        }
+        String time = mLineChart.getXAxis().getValueFormatter().getFormattedValue(e.getX(), mLineChart.getXAxis());
         showToast(String.format("时间：%s，胎心率：%s", time, (int) e.getY()));
     }
 

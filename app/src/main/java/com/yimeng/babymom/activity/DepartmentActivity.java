@@ -421,10 +421,10 @@ public class DepartmentActivity extends BaseActivity implements AdapterView.OnIt
         }
     }
 
-    @Override
     /**
      * 轮播图条目被点击回调
      */
+    @Override
     public void onItemClick(int index) {
         if (index < mBannerBeans.size() && index >= 0) {
             String url = mBannerBeans.get(index).decorate_value;

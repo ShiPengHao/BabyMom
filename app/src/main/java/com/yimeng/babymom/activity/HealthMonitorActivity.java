@@ -1,8 +1,14 @@
 package com.yimeng.babymom.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.LinearLayout;
 
 import com.yimeng.babymom.R;
@@ -13,9 +19,14 @@ import com.yimeng.babymom.R;
  */
 
 public class HealthMonitorActivity extends BaseActivity {
+    private boolean isPermitted;
+
+    // 要申请的权限
+    private String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
 
     private LinearLayout ll_fhr_start;
     private LinearLayout ll_fhr_history;
+    private final int REQUEST_CODE = 321;
 
     @Override
     protected int setLayoutResId() {
@@ -36,18 +47,43 @@ public class HealthMonitorActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        checkPermissions();
     }
 
     @Override
     protected void onInnerClick(int viewId) {
         switch (viewId) {
             case R.id.ll_fhr_start:
-                goFHRMonitor();
+                if (isPermitted) {
+                    goFHRMonitor();
+                } else {
+                    showToast(getString(R.string.permission_audio));
+                }
                 break;
             case R.id.ll_fhr_history:
                 goFHRHistory();
                 break;
+        }
+    }
+
+    private void checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int i = ContextCompat.checkSelfPermission(this, permissions[0]);
+            if (i == PackageManager.PERMISSION_GRANTED) {
+                isPermitted = true;
+            } else {
+                ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
+            }
+        } else {
+            isPermitted = true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE && grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            isPermitted = true;
         }
     }
 

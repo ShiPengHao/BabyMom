@@ -14,7 +14,7 @@ public class KeyBoardUtils {
     /**
      * 打卡软键盘
      *
-     * @param view     一个控件引用
+     * @param view 一个控件引用
      */
     public static void openKeyboard(View view) {
         IMM.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
@@ -25,10 +25,12 @@ public class KeyBoardUtils {
     /**
      * 关闭软键盘
      *
-     * @param view     一个控件引用
+     * @param view 一个控件引用
      */
     public static void closeKeyboard(View view) {
-        IMM.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (IMM.isActive()) {
+            IMM.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
 

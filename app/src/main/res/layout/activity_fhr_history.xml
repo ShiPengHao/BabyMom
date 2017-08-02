@@ -49,17 +49,33 @@
                 app:mcv_tileHeight="30dp"
                 app:mcv_titleAnimationOrientation="horizontal" />
 
-
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_width"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="4dp"
-                android:text="@string/heart_rate"
-                android:textColor="@color/colorAccent" />
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
 
+                <TextView
+                    android:id="@+id/tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_width"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
+                    android:text="@string/fhr"
+                    android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_width"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/fhr_skip_anim"
+                    android:textColor="@color/bg_grey_aaa" />
+            </RelativeLayout>
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/lineChart"
