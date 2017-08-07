@@ -36,7 +36,7 @@ public class NewsHolder extends BaseHolder<DecorateImgBean> {
                 .load(MyConstant.NAMESPACE + data.decorate_value)
                 .resize(item_icon.getWidth(), item_icon.getHeight())
                 .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.app_logo)
+                .error(R.mipmap.ic_launcher)
                 .into(item_icon);
         item_name.setText(data.decorate_name);
         item_content.setText(data.decorate_explain);

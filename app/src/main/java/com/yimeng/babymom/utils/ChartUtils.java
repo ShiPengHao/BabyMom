@@ -39,7 +39,10 @@ public class ChartUtils {
      * 数据线的颜色
      */
     private static final int COLOR_LINE_DATA = MyApp.getAppContext().getResources().getColor(R.color.bg_light_green);
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
+    /**
+     * 日期转为对应文件名的格式
+     */
+    private static final SimpleDateFormat FILE_FORMAT = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
 
     /**
      * 设置图表控件的样式
@@ -120,7 +123,7 @@ public class ChartUtils {
      * @param lineChart 图表
      * @param entry     数据
      */
-    public static void addLineData(LineChart lineChart, Entry entry) {
+    public static void appendLineEntry(LineChart lineChart, Entry entry) {
         if (lineChart.getData() == null) {
             // 创建一个数据集
             ArrayList<Entry> mLineValues = new ArrayList<>();
@@ -149,19 +152,19 @@ public class ChartUtils {
      * @param values    初始值集合
      */
     public static void initLineData(LineChart lineChart, ArrayList<Entry> values) {
-        LineDataSet mLineDataSet = new LineDataSet(values, "");
+        LineDataSet dataSet = new LineDataSet(values, "");
         // 设置线
-//        mLineDataSet.enableDashedLine(10f, 5f, 0f);
-//        mLineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
-        mLineDataSet.setColor(COLOR_LINE_DATA); // 数据连接线颜色
-        mLineDataSet.setLineWidth(1.5f);
-        mLineDataSet.setDrawCircles(false);
-        mLineDataSet.setDrawValues(false);
-        mLineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+//        dataSet.enableDashedLine(10f, 5f, 0f);
+//        dataSet.enableDashedHighlightLine(10f, 5f, 0f);
+        dataSet.setColor(COLOR_LINE_DATA); // 数据连接线颜色
+        dataSet.setLineWidth(1.5f);
+        dataSet.setDrawCircles(false);
+        dataSet.setDrawValues(false);
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
         //添加数据集
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(mLineDataSet);
+        dataSets.add(dataSet);
         //图表添加数据集
         lineChart.setData(new LineData(dataSets));
     }
@@ -173,7 +176,7 @@ public class ChartUtils {
      * @return 文件名
      */
     public static String getFileName(Date date) {
-        return simpleDateFormat.format(date);
+        return FILE_FORMAT.format(date);
     }
 
     /**
@@ -207,7 +210,7 @@ public class ChartUtils {
      * @param prefs sp
      * @param entry 点信息
      */
-    public static void putEntry(SharedPreferences prefs, Entry entry) {
+    public static void saveEntry(SharedPreferences prefs, Entry entry) {
         prefs.edit().putFloat(String.valueOf(entry.getX()), entry.getY()).apply();
     }
 
@@ -217,7 +220,7 @@ public class ChartUtils {
      * @param prefs sp
      * @return 包含所有点的信息的集合，不会为空
      */
-    public static ArrayList<Entry> getAllEntry(SharedPreferences prefs) {
+    public static ArrayList<Entry> getASCEntryList(SharedPreferences prefs) {
         ArrayList<Entry> values = new ArrayList<>();
         for (String key : prefs.getAll().keySet()) {
             values.add(new Entry(Float.parseFloat(key), prefs.getFloat(key, 0)));

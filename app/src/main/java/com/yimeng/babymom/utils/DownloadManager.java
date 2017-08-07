@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.view.KeyEvent;
 
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -93,7 +95,12 @@ public class DownloadManager {
             public void onResponse(File file, int i) {
                 progressDialog.dismiss();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                Uri uri = Uri.fromFile(file);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    uri = FileProvider.getUriForFile(MyApp.getAppContext(), MyApp.getAppContext().getPackageName()+".fileprovider", file);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                }
+                intent.setDataAndType(uri, "application/vnd.android.package-archive");
                 activity.startActivity(intent);
             }
 

@@ -237,7 +237,7 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
                 ArrayList<Entry> result = mHistoryMap.get(fileName);
                 if (null == result) {
                     isFirstRun = true;
-                    result = ChartUtils.getAllEntry(ChartUtils.getPrefs(fileName));
+                    result = ChartUtils.getASCEntryList(ChartUtils.getPrefs(fileName));
                     mHistoryMap.put(fileName, result);
                 }
                 return result;

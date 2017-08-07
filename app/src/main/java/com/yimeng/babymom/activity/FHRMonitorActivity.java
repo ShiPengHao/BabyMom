@@ -1,6 +1,9 @@
 package com.yimeng.babymom.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,11 +11,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Message;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +45,7 @@ import java.util.Date;
  * <li>通过{@link AsyncTask}存储胎心率数据到本地SharedPreference
  * <li>使用{@link Intent#ACTION_BATTERY_CHANGED}粘性广播在每次开始记录胎心率时查看电量，并及时提醒用户充电但不拒绝操作
  * <li>使用{@link Intent#ACTION_HEADSET_PLUG}广播实时检测耳机插孔状态，如果拔出则跳转到{@link FHRIntroduceActivity}页面
+ * <li>当正在胎心监护且页面不可见时，向通知栏发通知显示实时胎心率，用户点击跳转到此页面，逻辑在{@link #showNotification()}方法
  */
 public class FHRMonitorActivity extends BaseActivity implements OnChartValueSelectedListener, FHRService.FHRReceiver {
 
@@ -49,15 +55,23 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
     private Button bt_save_img;
     private Button bt_save_data;
     private ImageView iv_cal;
+    /**
+     * 闲置，准备开始记录
+     */
+    private static final int STATE_IDLE = 0;
+    /**
+     * 正在记录
+     */
+    private static final int STATE_RECORDING = 1;
+    /**
+     * 记录被中止
+     */
+    private static final int STATE_STOPPED = 2;
+    /**
+     * 胎心监护启停按钮状态
+     */
+    private int mState = STATE_IDLE;
 
-    /**
-     * 状态：正在接收数据
-     */
-    private boolean isRecording;
-    /**
-     * 状态：已停止接收数据，可以重置
-     */
-    private boolean isRecordStopped;
     /**
      * 保存监测数据的异步任务
      */
@@ -84,9 +98,29 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      */
     private Handler mFHRHandler;
     /**
+     * 让{@link #mFHRHandler}使用的what，用于在接收到胎心数据之后刷新ui
+     */
+    private static final int WHAT_DRAW = 100;
+    /**
      * 开始记录胎心的时间
      */
     private long mStartTime;
+    /**
+     * 通知管理
+     */
+    private NotificationManager mNotificationManager;
+    /**
+     * 实时胎心率通知的id
+     */
+    private static final int ID_NOTIFY = 101;
+    /**
+     * 当前胎心率
+     */
+    private int mCurrentFHR;
+    /**
+     * 当前界面是否可见
+     */
+    private boolean isBack;
 
     @Override
     protected int setLayoutResId() {
@@ -112,19 +146,20 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
         bt_save_img.setOnClickListener(this);
         bt_save_data.setOnClickListener(this);
         iv_cal.setOnClickListener(this);
-        setChartListener();
-        mBatteryStatus = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        mFHRHandler = new Handler(Looper.getMainLooper());
-        registerHeadsetPlugReceiver();
-    }
-
-    /**
-     * 设置图表点击事件
-     *
-     * @see #onValueSelected(Entry, Highlight)
-     */
-    private void setChartListener() {
         mLineChart.setOnChartValueSelectedListener(this);
+        mBatteryStatus = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        mFHRHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case WHAT_DRAW:
+                        freshUI();
+                        break;
+                }
+            }
+        };
+        registerHeadsetPlugReceiver();
     }
 
     @Override
@@ -135,14 +170,15 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
     @Override
     protected void onInnerClick(int viewId) {
         switch (viewId) {
-            case R.id.bt_submit:// 三种状态：正在记录、停止记录、重置（初始状态）
-                if (isRecording) {
+            case R.id.bt_submit:// 三种状态：正在记录、中止记录、闲置（初始状态）
+                if (mState == STATE_RECORDING) {
                     stopRecord();
-                } else if (isRecordStopped) {
+                } else if (mState == STATE_STOPPED) {
                     resetChart();
                 } else {
                     startRecord();
                 }
+                mState = (mState + 1) % 3;
                 break;
             case R.id.bt_save_img:
                 saveImg();
@@ -154,6 +190,77 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
                 goHistory();
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        isBack = false;
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(ID_NOTIFY);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        isBack = true;
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (null != mLineChart) {
+            mLineChart.setOnChartValueSelectedListener(null);
+        }
+        if (null != mNotificationManager) {
+            mNotificationManager.cancel(ID_NOTIFY);
+        }
+        if (null != mSaveTask) {
+            mSaveTask.cancel(false);
+        }
+        if (null != mFHRHandler) {
+            mFHRHandler.removeCallbacksAndMessages(null);
+        }
+        if (null != mFHRServiceConn) {
+            unbindService(mFHRServiceConn);
+        }
+        if (null != mHeadsetPlugReceiver) {
+            unregisterReceiver(mHeadsetPlugReceiver);
+        }
+        super.onDestroy();
+    }
+
+    /**
+     * 将接收到的数据更新到控件
+     */
+    private void freshUI() {
+        tv_beat_cur.setText(String.valueOf(mCurrentFHR));
+        if (mState == STATE_RECORDING) {
+            if (isBack) {
+                showNotification();
+            }
+            ChartUtils.appendLineEntry(mLineChart, new Entry((System.currentTimeMillis() - mStartTime) / 1000f, Math.max(65, Math.min(200, mCurrentFHR))));
+        }
+    }
+
+    /**
+     * 向通知栏发通知，展示实时胎心率
+     */
+    private void showNotification() {
+        if (mNotificationManager == null) {
+            mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, ID_NOTIFY, new Intent(this, FHRMonitorActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification = new Notification.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.logo))
+                .setContentText(String.format("%s:%s", getString(R.string.fhr), mCurrentFHR))
+                .setContentTitle(getString(R.string.tip_recording))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .build();
+        mNotificationManager.notify(ID_NOTIFY, notification);
     }
 
     /**
@@ -179,33 +286,8 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      * 去历史记录页面
      */
     private void goHistory() {
-        if (isRecording) {
-            showToast(getString(R.string.tip_recording_canot_leave));
-        } else {
-            startActivity(new Intent(this, FHRHistoryActivity.class));
-        }
+        startActivity(new Intent(this, FHRHistoryActivity.class));
     }
-
-    @Override
-    protected void onDestroy() {
-        if (null != mSaveTask) {
-            mSaveTask.cancel(false);
-        }
-        if (null != mFHRHandler) {
-            mFHRHandler.removeCallbacksAndMessages(null);
-        }
-        if (null != mFHRServiceConn) {
-            unbindService(mFHRServiceConn);
-        }
-        if (null != mLineChart) {
-            mLineChart.setOnChartValueSelectedListener(null);
-        }
-        if (null != mHeadsetPlugReceiver) {
-            unregisterReceiver(mHeadsetPlugReceiver);
-        }
-        super.onDestroy();
-    }
-
 
     /**
      * MPAndroidChart 图表上的点被选中时，吐司当前点坐标时间和胎心率
@@ -239,20 +321,10 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      * @param fhrInfo 数据
      */
     @Override
-    public void onReceived(final FHRInfo fhrInfo) {
+    public void onReceived(FHRInfo fhrInfo) {
         // 接收数据，主线程刷新UI
-        mFHRHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                int y = fhrInfo.getFhr();
-                tv_beat_cur.setText(String.valueOf(y));
-                if (isRecording) {
-                    y = Math.max(65, Math.min(200, y));
-                    ChartUtils.addLineData(mLineChart, new Entry((System.currentTimeMillis() - mStartTime) / 1000f, y));
-                }
-
-            }
-        });
+        mCurrentFHR = fhrInfo.getFhr();
+        mFHRHandler.sendEmptyMessage(WHAT_DRAW);
     }
 
     /**
@@ -272,7 +344,6 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
         }
         mStartTime = System.currentTimeMillis();
         bt_submit.setText(getString(R.string.stop));
-        isRecording = true;
     }
 
 
@@ -283,8 +354,6 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
         mLineChart.setVisibleXRangeMaximum(Math.max(mLineChart.getXChartMax(), 10));
         mLineChart.moveViewToX(0);
         bt_submit.setText(getString(R.string.reset));
-        isRecordStopped = true;
-        isRecording = false;
     }
 
     /**
@@ -294,7 +363,6 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
         mLineChart.clear();
         mLineChart.getXAxis().setAxisMaximum(ChartUtils.PAGE_SIZE);
         bt_submit.setText(getString(R.string.start));
-        isRecordStopped = false;
     }
 
     /**
@@ -314,7 +382,7 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      */
     private void saveData() {
         // 判断是否正在记录
-        if (isRecording) {
+        if (mState == STATE_RECORDING) {
             showToast("正在胎心监测，请先停止再保存数据");
             return;
         }
@@ -343,7 +411,7 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
                 SharedPreferences prefs = ChartUtils.getPrefs(fileName);
                 prefs.edit().clear().commit();
                 for (Entry e : values) {
-                    ChartUtils.putEntry(prefs, e);
+                    ChartUtils.saveEntry(prefs, e);
                 }
                 return null;
             }
