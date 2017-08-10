@@ -19,14 +19,19 @@ import com.yimeng.babymom.R;
  */
 
 public class HealthMonitorActivity extends BaseActivity {
-    private boolean isPermitted;
-
-    // 要申请的权限
-    private String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
 
     private LinearLayout ll_fhr_start;
     private LinearLayout ll_fhr_history;
     private final int REQUEST_CODE = 321;
+
+    /**
+     * 所需权限授权标志，true为已授权
+     */
+    private boolean isPermitted;
+    /**
+     * 要申请的权限
+     */
+    private final String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
 
     @Override
     protected int setLayoutResId() {
@@ -68,11 +73,11 @@ public class HealthMonitorActivity extends BaseActivity {
 
     private void checkPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int i = ContextCompat.checkSelfPermission(this, permissions[0]);
+            int i = ContextCompat.checkSelfPermission(this, PERMISSIONS[0]);
             if (i == PackageManager.PERMISSION_GRANTED) {
                 isPermitted = true;
             } else {
-                ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_CODE);
             }
         } else {
             isPermitted = true;

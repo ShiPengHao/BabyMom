@@ -43,7 +43,7 @@ import java.util.Date;
  * <li>通过绑定{@link FHRService}服务获取胎心率
  * <li>使用第三方图表控件库MPAndroidChart的{@link LineChart}展示胎心率波形，这里封装了一个图表有关的工具类{@link ChartUtils}
  * <li>通过{@link AsyncTask}存储胎心率数据到本地SharedPreference
- * <li>使用{@link Intent#ACTION_BATTERY_CHANGED}粘性广播在每次开始记录胎心率时查看电量，并及时提醒用户充电但不拒绝操作
+ * <li>使用{@link Intent#ACTION_BATTERY_CHANGED}粘性广播在每次开始记录胎心率时查看手机电量，并及时提醒用户充电但不拒绝操作
  * <li>使用{@link Intent#ACTION_HEADSET_PLUG}广播实时检测耳机插孔状态，如果拔出则跳转到{@link FHRIntroduceActivity}页面
  * <li>当正在胎心监护且页面不可见时，向通知栏发通知显示实时胎心率，用户点击跳转到此页面，逻辑在{@link #showNotification()}方法
  */
@@ -109,6 +109,10 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      * 通知管理
      */
     private NotificationManager mNotificationManager;
+    /**
+     * 通知构造辅助类
+     */
+    private Notification.Builder mNotificationBuilder;
     /**
      * 实时胎心率通知的id
      */
@@ -239,7 +243,14 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
             if (isBack) {
                 showNotification();
             }
-            ChartUtils.appendLineEntry(mLineChart, new Entry((System.currentTimeMillis() - mStartTime) / 1000f, Math.max(65, Math.min(200, mCurrentFHR))));
+            float x;
+            if (mStartTime == -1L) {
+                mStartTime = System.currentTimeMillis();
+                x = 0f;
+            } else {
+                x = (System.currentTimeMillis() - mStartTime) / 1000f;
+            }
+            ChartUtils.appendLineEntry(mLineChart, new Entry(x, Math.max(65, Math.min(200, mCurrentFHR))));
         }
     }
 
@@ -247,17 +258,18 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
      * 向通知栏发通知，展示实时胎心率
      */
     private void showNotification() {
-        if (mNotificationManager == null) {
+        if (mNotificationBuilder == null) {
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, ID_NOTIFY, new Intent(this, FHRMonitorActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+            mNotificationBuilder = new Notification.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.logo))
+                    .setContentTitle(getString(R.string.tip_recording))
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
         }
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, ID_NOTIFY, new Intent(this, FHRMonitorActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification = new Notification.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.logo))
+        Notification notification = mNotificationBuilder
                 .setContentText(String.format("%s:%s", getString(R.string.fhr), mCurrentFHR))
-                .setContentTitle(getString(R.string.tip_recording))
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
                 .build();
         mNotificationManager.notify(ID_NOTIFY, notification);
@@ -342,8 +354,8 @@ public class FHRMonitorActivity extends BaseActivity implements OnChartValueSele
                 showToast("手机电量不足，请及时充电");
             }
         }
-        mStartTime = System.currentTimeMillis();
         bt_submit.setText(getString(R.string.stop));
+        mStartTime = -1L;
     }
 
 
