@@ -74,7 +74,17 @@ public class BabyHeightFragment extends BaseFragment implements MeasureActivity.
 
         int pa = Integer.parseInt(mHeadWidth);
         int ma = Integer.parseInt(mBodyWidth);
-        tv.setText("男宝宝的身高大概为" + (pa + ma + 14) / 2 + "cm\n" + "女宝宝的身高大概为" + (pa + ma - 12) / 2 + "cm\n");
+        String result;
+        int color;
+        if (pa < 250 && pa > 120 && ma < 250 && ma > 120) {
+            result = "男宝宝的身高大概为" + (pa + ma + 14) / 2 + "cm\n" + "女宝宝的身高大概为" + (pa + ma - 12) / 2 + "cm\n";
+            color = getResources().getColor(R.color.colorAccent);
+        } else {
+            result = "呵呵~";
+            color = getResources().getColor(R.color.bg_grey_aaa);
+        }
+        tv.setText(result);
+        tv.setTextColor(color);
     }
 
     @Override

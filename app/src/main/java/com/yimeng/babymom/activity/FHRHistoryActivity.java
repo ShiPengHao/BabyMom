@@ -190,7 +190,6 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
         } else {
             ObjectAnimator.ofFloat(mCalendarView.getParent(), "translationY", 0).setDuration(300).start();
         }
-
     }
 
     /**
@@ -237,7 +236,7 @@ public class FHRHistoryActivity extends BaseActivity implements OnDateSelectedLi
                 ArrayList<Entry> result = mHistoryMap.get(fileName);
                 if (null == result) {
                     isFirstRun = true;
-                    result = ChartUtils.getASCEntryList(ChartUtils.getPrefs(fileName));
+                    result = ChartUtils.getOrderedEntryList(ChartUtils.getPrefs(fileName));
                     mHistoryMap.put(fileName, result);
                 }
                 return result;

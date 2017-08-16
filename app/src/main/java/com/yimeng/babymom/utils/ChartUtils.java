@@ -220,7 +220,7 @@ public class ChartUtils {
      * @param prefs sp
      * @return 包含所有点的信息的集合，不会为空
      */
-    public static ArrayList<Entry> getASCEntryList(SharedPreferences prefs) {
+    public static ArrayList<Entry> getOrderedEntryList(SharedPreferences prefs) {
         ArrayList<Entry> values = new ArrayList<>();
         for (String key : prefs.getAll().keySet()) {
             values.add(new Entry(Float.parseFloat(key), prefs.getFloat(key, 0)));

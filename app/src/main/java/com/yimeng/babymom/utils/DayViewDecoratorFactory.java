@@ -15,7 +15,7 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 public class DayViewDecoratorFactory {
 
     /**
-     * 今日标记
+     * 获取今日标记
      *
      * @param context    context
      * @param drawableId 背景资源id

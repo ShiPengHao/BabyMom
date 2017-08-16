@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:background="@drawable/selector_bt_bg_accent"
-        android:text="@string/submit"
+        android:text="@string/calculate"
         android:textColor="@color/white"
         android:textSize="16dp" />
 

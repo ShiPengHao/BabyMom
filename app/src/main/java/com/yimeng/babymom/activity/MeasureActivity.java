@@ -41,7 +41,7 @@ public class MeasureActivity extends BaseActivity implements AdapterView.OnItemC
      */
     private final int[] FUN_PICS = new int[]{R.drawable.blood, R.drawable.date, R.drawable.weight, R.drawable.height};
     private int mCheckedItemPosition;
-    private ArrayList<Fragment> fragments = new ArrayList<>();
+    private ArrayList<Fragment> mFunFragments = new ArrayList<>();
     private ArrayList<PicDesBean> mFunPicBeans = new ArrayList<>();
     private DefaultAdapter<PicDesBean> mFunGridAdapter;
     private SaveFragmentPagerAdapter mPagerAdapter;
@@ -70,9 +70,7 @@ public class MeasureActivity extends BaseActivity implements AdapterView.OnItemC
         };
         gd_fun.setAdapter(mFunGridAdapter);
         gd_fun.setOnItemClickListener(this);
-
-
-        mPagerAdapter = new SaveFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+        mPagerAdapter = new SaveFragmentPagerAdapter(getSupportFragmentManager(), mFunFragments);
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setOnTouchListener(this);
         bt_submit.setOnClickListener(this);
@@ -87,12 +85,11 @@ public class MeasureActivity extends BaseActivity implements AdapterView.OnItemC
             mFunPicBeans.add(new PicDesBean(FUN_PICS[i], FUN_DES[i]));
         }
         mFunGridAdapter.notifyDataSetChanged();
-
-        fragments.clear();
-        fragments.add(new BloodTypeFragment());
-        fragments.add(new BirthDayFragment());
-        fragments.add(new BabyWeightFragment());
-        fragments.add(new BabyHeightFragment());
+        mFunFragments.clear();
+        mFunFragments.add(new BloodTypeFragment());
+        mFunFragments.add(new BirthDayFragment());
+        mFunFragments.add(new BabyWeightFragment());
+        mFunFragments.add(new BabyHeightFragment());
         mPagerAdapter.notifyDataSetChanged();
     }
 
@@ -107,7 +104,7 @@ public class MeasureActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onInnerClick(int viewId) {
         switch (viewId) {
             case R.id.bt_submit:
-                ((MeasureSubmitListener) fragments.get(mCheckedItemPosition)).onSubmit();
+                ((MeasureSubmitListener) mFunFragments.get(mCheckedItemPosition)).onSubmit();
                 break;
         }
     }
