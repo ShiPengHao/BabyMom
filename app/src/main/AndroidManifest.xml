@@ -119,15 +119,15 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <meta-data
-            android:name="com.taobao.android.hotfix.IDSECRET"
-            android:value="24545030-1" />
-        <meta-data
-            android:name="com.taobao.android.hotfix.APPSECRET"
-            android:value="7557e89a97153a44ef7b0762eecd8f31" />
-        <meta-data
-            android:name="com.taobao.android.hotfix.RSASECRET"
-            android:value="MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCMXNhxttmUMQB6+6Fi51BNpVmF1gEPiZaLN2qjePdWRcwbDnispSUtbILa3JWhMmO/rb8dFliPPSp9csITvcxftFF13wKfkIWeox1f3d7MZWwEImoOgd87Svi/vVAZ96++Jo3VpxsgLz/vexeVC2btH02/gUrG/JZTIFuDTaTtJOoYnHHwblIupmNS8GxklMQZiRhQAwCOm8YSygJXNBxaN9XawWOY9GHY+3NuJ/pU8b8Hy5RLgM3R1SjbV/Yq1JFhZLVXakkFVyJoXnykJe19dJBzRqN+kgeecTR3arL3/moKeK5NrXI/XHlhNxllPk+tzWC6WF0JFvn9b+hcz7cRAgMBAAECggEAR9M67vWiYTKyDDy3WOUFMrZqGRJpeInvf03cQ8qixoLw7ud42N+pJpVgYJ5/8vzWDj/ajAfjSWkDVS5kIbX93vtms+pqbTyHI6ZUYbonSHCd1X/GxaWvlafHolY9pwwX4jXYXnwkZVPIY8OZTauH/88E+fovSaP3SJJGQep5et+mbGnPuVDuoa0Enl7FQOePw33Do1POJsHl78zrOyXCR0TSbH1ehpJQ4Zz32Hdd6iUJ1renSqKXuBD1/MBv3aNej7+IzirTuQOroNEE5/dD+nq/vpKseW6GmtMMWnnz2oNxQxWlrM0sngkg3I4Ypt5Fq6l5FhES7VJ9gB02RUvQAQKBgQDLi/2LYEouYb/cPktC83iUiO7QZsIJNyjm7QjIG9Vemmt3XZuqz0yIE7Ajq1pZGw9RZrapW/Y/owH17OKsWKKrjNhN3mbbVGEKpI55Llp7rlhnba+Gdm/YEHHGItHZBsaGrsgGzZhp7G1oh9irxgc0HifydBRdcv+wZm3eGkg9VQKBgQCwiJaf8ZoQXFKxf14M3TncLsoatkQCIZXzSYTt9OOld3BTXUVkuiNGUiKRTqgVu9Duo4NYWnVJGAqKxAcGK/DzHpQIlujJwOelKm7+I79iSMTBAwHG9GKsjVA7LHzlBc3IcCgJrhswizIBapki9UTvhAy5Bq02UOt6ypcfAQwyzQKBgBy+lTykiXVJWpXYujonNeUL/WWyzT4N6xnJaY8Q1y338qs1rfEOO0mQNjSjUyv4NU6SicMa+Ih+FZ3MKSqbjcVaK4W7nZzlqpqdKH2WfTKwKU3Z4IrFmP/TOq33ZtkWKt0EO70yNY7n03+Kh5+iZIwIoi2MFQApaFBZ9rQB1CfNAoGAGyITTKgczvDxwNhbw0xpbT8/zxU+pLk2y/r71Hs0ViVifV2zocS+UTukloLpcNW6SkOVl4nnxwFL9YIltjwgv61ugVd4ljHxKMC56JPkAZ4/p47nwgWj+POLZlzzIVxgAbPDY6GAClkKqY8R1H6wRsQcFIBDNTsAxpHG4nwNvO0CgYAQeInngyhE4i/LK/52WDvBaF0daSG+VGdOlAG+n46r7Kt/QXo0QpyQ5KR1/lUbSjkM1LsIsrUzQTOJoeRiXBx2Sov4wbcFpQobg88fgR7bygoE+TvlbWayQVKPafu5vrZ0sEUW/BYLjDV1aQ5h2C3TSmWhwIt3iQbVXjj4LtBJqg==" />
+        <!--<meta-data-->
+            <!--android:name="com.taobao.android.hotfix.IDSECRET"-->
+            <!--android:value="24545030-1" />-->
+        <!--<meta-data-->
+            <!--android:name="com.taobao.android.hotfix.APPSECRET"-->
+            <!--android:value="7557e89a97153a44ef7b0762eecd8f31" />-->
+        <!--<meta-data-->
+            <!--android:name="com.taobao.android.hotfix.RSASECRET"-->
+            <!--android:value="MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCMXNhxttmUMQB6+6Fi51BNpVmF1gEPiZaLN2qjePdWRcwbDnispSUtbILa3JWhMmO/rb8dFliPPSp9csITvcxftFF13wKfkIWeox1f3d7MZWwEImoOgd87Svi/vVAZ96++Jo3VpxsgLz/vexeVC2btH02/gUrG/JZTIFuDTaTtJOoYnHHwblIupmNS8GxklMQZiRhQAwCOm8YSygJXNBxaN9XawWOY9GHY+3NuJ/pU8b8Hy5RLgM3R1SjbV/Yq1JFhZLVXakkFVyJoXnykJe19dJBzRqN+kgeecTR3arL3/moKeK5NrXI/XHlhNxllPk+tzWC6WF0JFvn9b+hcz7cRAgMBAAECggEAR9M67vWiYTKyDDy3WOUFMrZqGRJpeInvf03cQ8qixoLw7ud42N+pJpVgYJ5/8vzWDj/ajAfjSWkDVS5kIbX93vtms+pqbTyHI6ZUYbonSHCd1X/GxaWvlafHolY9pwwX4jXYXnwkZVPIY8OZTauH/88E+fovSaP3SJJGQep5et+mbGnPuVDuoa0Enl7FQOePw33Do1POJsHl78zrOyXCR0TSbH1ehpJQ4Zz32Hdd6iUJ1renSqKXuBD1/MBv3aNej7+IzirTuQOroNEE5/dD+nq/vpKseW6GmtMMWnnz2oNxQxWlrM0sngkg3I4Ypt5Fq6l5FhES7VJ9gB02RUvQAQKBgQDLi/2LYEouYb/cPktC83iUiO7QZsIJNyjm7QjIG9Vemmt3XZuqz0yIE7Ajq1pZGw9RZrapW/Y/owH17OKsWKKrjNhN3mbbVGEKpI55Llp7rlhnba+Gdm/YEHHGItHZBsaGrsgGzZhp7G1oh9irxgc0HifydBRdcv+wZm3eGkg9VQKBgQCwiJaf8ZoQXFKxf14M3TncLsoatkQCIZXzSYTt9OOld3BTXUVkuiNGUiKRTqgVu9Duo4NYWnVJGAqKxAcGK/DzHpQIlujJwOelKm7+I79iSMTBAwHG9GKsjVA7LHzlBc3IcCgJrhswizIBapki9UTvhAy5Bq02UOt6ypcfAQwyzQKBgBy+lTykiXVJWpXYujonNeUL/WWyzT4N6xnJaY8Q1y338qs1rfEOO0mQNjSjUyv4NU6SicMa+Ih+FZ3MKSqbjcVaK4W7nZzlqpqdKH2WfTKwKU3Z4IrFmP/TOq33ZtkWKt0EO70yNY7n03+Kh5+iZIwIoi2MFQApaFBZ9rQB1CfNAoGAGyITTKgczvDxwNhbw0xpbT8/zxU+pLk2y/r71Hs0ViVifV2zocS+UTukloLpcNW6SkOVl4nnxwFL9YIltjwgv61ugVd4ljHxKMC56JPkAZ4/p47nwgWj+POLZlzzIVxgAbPDY6GAClkKqY8R1H6wRsQcFIBDNTsAxpHG4nwNvO0CgYAQeInngyhE4i/LK/52WDvBaF0daSG+VGdOlAG+n46r7Kt/QXo0QpyQ5KR1/lUbSjkM1LsIsrUzQTOJoeRiXBx2Sov4wbcFpQobg88fgR7bygoE+TvlbWayQVKPafu5vrZ0sEUW/BYLjDV1aQ5h2C3TSmWhwIt3iQbVXjj4LtBJqg==" />-->
 
     </application>
 

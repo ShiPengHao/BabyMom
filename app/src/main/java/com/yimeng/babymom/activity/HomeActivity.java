@@ -77,8 +77,9 @@ public class HomeActivity extends BaseActivity implements HomeAInterface {
 
     @Override
     protected void onInnerClick(int viewId) {
-        if (viewId != mLastPageIndex)
+        if (viewId != mLastPageIndex) {
             viewPager.setCurrentItem(viewId);
+        }
     }
 
     @Override
@@ -96,10 +97,11 @@ public class HomeActivity extends BaseActivity implements HomeAInterface {
             view = ll_tab.getChildAt(i);
             view.setId(i);
             view.setOnClickListener(this);
-            if (i == 0)
+            if (i == 0) {
                 view.setEnabled(false);
-            else
+            } else {
                 view.setEnabled(true);
+            }
         }
     }
 
@@ -112,8 +114,9 @@ public class HomeActivity extends BaseActivity implements HomeAInterface {
 
     @Override
     protected void onDestroy() {
-        if (viewPager != null && mPageChangeListener != null)
+        if (viewPager != null && mPageChangeListener != null) {
             viewPager.removeOnPageChangeListener(mPageChangeListener);
+        }
         super.onDestroy();
     }
 

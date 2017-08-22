@@ -122,8 +122,8 @@ public class MeasureActivity extends BaseActivity implements AdapterView.OnItemC
         }
     }
 
-    @Override
     // 禁用viewpager的滑动事件
+    @Override
     public boolean onTouch(View v, MotionEvent event) {
         return true;
     }
